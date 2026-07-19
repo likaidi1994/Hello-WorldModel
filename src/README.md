@@ -15,3 +15,19 @@
 - 每个实验都能从 README 或注释中看懂入口。
 - 优先写小而清楚的代码，再逐步抽象。
 - 每次实验都记录对应的笔记链接。
+
+## 当前代码
+
+- [hello_world_model](hello_world_model)：最小 world model 教学代码。
+
+它包含：
+
+- `envs.py`：一维点质量环境。
+- `models.py`：预测 next state 和 reward 的 MLP world model。
+- `training.py`：数据收集、训练和评估。
+- `planning.py`：random shooting 规划器。
+- `visualization.py`：训练过程和规划结果的可视化。
+
+对应笔记：
+
+- [MDP、POMDP 与最小世界模型](../docs/notes/world-models-basics.md)
