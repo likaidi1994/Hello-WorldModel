@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data and generated outputs
+data/
+outputs/
+runs/
+checkpoints/
+*.pt
+*.pth
+*.ckpt
+
+# OS and editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
