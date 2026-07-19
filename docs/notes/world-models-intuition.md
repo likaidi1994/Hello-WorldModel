@@ -1,9 +1,5 @@
 # 世界模型的第一层直觉
 
-日期：2026-07-19
-
-状态：学习笔记草稿
-
 ## 一句话理解
 
 我现在对世界模型（World Model）最朴素的理解是：
@@ -60,6 +56,7 @@ World model / model-based reinforcement learning 的核心思路是：先学习�
 
 $$
 p(s_{t+1}, r_t \mid s_t, a_t)
+
 $$
 
 意思是：在当前状态 \(s_t\) 下执行动作 \(a_t\)，下一个状态 \(s_{t+1}\) 和奖励 \(r_t\) 会如何分布。
@@ -70,6 +67,7 @@ $$
 p(z_{t+1} \mid z_t, a_t), \quad
 p(r_t \mid z_t, a_t), \quad
 p(o_t \mid z_t)
+
 $$
 
 也就是说，模型要学三件事：
@@ -88,19 +86,9 @@ PlaNet 和 Dreamer 系列的一个关键思想，就是不直接在高维像素�
 
 这也是我后续想持续追问的问题：
 
-> 世界模型到底需要多真实，才足够帮助决策？
+> 世界模型到底需要多真实，才足够帮助决策？或者说世界模型需要如何识别哪些对决策有用的信息然后去做压缩？
 
 这个问题很可能贯穿后面的学习。
-
-## 经典路线
-
-后续可以按下面这条路线继续读：
-
-- World Models：把“先学环境模型，再训练控制器”的工程路线讲清楚。
-- PlaNet：在潜在空间里做 planning。
-- Dreamer：在学习到的潜在动力学中做 imagination，并训练 actor-critic。
-- MuZero：不重建观测，而是学习对规划有用的表征、动态和价值。
-- TD-MPC / TD-MPC2：把潜在动力学、价值学习和模型预测控制结合起来。
 
 ## 参考资料
 
@@ -108,9 +96,3 @@ PlaNet 和 Dreamer 系列的一个关键思想，就是不直接在高维像素�
 - Hafner et al., [Learning Latent Dynamics for Planning from Pixels](https://arxiv.org/abs/1811.04551), 2019.
 - Hafner et al., [Dream to Control: Learning Behaviors by Latent Imagination](https://arxiv.org/abs/1912.01603), 2020.
 - Schrittwieser et al., [Mastering Atari, Go, Chess and Shogi by Planning with a Learned Model](https://www.nature.com/articles/s41586-020-03051-4), 2020.
-
-## 下一步
-
-下一篇笔记可以专门回答一个问题：
-
-> World Models 这篇论文里的 V、M、C 分别是什么，它们怎样组合成一个完整智能体？
