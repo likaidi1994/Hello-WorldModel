@@ -1,6 +1,5 @@
 # MDP、POMDP 与最小世界模型
 
-
 这篇笔记围绕四个问题展开：
 
 - MDP 里的 state、action、reward、transition 分别是什么？
@@ -16,6 +15,7 @@
 
 $$
 (s_t, a_t, r_t, s_{t+1})
+
 $$
 
 其中：
@@ -29,6 +29,7 @@ $$
 
 $$
 p(s_{t+1}, r_t \mid s_t, a_t)
+
 $$
 
 也就是说：给定当前状态和动作，模型要预测下一步世界会如何变化，以及这个变化会带来什么奖励。
@@ -61,6 +62,7 @@ flowchart LR
 
 $$
 b_t \approx p(s_t \mid o_{\le t}, a_{<t})
+
 $$
 
 在深度学习系统里，这个内部信念常常被表示为 latent state，例如 \(z_t\) 或 \(h_t\)。它不是环境直接给出的，而是模型从历史中学出来的压缩表示。
@@ -78,15 +80,18 @@ PlaNet 和 Dreamer 系列常用 RSSM（Recurrent State-Space Model，循环状�
 
 $$
 h_t = f(h_{t-1}, z_{t-1}, a_{t-1})
+
 $$
 
 $$
 z_t \sim p(z_t \mid h_t)
+
 $$
 
 $$
 o_t \sim p(o_t \mid h_t, z_t), \quad
 r_t \sim p(r_t \mid h_t, z_t)
+
 $$
 
 对应关系大致是：
@@ -126,7 +131,7 @@ flowchart TD
 - 状态：位置和速度，即 \([position, velocity]\)。
 - 动作：加速度，范围是 \([-1, 1]\)。
 - 目标：把点移动到目标位置 \(0.0\)。
-- 世界模型：学习 \((s_t, a_t) \rightarrow (s_{t+1}, r_t)\)。
+- 世界模型：学习 \((s_t, a_t) -> (s_{t+1}, r_t)\)。
 - 规划器：随机采样多条未来动作序列，选择模型预测回报最高的那条。
 
 完整代码已经整理到：
@@ -140,13 +145,6 @@ flowchart TD
 pip install -r requirements.txt
 python examples/run_point_mass_world_model.py
 ```
-
-运行后会生成四张图：
-
-- `01_random_data_phase_space.png`：随机策略探索到的状态区域。
-- `02_training_loss.png`：world model 是否逐渐拟合 dynamics + reward。
-- `03_one_step_predictions.png`：模型预测的下一步状态和真实下一步状态是否接近。
-- `04_planned_trajectory.png`：使用 learned model 做 planning 后，点是否被推向目标位置。
 
 ## 5. 最小闭环
 
@@ -187,9 +185,3 @@ flowchart LR
 - 从 state prediction 走向 latent dynamics。
 - 从 random shooting 走向更强的 planning 或 actor-critic。
 - 从离线训练走向数据收集、训练、规划的闭环迭代。
-
-## 7. 下一步
-
-下一篇笔记可以继续拆解：
-
-> World Models 论文中的 V、M、C 分别是什么？为什么它用 VAE、MDN-RNN 和 Controller 组成一个智能体？
