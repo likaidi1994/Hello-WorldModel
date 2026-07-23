@@ -15,3 +15,10 @@ YYYY-MM-DD-topic.md
 - 有哪些例子或代码帮助理解。
 - 还不理解什么。
 - 下一步准备做什么。
+
+## 当前笔记
+
+- [世界模型的第一层直觉](world-models-intuition.md)
+- [MDP、POMDP 与最小世界模型](world-models-basics.md)
+- [为什么世界模型需要 memory 与 latent state](world-models-latent-memory.md)
+- [为什么世界模型需要预测 reward](world-models-reward.md)

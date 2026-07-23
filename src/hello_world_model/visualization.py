@@ -8,6 +8,7 @@ import numpy as np
 import torch
 
 from .models import WorldModel
+from .memory import Episode
 from .training import Transition
 
 
@@ -47,6 +48,28 @@ def plot_training_loss(losses: Sequence[float], output_path: Path) -> None:
     ax.set_title("World Model Training Loss")
     ax.set_xlabel("epoch")
     ax.set_ylabel("MSE loss")
+    ax.grid(True, alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_reward_model_losses(
+    losses: dict[str, Sequence[float]],
+    output_path: Path,
+) -> None:
+    """Show total, observation, and reward losses for a reward world model."""
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    epochs = np.arange(1, len(losses["total"]) + 1)
+    ax.plot(epochs, losses["total"], label="total", linewidth=2)
+    ax.plot(epochs, losses["obs"], label="observation", linewidth=1.8)
+    ax.plot(epochs, losses["reward"], label="reward", linewidth=1.8)
+    ax.set_title("Reward World Model Training Losses")
+    ax.set_xlabel("epoch")
+    ax.set_ylabel("MSE loss")
+    ax.legend(loc="best")
     ax.grid(True, alpha=0.25)
     fig.tight_layout()
     fig.savefig(output_path, dpi=160)
@@ -136,6 +159,189 @@ def plot_planned_trajectory(
     axes[2].set_ylabel("return")
     axes[2].grid(True, alpha=0.25)
 
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_partial_observation_ambiguity(
+    episodes: Sequence[Episode],
+    output_path: Path,
+    max_points: int = 1000,
+) -> None:
+    """Show that one observed position can map to many hidden velocities."""
+
+    true_states = np.concatenate([episode["true_state"] for episode in episodes], axis=0)
+    if len(true_states) > max_points:
+        true_states = true_states[:max_points]
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(7, 5))
+    scatter = ax.scatter(
+        true_states[:, 0],
+        true_states[:, 1],
+        c=true_states[:, 1],
+        s=9,
+        alpha=0.6,
+        cmap="coolwarm",
+    )
+    ax.axvline(0.0, color="black", linewidth=1, linestyle="--", label="goal")
+    ax.set_title("Partial Observation Ambiguity")
+    ax.set_xlabel("observed position")
+    ax.set_ylabel("hidden velocity")
+    ax.legend(loc="best")
+    fig.colorbar(scatter, ax=ax, label="hidden velocity")
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_gru_sequence_prediction(
+    true_next_obs: np.ndarray,
+    pred_next_obs: np.ndarray,
+    output_path: Path,
+) -> None:
+    """Compare a real position sequence with GRU one-step predictions."""
+
+    steps = np.arange(len(true_next_obs))
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    ax.plot(steps, true_next_obs[:, 0], label="real next position", linewidth=2)
+    ax.plot(
+        steps,
+        pred_next_obs[:, 0],
+        label="predicted next position",
+        linewidth=2,
+        linestyle="--",
+    )
+    ax.axhline(0.0, color="black", linewidth=1, linestyle=":", label="goal")
+    ax.set_title("GRU World Model Sequence Prediction")
+    ax.set_xlabel("time step")
+    ax.set_ylabel("position")
+    ax.legend(loc="best")
+    ax.grid(True, alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_hidden_state_velocity_probe(
+    hidden_states: np.ndarray,
+    episode: Episode,
+    output_path: Path,
+) -> None:
+    """Visualize whether a hidden dimension tracks the unobserved velocity."""
+
+    velocity = episode["true_state"][:, 1]
+    correlations = [
+        abs(np.corrcoef(hidden_states[:, dim], velocity)[0, 1])
+        for dim in range(hidden_states.shape[1])
+    ]
+    best_dim = int(np.nanargmax(correlations))
+    hidden_signal = hidden_states[:, best_dim]
+    hidden_signal = (hidden_signal - hidden_signal.mean()) / (hidden_signal.std() + 1e-8)
+    velocity_signal = (velocity - velocity.mean()) / (velocity.std() + 1e-8)
+    steps = np.arange(len(velocity))
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    ax.plot(steps, velocity_signal, label="hidden true velocity", linewidth=2)
+    ax.plot(
+        steps,
+        hidden_signal,
+        label=f"GRU hidden dim {best_dim}",
+        linewidth=2,
+        linestyle="--",
+    )
+    ax.set_title("Hidden State Probe")
+    ax.set_xlabel("time step")
+    ax.set_ylabel("standardized value")
+    ax.legend(loc="best")
+    ax.grid(True, alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_reward_landscape(output_path: Path, goal: float = 0.0) -> None:
+    """Show how the toy reward depends on next position and action size."""
+
+    positions = np.linspace(-2.0, 2.0, 120)
+    actions = np.linspace(-1.0, 1.0, 100)
+    grid_x, grid_a = np.meshgrid(positions, actions)
+    rewards = -((grid_x - goal) ** 2 + 0.1 * grid_a**2)
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(7.5, 5))
+    mesh = ax.contourf(grid_x, grid_a, rewards, levels=24, cmap="viridis")
+    ax.axvline(goal, color="white", linewidth=1.2, linestyle="--", label="goal")
+    ax.set_title("Toy Reward Landscape")
+    ax.set_xlabel("next position")
+    ax.set_ylabel("action")
+    ax.legend(loc="best")
+    fig.colorbar(mesh, ax=ax, label="reward")
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_reward_predictions(
+    true_reward: np.ndarray,
+    pred_reward: np.ndarray,
+    output_path: Path,
+) -> None:
+    """Compare true rewards with model-predicted rewards."""
+
+    _prepare_output(output_path)
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4.5))
+    steps = np.arange(len(true_reward))
+
+    axes[0].plot(steps, true_reward[:, 0], label="true reward", linewidth=2)
+    axes[0].plot(
+        steps,
+        pred_reward[:, 0],
+        label="predicted reward",
+        linewidth=2,
+        linestyle="--",
+    )
+    axes[0].set_title("Reward Along One Episode")
+    axes[0].set_xlabel("time step")
+    axes[0].set_ylabel("reward")
+    axes[0].legend(loc="best")
+    axes[0].grid(True, alpha=0.25)
+
+    _plot_prediction_panel(axes[1], true_reward[:, 0], pred_reward[:, 0], "reward")
+    axes[1].set_title("Reward Prediction Scatter")
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_action_reward_scores(
+    actions: np.ndarray,
+    scores: np.ndarray,
+    output_path: Path,
+) -> None:
+    """Show how predicted reward ranks candidate actions."""
+
+    best_idx = int(np.argmax(scores))
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(7.5, 4.5))
+    ax.plot(actions, scores, linewidth=2)
+    ax.scatter(
+        [actions[best_idx]],
+        [scores[best_idx]],
+        s=60,
+        label=f"best action = {actions[best_idx]:.2f}",
+    )
+    ax.set_title("Reward-Guided One-Step Action Scores")
+    ax.set_xlabel("candidate action")
+    ax.set_ylabel("predicted reward")
+    ax.legend(loc="best")
+    ax.grid(True, alpha=0.25)
     fig.tight_layout()
     fig.savefig(output_path, dpi=160)
     plt.close(fig)

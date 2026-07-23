@@ -38,3 +38,13 @@ class PointMass1DEnv:
 
     def _get_obs(self) -> np.ndarray:
         return np.array([self.pos, self.vel], dtype=np.float32)
+
+
+class PartialPointMass1DEnv(PointMass1DEnv):
+    """Point-mass environment where the agent only observes position."""
+
+    def _get_obs(self) -> np.ndarray:
+        return np.array([self.pos], dtype=np.float32)
+
+    def get_true_state(self) -> np.ndarray:
+        return np.array([self.pos, self.vel], dtype=np.float32)
