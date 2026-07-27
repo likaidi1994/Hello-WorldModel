@@ -1,10 +1,10 @@
 # 为什么世界模型需要预测 reward
 
-
 上一篇笔记里，GRU world model 已经能处理部分可观测环境：
 
 $$
 (o_t, a_t, h_{t-1}) \rightarrow h_t \rightarrow o_{t+1}
+
 $$
 
 也就是说，模型能：
@@ -28,6 +28,7 @@ $$
 
 $$
 p(o_{t+1} \mid h_t, a_t)
+
 $$
 
 它学到的是环境变化规律。这个模型知道“接下来会看到什么”，但还不一定知道“这个未来对任务意味着什么”。
@@ -57,12 +58,13 @@ flowchart LR
 
 $$
 r_t = -\left((x_{t+1} - goal)^2 + 0.1a_t^2\right)
+
 $$
 
 它表达了两件事：
 
 - 离目标越远，reward 越低。
-- 动作越大，也要付出代价。
+- 加速度越大，也要付出代价。
 
 所以 reward 本质上在告诉模型：
 
@@ -97,24 +99,28 @@ flowchart TD
 
 $$
 h_t \rightarrow \hat{o}_{t+1}
+
 $$
 
 这一篇把它扩展为：
 
 $$
 h_t \rightarrow (\hat{o}_{t+1}, \hat{r}_t)
+
 $$
 
 训练目标也从单一 observation loss 变成：
 
 $$
 L = L_{obs} + \lambda L_{reward}
+
 $$
 
 入门版本里先取 \(\lambda = 1\)：
 
 $$
 L = \text{MSE}(\hat{o}_{t+1}, o_{t+1}) + \text{MSE}(\hat{r}_t, r_t)
+
 $$
 
 完整代码已经整理到：
@@ -150,6 +156,7 @@ python examples/run_reward_world_model.py
 
 $$
 \sum_{t=0}^{H-1} \hat{r}_t
+
 $$
 
 最后选择预测回报最高的动作序列。
@@ -172,9 +179,3 @@ $$
 reward prediction 不等于 reward hacking。
 
 reward head 的作用是学习环境给出的任务反馈，而不是让模型自己发明目标。真正危险的是 reward 设计错了，或者 planner 只优化 reward model 的漏洞。这个问题后续进入 model-based RL 的安全性和泛化时会更重要。
-
-## 下一步
-
-下一篇笔记可以继续拆：
-
-> 有了 dynamics、memory 和 reward 之后，planner 如何在 world model 里“想象未来”并选择动作？

@@ -5621,3 +5621,2073 @@ git push
 _**User (2026-07-23 11:49:06Z)**_
 
 现在更新了笔记：docs\notes\world-models-reward.md 请你作为世界模型专家，审视这个文件的内容，并按照开源项目风格，进行格式和内容的优化，有必要，你可以生成一些图示辅助理解；我笔记离提到的代码，先在该笔记里优化格式，然后补齐其他演示运行所需要的内容，然后可以考虑把他们整理成一个完整项目放到/src 目录下，作为完整的代码配套,注意和已有代码的演示逻辑，因为这个项目每一篇笔记都会对应一个演示，演示逻辑和结构要清晰；
+
+
+---
+
+_**Agent (gpt-5.5 2026-07-23 11:50:50Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Clarifying visualize skill usage rules**
+</details></think>
+
+_**Agent (gpt-5.5 2026-07-23 11:50:51Z)**_
+
+我会继续按“每篇笔记对应一个清晰演示”的结构来处理：先审视 `world-models-reward.md`，再把 reward model 的演示逻辑补成可运行代码。因为你提到可能需要图示，我会使用 `visualize:visualize` 的图示规范来决定哪些图真正有助于理解。
+
+_**Agent (gpt-5.5 2026-07-23 11:50:52Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Raw 'C:\Users\Lenovo\.codex\plugins\cache\openai-bundled\visualize\1.0.14\skills\visualize\SKILL.md'`</summary>
+```
+Chunk ID: 9ab675
+Wall time: 0.5988 seconds
+Process exited with code 0
+Original token count: 5164
+Output:
+---
+name: visualize
+description: "Create visualizations and interactive tools directly in conversation. Use when asked to show how something works, make simulators or labs, maps, plots, charts or graphs, comparisons, scenarios, adjustable inputs, and exploration beyond regular text."
+---
+
+# Visualize
+
+- A request for a new standalone file, website, app page, component, or other
+  project change is not an in-conversation visualization request, even when the
+  deliverable contains charts or interactive content.
+- Create a visual only when the user needs to see or explore it in the
+  conversation and it materially improves the explanation. Do not create an
+  inline visual merely because the request involves data, charts, or an
+  interactive page.
+- Use Mermaid when labeled nodes and edges fully explain a static structure;
+  return a normal fenced Mermaid block and no visualization file. Use HTML for
+  dynamics, spatial motion, adjustable inputs, and other visuals.
+- Work silently unless blocked or the user explicitly asks for progress. Never
+  send commentary or progress updates while reading this skill or writing or
+  updating the file; the final response must be your first user-facing message.
+- In user-facing prose, describe only what the visual helps the user see or
+  decide. Keep it concise and do not repeat information already clear from the
+  visual. Never announce this skill, a visualization surface, widgets, HTML,
+  SVG, scripts, local files, inline data, or implementation details.
+
+## Context compaction
+
+Copy into every compaction summary:
+`Reload the full visualize skill before creating or updating a visualization.`
+
+## Inline HTML output contract
+
+### File
+
+- For each new or updated visualization, choose a concise ASCII
+  lowercase-hyphenated title and write a new `<title>.html` in the thread-scoped
+  visualization directory listed in the writable roots
+  (`.codex/visualizations/YYYY/MM/DD/<thread-id>`).
+- Build the visual in the conversation. Use the open project when the user asks
+  for a site, app page, component, or change to existing project files.
+
+### Fragment
+
+- Write only an HTML fragment: no `<!doctype>`, `<html>`, `<head>`, or `<body>`.
+- Write literal markup: use `<div class="card">Hi</div>` plus a real newline,
+  never `<div class=\"card\">Hi</div>\n`. Never embed the fragment in an inline
+  Python, JavaScript, or shell string. Read it back; rewrite literal `\"` or
+  `\n`.
+- Keep CSS and JavaScript in the fragment only when base classes are
+  insufficient. Load static resources only from the CDN allowlist. Never use
+  `fetch`, XHR, WebSocket, or other API calls.
+- Give the fragment root a unique ID and select it with
+  `document.getElementById(...)`. Never derive the root from
+  `document.currentScript`; scripts may sit outside the root.
+- Keep visualizations under 2 MB. Aggregate, bin, downsample, reduce precision,
+  or drop unused fields from large inline datasets.
+- Check that JavaScript has no undefined identifiers, every queried element
+  exists, and the primary interaction updates the visual. The bundled
+  `python3 scripts/render.py <absolute-fragment-path> [<destination>.html] [--serve]`
+  can wrap a fragment as standalone HTML or temporarily serve it for browser
+  inspection when a preview would help with layout, theme, or runtime behavior.
+
+### Content and response
+
+- Keep the fragment focused on the visualization. Do not include explanatory
+  paragraphs, formulas, instructions, or narrative callouts. Include only
+  necessary labels, legends, values, and accessible text alternatives.
+- Use the normal response flow. Put any necessary concise explanation outside
+  the fragment, and add this exact directive on its own line where the visual
+  should appear:
+
+```text
+::codex-inline-vis{file="<title>.html"}
+```
+
+- Emit only the directive for the fragment. Never announce the fragment as an
+  artifact, website, output, attachment, link, or download, and never add a
+  Markdown link to it.
+
+### External resources
+
+- The CSP allows only `cdnjs.cloudflare.com`, `esm.sh`, `cdn.jsdelivr.net`,
+  `unpkg.com`, `fonts.googleapis.com`, `fonts.gstatic.com`, and
+  `fonts.bunny.net`. Other origins are blocked and fail silently.
+
+## Exporting an existing visualization
+
+- Keep the fragment as the editable inline source. When the user explicitly asks
+  to save, export, or publish a visualization that is already shown in the
+  conversation, render it with
+  `python3 scripts/render.py <absolute-fragment-path> <destination>.html`.
+- Apply this export flow only when the user explicitly asks to turn the existing
+  inline source or visualization into a website. For a general website request,
+  build a new responsive site in the output directory or open project, using
+  Sites when appropriate, without applying th
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-23 11:51:04Z)**_
+
+我现在读取新笔记和当前项目文件，先弄清楚你这篇 reward 笔记想表达的主线，再决定是复用前面的 point-mass 示例，还是补一个专门解释 reward prediction 与 planning 的演示。
+
+_**Agent (gpt-5.5 2026-07-23 11:51:04Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Raw 'docs\notes\world-models-reward.md'`</summary>
+```
+Chunk ID: 0a6124
+Wall time: 0.5797 seconds
+Process exited with code 0
+Original token count: 1672
+Output:
+鍓嶄竴鑺傜殑 GRU 妯″瀷宸茬粡鑳藉仛锛?
+
+(o
+t
+	鈥?
+
+,a
+t
+	鈥?
+
+,h
+t鈭?
+	鈥?
+
+)鈫抙
+t
+	鈥?
+
+鈫抩
+t+1
+	鈥?
+
+
+涔熷氨鏄細
+
+鐪嬪埌褰撳墠瑙傛祴
+璇诲叆褰撳墠鍔ㄤ綔
+鏇存柊鍐呴儴璁板繂
+棰勬祴涓嬩竴瑙傛祴
+
+浣嗚繖杩樹笉澶燂紝鍥犱负鎺у埗涓嶅彧鍏冲績鈥滄帴涓嬫潵浼氱湅鍒颁粈涔堚€濓紝杩樺叧蹇冿細
+
+杩欎釜鏈潵鏄ソ杩樻槸鍧忥紵
+鎴戜細寰楀埌澶氬ぇ reward锛?
+鍙娴嬩笅涓€瑙傛祴锛屾ā鍨嬬煡閬撶殑鏄細
+
+涓栫晫浼氭€庝箞鍙樺寲
+
+浣嗗姞鍏?reward 鍚庯紝妯″瀷寮€濮嬬煡閬擄細
+
+杩欑鍙樺寲瀵逛换鍔℃剰鍛崇潃浠€涔?
+
+杩欎袱鑰呭樊鍒緢澶с€?
+
+涓句釜鏈€绠€鍗曠殑渚嬪瓙锛?
+
+涓や釜鍔ㄤ綔閮戒細璁╀綅缃彉鍖?
+浣嗕竴涓姩浣滆浣犳洿闈犺繎鐩爣锛宺eward 鏇撮珮
+鍙︿竴涓姩浣滆浣犺繙绂荤洰鏍囷紝reward 鏇翠綆
+
+濡傛灉妯″瀷鍙細棰勬祴涓嬩竴瑙傛祴锛屽畠鍙槸涓€滅幆澧冨彉鍖栨ā鎷熷櫒鈥濄€?
+濡傛灉瀹冭繕鑳介娴?reward锛屽畠鎵嶅紑濮嬪彉鎴愨€滄湇鍔″喅绛栫殑涓栫晫妯″瀷鈥濄€?
+
+鍦ㄦ垜浠殑 toy 鐜閲岋紝reward 鏄粈涔?
+
+鐜閲?reward 鏄細
+
+r
+t
+	鈥?
+
+=鈭?(x
+t+1
+	鈥?
+
+鈭抔oal)
+2
++0.1a
+t
+2
+	鈥?
+
+)
+
+瀹冭〃杈句簡涓や欢浜嬶細
+
+绂荤洰鏍囪秺杩滆秺宸?
+鍔ㄤ綔澶ぇ涔熸湁浠ｄ环
+
+鎵€浠?reward 鏈川涓婂湪鍛婅瘔妯″瀷锛?
+
+鈥滀笉鏄墍鏈夋湭鏉ラ兘涓€鏍凤紝鏈変簺鏈潵鏇村€煎緱鍘汇€傗€?
+
+3. 鍏堟敼鏁版嵁锛氭妸 reward 涔熷瓨杩?episode
+
+鎶婁笂涓€璁茬殑鏁版嵁鏀堕泦鍑芥暟绋嶅井鎵╁睍涓€涓嬨€?
+
+import numpy as np
+
+def collect_partial_episodes_with_reward(env, episodes=200):
+    all_episodes = []
+
+    for _ in range(episodes):
+        obs_seq = []
+        act_seq = []
+        next_obs_seq = []
+        reward_seq = []
+
+        obs = env.reset()
+        done = False
+
+        while not done:
+            action = np.random.uniform(-1.0, 1.0)
+            next_obs, reward, done, _ = env.step(action)
+
+            obs_seq.append(obs.copy())              
+            act_seq.append(np.array([action], dtype=np.float32))
+            next_obs_seq.append(next_obs.copy())
+            reward_seq.append(np.array([reward], dtype=np.float32))
+
+            obs = next_obs
+
+        all_episodes.append({
+            "obs": np.stack(obs_seq),             # [T, 1]
+            "act": np.stack(act_seq),             # [T, 1]
+            "next_obs": np.stack(next_obs_seq),   # [T, 1]
+            "reward": np.stack(reward_seq),       # [T, 1]
+        })
+
+    return all_episodes
+4. 鏀规ā鍨嬶細鍦?hidden state 涓婂啀鎺ヤ竴涓?reward head
+
+杩欎竴姝ラ潪甯歌嚜鐒躲€?
+GRU 鍏堝舰鎴愬唴閮ㄧ姸鎬?out锛岀劧鍚庝粠杩欎釜鐘舵€佸悓鏃堕娴嬶細
+
+next_obs
+reward
+import torch
+import torch.nn as nn
+
+class GRUWorldModelWithReward(nn.Module):
+    def __init__(self, obs_dim=1, act_dim=1, hidden_dim=32):
+        super().__init__()
+        self.input_dim = obs_dim + act_dim
+        self.hidden_dim = hidden_dim
+
+        self.gru = nn.GRU(
+            input_size=self.input_dim,
+            hidden_size=hidden_dim,
+            batch_first=True
+        )
+
+        self.next_obs_head = nn.Linear(hidden_dim, obs_dim)
+        self.reward_head = nn.Linear(hidden_dim, 1)
+
+    def forward(self, obs_seq, act_seq, h0=None):
+        """
+        obs_seq: [B, T, obs_dim]
+        act_seq: [B, T, act_dim]
+        """
+        x = torch.cat([obs_seq, act_seq], dim=-1)   # [B, T, obs_dim + act_dim]
+        out, hn = self.gru(x, h0)                   # out: [B, T, hidden_dim]
+
+        pred_next_obs = self.next_obs_head(out)     # [B, T, obs_dim]
+        pred_reward = self.reward_head(out)         # [B, T, 1]
+
+        return pred_next_obs, pred_reward, hn
+5. 璁粌瀹冿細涓や釜 loss 涓€璧峰
+
+杩欓噷鏈€鍏抽敭鐨勫彉鍖栨槸锛?
+
+L=L
+obs
+	鈥?
+
++位L
+reward
+	鈥?
+
+
+鏈€绠€鍗曞厛鍙?位=1銆?
+
+import torch
+import torch.nn as nn
+import torch.optim as optim
+
+def train_gru_world_model_with_reward(model, episodes, epochs=50, lr=1e-3, device="cpu"):
+    model.to(device)
+    optimizer = optim.Adam(model.parameters(), lr=lr)
+    mse = nn.MSELoss()
+
+    for epoch in range(epochs):
+        total_loss = 0.0
+        total_obs_loss = 0.0
+        total_reward_loss = 0.0
+
+        for ep in episodes:
+            obs = torch.tensor(ep["obs"], dtype=torch.float32, device=device).unsqueeze(0)          # [1, T, 1]
+            act = torch.tensor(ep["act"], dtype=torch
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-23 11:51:04Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git status --short --branch`</summary>
+```
+Chunk ID: e46bbc
+Wall time: 0.3344 seconds
+Process exited with code 0
+Original token count: 112
+Output:
+## main...origin/main
+ M .specstory/history/2026-07-19_03-33-50Z-github-github-https-github.md
+ M .specstory/statistics.json
+ M docs/notes/README.md
+ M examples/README.md
+ M src/README.md
+ M src/hello_world_model/__init__.py
+ M src/hello_world_model/envs.py
+ M src/hello_world_model/models.py
+ M src/hello_world_model/visualization.py
+?? .specstory/history/2026-07-22_12-15-43Z-gru-hidden-dimension-analysis.md
+?? docs/notes/world-models-reward.md
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-23 11:51:04Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `rg --files -uu src examples docs requirements.txt`</summary>
+```
+Chunk ID: 9e4a72
+Wall time: 3.7885 seconds
+Process exited with code 0
+Original token count: 282
+Output:
+requirements.txt
+docs\roadmap.md
+src\README.md
+docs\00-start-here.md
+docs\glossary.md
+docs\notes\world-models-reward.md
+docs\notes\world-models-latent-memory.md
+docs\notes\world-models-intuition.md
+docs\notes\world-models-basics.md
+docs\notes\README.md
+src\hello_world_model\planning.py
+src\hello_world_model\models.py
+src\hello_world_model\memory.py
+src\hello_world_model\envs.py
+src\hello_world_model\visualization.py
+src\hello_world_model\training.py
+src\hello_world_model\__init__.py
+examples\run_partial_observation_gru.py
+examples\README.md
+examples\run_point_mass_world_model.py
+examples\__pycache__\run_point_mass_world_model.cpython-314.pyc
+examples\__pycache__\run_partial_observation_gru.cpython-314.pyc
+src\hello_world_model\__pycache__\__init__.cpython-314.pyc
+src\hello_world_model\__pycache__\visualization.cpython-314.pyc
+src\hello_world_model\__pycache__\training.cpython-314.pyc
+src\hello_world_model\__pycache__\planning.cpython-314.pyc
+src\hello_world_model\__pycache__\models.cpython-314.pyc
+src\hello_world_model\__pycache__\memory.cpython-314.pyc
+src\hello_world_model\__pycache__\envs.cpython-314.pyc
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-23 11:51:04Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Raw 'src\hello_world_model\visualization.py'`</summary>
+```
+Chunk ID: 00a882
+Wall time: 0.5411 seconds
+Process exited with code 0
+Original token count: 1974
+Output:
+from __future__ import annotations
+
+from pathlib import Path
+from collections.abc import Sequence
+
+import matplotlib.pyplot as plt
+import numpy as np
+import torch
+
+from .models import WorldModel
+from .memory import Episode
+from .training import Transition
+
+
+def plot_dataset_phase_space(data: Sequence[Transition], output_path: Path) -> None:
+    """Show what states the random data collection covered."""
+
+    states = np.stack([transition[0] for transition in data])
+    actions = np.stack([transition[1] for transition in data]).reshape(-1)
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(7, 5))
+    scatter = ax.scatter(
+        states[:, 0],
+        states[:, 1],
+        c=actions,
+        s=8,
+        alpha=0.55,
+        cmap="coolwarm",
+    )
+    ax.axvline(0.0, color="black", linewidth=1, linestyle="--", label="goal")
+    ax.set_title("Random Data Coverage")
+    ax.set_xlabel("position")
+    ax.set_ylabel("velocity")
+    ax.legend(loc="best")
+    fig.colorbar(scatter, ax=ax, label="action")
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_training_loss(losses: Sequence[float], output_path: Path) -> None:
+    """Show whether the learned dynamics/reward model is fitting the data."""
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(7, 4))
+    ax.plot(np.arange(1, len(losses) + 1), losses, linewidth=2)
+    ax.set_title("World Model Training Loss")
+    ax.set_xlabel("epoch")
+    ax.set_ylabel("MSE loss")
+    ax.grid(True, alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+@torch.no_grad()
+def plot_one_step_predictions(
+    model: WorldModel,
+    data: Sequence[Transition],
+    output_path: Path,
+    max_points: int = 800,
+    device: str = "cpu",
+) -> None:
+    """Compare real next states with one-step predictions."""
+
+    model.eval()
+    sample = list(data[:max_points])
+
+    states = torch.tensor(
+        np.stack([transition[0] for transition in sample]),
+        dtype=torch.float32,
+        device=device,
+    )
+    actions = torch.tensor(
+        np.stack([transition[1] for transition in sample]),
+        dtype=torch.float32,
+        device=device,
+    )
+    true_next = np.stack([transition[2] for transition in sample])
+    pred_next, _ = model(states, actions)
+    pred_next_np = pred_next.cpu().numpy()
+
+    _prepare_output(output_path)
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4))
+
+    _plot_prediction_panel(
+        axes[0],
+        true_next[:, 0],
+        pred_next_np[:, 0],
+        "next position",
+    )
+    _plot_prediction_panel(
+        axes[1],
+        true_next[:, 1],
+        pred_next_np[:, 1],
+        "next velocity",
+    )
+
+    fig.suptitle("One-Step Prediction: Real Environment vs Learned Model")
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_planned_trajectory(
+    states: np.ndarray,
+    actions: np.ndarray,
+    rewards: Sequence[float],
+    output_path: Path,
+) -> None:
+    """Show how planning moves the point mass toward the goal."""
+
+    steps = np.arange(len(states))
+    action_steps = np.arange(len(actions))
+    cumulative_reward = np.cumsum(rewards)
+
+    _prepare_output(output_path)
+    fig, axes = plt.subplots(3, 1, figsize=(8, 8), sharex=False)
+
+    axes[0].plot(steps, states[:, 0], linewidth=2, label="position")
+    axes[0].axhline(0.0, color="black", linewidth=1, linestyle="--", label="goal")
+    axes[0].set_title("Planner-Controlled Position")
+    axes[0].set_ylabel("position")
+    axes[0].legend(loc="best")
+    axes[0].grid(True, alpha=0.25)
+
+    axes[1].plot(action_steps, actions, color="tab:orange", linewidth=1.5)
+    axes[1].set_title("Actions Selected by Random Shooting")
+    axes[1].set_ylabel("acceleration")
+    axes[1].set_ylim(-1.05, 1.05)
+    axes[1].grid(True, alpha=0.25)
+
+    axes[2].plot(action_steps, cumulative_reward, color="tab:green", linewidth=2)
+    axes[2].set_title("Cumulative Reward")
+    axes[2].set_xlabel("step")
+    axes[2].set_ylabel("return")
+    axes[2].grid(True, alpha=0.25)
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_partial_observation_ambiguity(
+    episodes: Sequence[Episode],
+    output_path: Path,
+    max_points: int = 1000,
+) -> None:
+    """Show that one observed position can map to many hidden velocities."""
+
+    true_states = np.concatenate([episode["true_state"] for episode in episodes], axis=0)
+    if len(true_states) > max_points:
+        true_states = true_states[:max_points]
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(7, 5))
+    scatter = ax.scatter(
+        true_states[:, 0],
+        true_states[:, 1],
+        c=true_states[:, 1],
+        s=9,
+        alpha=0.6,
+        cmap="coolwarm",
+    )
+    ax.axvline(0.0, color="black", linewidth=1, linestyle="--", label="goal")
+    ax.set_title("
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-23 11:51:20Z)**_
+
+这篇 reward 笔记的主线很适合接在 `latent-memory` 后面：前一篇让 hidden state 预测“会看到什么”，这一篇让同一个 hidden state 同时预测“这个未来好不好”。我会复用现有 partial-observation GRU 结构，新增 reward head 和一套对应演示，保持每篇笔记一个入口脚本。
+
+_**Agent (gpt-5.5 2026-07-23 11:51:20Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Raw 'src\hello_world_model\models.py'`</summary>
+```
+Chunk ID: f09ac2
+Wall time: 0.5647 seconds
+Process exited with code 0
+Original token count: 425
+Output:
+from __future__ import annotations
+
+import torch
+from torch import nn
+
+
+class WorldModel(nn.Module):
+    """Predict next state and reward from current state-action pair."""
+
+    def __init__(self, state_dim: int = 2, action_dim: int = 1, hidden_dim: int = 128):
+        super().__init__()
+        self.backbone = nn.Sequential(
+            nn.Linear(state_dim + action_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.ReLU(),
+        )
+        self.next_state_head = nn.Linear(hidden_dim, state_dim)
+        self.reward_head = nn.Linear(hidden_dim, 1)
+
+    def forward(
+        self, state: torch.Tensor, action: torch.Tensor
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        x = torch.cat([state, action], dim=-1)
+        h = self.backbone(x)
+        return self.next_state_head(h), self.reward_head(h)
+
+
+class GRUWorldModel(nn.Module):
+    """Predict next observation from a sequence of observations and actions."""
+
+    def __init__(self, obs_dim: int = 1, action_dim: int = 1, hidden_dim: int = 32):
+        super().__init__()
+        self.hidden_dim = hidden_dim
+        self.gru = nn.GRU(
+            input_size=obs_dim + action_dim,
+            hidden_size=hidden_dim,
+            batch_first=True,
+        )
+        self.next_obs_head = nn.Linear(hidden_dim, obs_dim)
+
+    def forward(
+        self,
+        obs_seq: torch.Tensor,
+        action_seq: torch.Tensor,
+        h0: torch.Tensor | None = None,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        x = torch.cat([obs_seq, action_seq], dim=-1)
+        hidden_seq, hn = self.gru(x, h0)
+        pred_next_obs = self.next_obs_head(hidden_seq)
+        return pred_next_obs, hn
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-23 11:51:20Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Raw 'src\hello_world_model\memory.py'`</summary>
+```
+Chunk ID: 47a1b7
+Wall time: 0.4749 seconds
+Process exited with code 0
+Original token count: 815
+Output:
+from __future__ import annotations
+
+from collections.abc import Sequence
+
+import numpy as np
+import torch
+from torch import nn, optim
+
+from .envs import PartialPointMass1DEnv
+from .models import GRUWorldModel
+
+Episode = dict[str, np.ndarray]
+
+
+def collect_partial_episodes(
+    env: PartialPointMass1DEnv,
+    episodes: int = 200,
+) -> list[Episode]:
+    """Collect full episodes where observations hide the true velocity."""
+
+    all_episodes: list[Episode] = []
+
+    for _ in range(episodes):
+        obs_seq: list[np.ndarray] = []
+        action_seq: list[np.ndarray] = []
+        next_obs_seq: list[np.ndarray] = []
+        true_state_seq: list[np.ndarray] = []
+
+        obs = env.reset()
+        done = False
+
+        while not done:
+            action_value = float(np.random.uniform(-1.0, 1.0))
+            next_obs, _, done, _ = env.step(action_value)
+
+            obs_seq.append(obs.copy())
+            action_seq.append(np.array([action_value], dtype=np.float32))
+            next_obs_seq.append(next_obs.copy())
+            true_state_seq.append(env.get_true_state())
+
+            obs = next_obs
+
+        all_episodes.append(
+            {
+                "obs": np.stack(obs_seq),
+                "action": np.stack(action_seq),
+                "next_obs": np.stack(next_obs_seq),
+                "true_state": np.stack(true_state_seq),
+            }
+        )
+
+    return all_episodes
+
+
+def train_gru_world_model(
+    model: GRUWorldModel,
+    episodes: Sequence[Episode],
+    epochs: int = 50,
+    lr: float = 1e-3,
+    device: str = "cpu",
+) -> list[float]:
+    """Train a GRU model to predict the next position-only observation."""
+
+    model.to(device)
+    optimizer = optim.Adam(model.parameters(), lr=lr)
+    mse = nn.MSELoss()
+    losses: list[float] = []
+
+    for epoch in range(epochs):
+        total_loss = 0.0
+
+        for episode in episodes:
+            obs = _to_sequence_tensor(episode["obs"], device)
+            action = _to_sequence_tensor(episode["action"], device)
+            next_obs = _to_sequence_tensor(episode["next_obs"], device)
+
+            pred_next_obs, _ = model(obs, action)
+            loss = mse(pred_next_obs, next_obs)
+
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+
+            total_loss += loss.item()
+
+        avg_loss = total_loss / len(episodes)
+        losses.append(avg_loss)
+        print(f"Epoch {epoch + 1:03d} | loss = {avg_loss:.6f}")
+
+    return losses
+
+
+@torch.no_grad()
+def predict_episode(
+    model: GRUWorldModel,
+    episode: Episode,
+    device: str = "cpu",
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Return true next observations, predicted next observations, and hidden states."""
+
+    model.eval()
+    obs = _to_sequence_tensor(episode["obs"], device)
+    action = _to_sequence_tensor(episode["action"], device)
+    pred_next_obs, _ = model(obs, action)
+
+    x = torch.cat([obs, action], dim=-1)
+    hidden_seq, _ = model.gru(x)
+
+    return (
+        episode["next_obs"],
+        pred_next_obs.squeeze(0).cpu().numpy(),
+        hidden_seq.squeeze(0).cpu().numpy(),
+    )
+
+
+def _to_sequence_tensor(array: np.ndarray, device: str) -> torch.Tensor:
+    return torch.tensor(array, dtype=torch.float32, device=device).unsqueeze(0)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-23 11:51:20Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Raw 'src\hello_world_model\__init__.py'`</summary>
+```
+Chunk ID: 0297ee
+Wall time: 0.4631 seconds
+Process exited with code 0
+Original token count: 311
+Output:
+"""Minimal world model examples for learning."""
+
+from .envs import PartialPointMass1DEnv, PointMass1DEnv
+from .memory import collect_partial_episodes, predict_episode, train_gru_world_model
+from .models import GRUWorldModel, WorldModel
+from .planning import plan_action_random_shooting
+from .training import (
+    collect_random_data,
+    evaluate_planner,
+    rollout_planner_episode,
+    train_world_model,
+)
+from .visualization import (
+    plot_dataset_phase_space,
+    plot_gru_sequence_prediction,
+    plot_hidden_state_velocity_probe,
+    plot_one_step_predictions,
+    plot_partial_observation_ambiguity,
+    plot_planned_trajectory,
+    plot_training_loss,
+)
+
+__all__ = [
+    "GRUWorldModel",
+    "PartialPointMass1DEnv",
+    "PointMass1DEnv",
+    "WorldModel",
+    "collect_partial_episodes",
+    "collect_random_data",
+    "evaluate_planner",
+    "plot_dataset_phase_space",
+    "plot_gru_sequence_prediction",
+    "plot_hidden_state_velocity_probe",
+    "plot_one_step_predictions",
+    "plot_partial_observation_ambiguity",
+    "plot_planned_trajectory",
+    "plot_training_loss",
+    "plan_action_random_shooting",
+    "predict_episode",
+    "rollout_planner_episode",
+    "train_gru_world_model",
+    "train_world_model",
+]
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-23 11:51:20Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Raw 'docs\notes\README.md'`</summary>
+```
+Chunk ID: 01b001
+Wall time: 0.4904 seconds
+Process exited with code 0
+Original token count: 194
+Output:
+# 瀛︿範绗旇
+
+杩欓噷瀛樻斁涓栫晫妯″瀷瀛︿範杩囩▼涓殑绗旇銆佹€濊€冨拰璁烘枃闃呰璁板綍銆?
+寤鸿鍛藉悕鏂瑰紡锛?
+```text
+YYYY-MM-DD-topic.md
+```
+
+寤鸿姣忕瘒绗旇鍖呭惈锛?
+- 浠婂ぉ瑙ｅ喅浜嗕粈涔堥棶棰樸€?- 鎴戠幇鍦ㄦ€庝箞鐞嗚В杩欎釜姒傚康銆?- 鏈夊摢浜涗緥瀛愭垨浠ｇ爜甯姪鐞嗚В銆?- 杩樹笉鐞嗚В浠€涔堛€?- 涓嬩竴姝ュ噯澶囧仛浠€涔堛€?
+## 褰撳墠绗旇
+
+- [涓栫晫妯″瀷鐨勭涓€灞傜洿瑙塢(world-models-intuition.md)
+- [MDP銆丳OMDP 涓庢渶灏忎笘鐣屾ā鍨媇(world-models-basics.md)
+- [涓轰粈涔堜笘鐣屾ā鍨嬮渶瑕?memory 涓?latent state](world-models-latent-memory.md)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-23 11:51:37Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Planning reward integration and import refactor**
+</details></think>
+
+_**Agent (gpt-5.5 2026-07-23 11:51:38Z)**_
+
+我会把 reward 演示做成第三个入口脚本 `run_reward_world_model.py`，它接在前两篇之后：第一篇演示 dynamics，第二篇演示 memory，第三篇演示 reward head 如何把 learned state 变成“可用于决策的模型”。
+
+_**Agent (gpt-5.5 2026-07-23 11:53:18Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Delete: `docs/notes/world-models-reward.md`**
+
+**Add: `docs/notes/world-models-reward.md`**
+
+```diff
++# 为什么世界模型需要预测 reward
++
++日期：2026-07-23
++
++状态：学习笔记草稿
++
++## 这篇笔记解决什么问题
++
++上一篇笔记里，GRU world model 已经能处理部分可观测环境：
++
++$$
++(o_t, a_t, h_{t-1}) \rightarrow h_t \rightarrow o_{t+1}
++$$
++
++也就是说，模型能：
++
++- 看到当前观测 \(o_t\)。
++- 读入当前动作 \(a_t\)。
++- 更新内部记忆 \(h_t\)。
++- 预测下一步观测 \(o_{t+1}\)。
++
++但这还不够。控制任务不只关心“世界接下来会变成什么样”，还关心：
++
++- 这个未来是好还是坏？
++- 我会得到多大 reward？
++- 这个动作是不是把我带向目标？
++
++所以这一篇要回答：为什么 world model 通常不仅预测 dynamics，还要预测 reward？
++
++## 1. Dynamics 只告诉我们世界如何变化
++
++如果模型只预测下一观测：
++
++$$
++p(o_{t+1} \mid h_t, a_t)
++$$
++
++它学到的是环境变化规律。这个模型知道“接下来会看到什么”，但还不一定知道“这个未来对任务意味着什么”。
++
++举个最小例子：两个动作都会让位置发生变化。
++
++- 动作 A 让智能体更靠近目标。
++- 动作 B 让智能体远离目标。
++
++如果没有 reward，模型只知道两种变化都可能发生；如果有 reward，模型才知道哪种变化更值得选择。
++
++```mermaid
++flowchart LR
++    H["latent state h_t"] --> D["dynamics head: predict o_{t+1}"]
++    H --> R["reward head: predict r_t"]
++    D --> W["what will happen?"]
++    R --> V["is it useful for the task?"]
++```
++
++这就是 reward head 的意义：它把“环境模拟器”推进成“服务决策的世界模型”。
++
++## 2. Toy 环境里的 reward 是什么
++
++在我们的一维 point mass 环境里，目标是让点靠近 `goal = 0.0`，同时避免动作过大。
++
++环境中的 reward 是：
++
++$$
++r_t = -\left((x_{t+1} - goal)^2 + 0.1a_t^2\right)
++$$
++
++它表达了两件事：
++
++- 离目标越远，reward 越低。
++- 动作越大，也要付出代价。
++
++所以 reward 本质上在告诉模型：
++
++> 不是所有未来都一样，有些未来更值得去。
++
++## 3. 为什么 reward prediction 会改变表示学习
++
++只预测 observation 时，模型可能把能力花在和任务无关的细节上。比如视觉任务里，它可能努力预测背景纹理，却没有学好和行动相关的风险或目标距离。
++
++加入 reward prediction 后，hidden state 会被迫包含任务相关信息：
++
++- 什么状态更接近目标？
++- 什么动作代价更大？
++- 哪些变化会带来更高或更低回报？
++
++这并不是说 observation prediction 不重要，而是说 reward head 给 learned state 加了一个任务方向。
++
++```mermaid
++flowchart TD
++    I["history: observations + actions"] --> H["hidden state h_t"]
++    H --> O["next observation loss"]
++    H --> R["reward loss"]
++    O --> L["learn environment dynamics"]
++    R --> T["learn task relevance"]
++    L --> Z["better world model state"]
++    T --> Z
++```
++
++## 4. 最小代码改动：给 GRU 加 reward head
++
++前一篇的 GRU 只输出下一观测：
++
++$$
++h_t \rightarrow \hat{o}_{t+1}
++$$
++
++这一篇把它扩展为：
++
++$$
++h_t \rightarrow (\hat{o}_{t+1}, \hat{r}_t)
++$$
++
++训练目标也从单一 observation loss 变成：
++
++$$
++L = L_{obs} + \lambda L_{reward}
++$$
++
++入门版本里先取 \(\lambda = 1\)：
++
++$$
++L = \text{MSE}(\hat{o}_{t+1}, o_{t+1}) + \text{MSE}(\hat{r}_t, r_t)
++$$
++
++完整代码已经整理到：
++
++- [src/hello_world_model](../../src/hello_world_model)
++- [examples/run_reward_world_model.py](../../examples/run_reward_world_model.py)
++
++运行方式：
++
++```bash
++pip install -r requirements.txt
++python examples/run_reward_world_model.py
++```
++
++运行后会生成：
++
++- `01_reward_landscape.png`：不同位置和动作对应的真实 reward。
++- `02_reward_model_losses.png`：total / observation / reward 三种 loss。
++- `03_reward_prediction.png`：真实 reward 与模型预测 reward 的对比。
++- `04_reward_guided_action_scores.png`：模型如何用预测 reward 给候选动作打分。
++
++## 5. 这和 planning 有什么关系
++
++只会预测下一观测的模型，可以告诉我们：
++
++> 如果我这样做，世界可能怎么变？
++
++会预测 reward 的模型，可以进一步告诉我们：
++
++> 如果我这样做，这个变化对任务是否更好？
++
++在 model-based control 里，这一步非常关键。planner 可以在模型内部 rollout 多条未来轨迹，然后比较预测累计 reward：
++
++$$
++\sum_{t=0}^{H-1} \hat{r}_t
++$$
++
++最后选择预测回报最高的动作序列。
++
++这也是前面 random shooting planner 的核心逻辑：不是随便想象未来，而是用 reward 给想象出来的未来排序。
++
++## 6. 从 reward 到更完整的 world model
++
++很多现代 world model 不只预测 observation 和 reward，还会预测更多任务相关信号：
++
++- dynamics：世界会如何演化。
++- reward：这个状态或动作结果有多好。
++- continuation / termination：episode 是否会继续。
++- value：从当前状态往后看，长期回报大概是多少。
++
++这些 head 的共同目标是：让 hidden state 不只是“像世界”，而是“对决策有用”。
++
++## 7. 容易误解的一点
++
++reward prediction 不等于 reward hacking。
++
++reward head 的作用是学习环境给出的任务反馈，而不是让模型自己发明目标。真正危险的是 reward 设计错了，或者 planner 只优化 reward model 的漏洞。这个问题后续进入 model-based RL 的安全性和泛化时会更重要。
++
++## 下一步
++
++下一篇笔记可以继续拆：
++
++> 有了 dynamics、memory 和 reward 之后，planner 如何在 world model 里“想象未来”并选择动作？
+```
+
+**Update: `src/hello_world_model/models.py`**
+
+```diff
+@@
+ class GRUWorldModel(nn.Module):
+@@
+         pred_next_obs = self.next_obs_head(hidden_seq)
+         return pred_next_obs, hn
++
++
++class GRURewardWorldModel(nn.Module):
++    """Predict next observation and reward from recurrent world-model state."""
++
++    def __init__(self, obs_dim: int = 1, action_dim: int = 1, hidden_dim: int = 32):
++        super().__init__()
++        self.hidden_dim = hidden_dim
++        self.gru = nn.GRU(
++            input_size=obs_dim + action_dim,
++            hidden_size=hidden_dim,
++            batch_first=True,
++        )
++        self.next_obs_head = nn.Linear(hidden_dim, obs_dim)
++        self.reward_head = nn.Linear(hidden_dim, 1)
++
++    def forward(
++        self,
++        obs_seq: torch.Tensor,
++        action_seq: torch.Tensor,
++        h0: torch.Tensor | None = None,
++    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
++        x = torch.cat([obs_seq, action_seq], dim=-1)
++        hidden_seq, hn = self.gru(x, h0)
++        pred_next_obs = self.next_obs_head(hidden_seq)
++        pred_reward = self.reward_head(hidden_seq)
++        return pred_next_obs, pred_reward, hn
+```
+
+**Update: `src/hello_world_model/memory.py`**
+
+```diff
+@@
+-from .models import GRUWorldModel
++from .models import GRURewardWorldModel, GRUWorldModel
+@@
+         next_obs_seq: list[np.ndarray] = []
++        reward_seq: list[np.ndarray] = []
+         true_state_seq: list[np.ndarray] = []
+@@
+-            next_obs, _, done, _ = env.step(action_value)
++            next_obs, reward, done, _ = env.step(action_value)
+ 
+             obs_seq.append(obs.copy())
+             action_seq.append(np.array([action_value], dtype=np.float32))
+             next_obs_seq.append(next_obs.copy())
++            reward_seq.append(np.array([reward], dtype=np.float32))
+             true_state_seq.append(env.get_true_state())
+@@
+                 "action": np.stack(action_seq),
+                 "next_obs": np.stack(next_obs_seq),
++                "reward": np.stack(reward_seq),
+                 "true_state": np.stack(true_state_seq),
+             }
+         )
+@@
+ def predict_episode(
+@@
+     return (
+         episode["next_obs"],
+         pred_next_obs.squeeze(0).cpu().numpy(),
+         hidden_seq.squeeze(0).cpu().numpy(),
+     )
++
++
++def train_gru_reward_world_model(
++    model: GRURewardWorldModel,
++    episodes: Sequence[Episode],
++    epochs: int = 50,
++    lr: float = 1e-3,
++    reward_loss_weight: float = 1.0,
++    device: str = "cpu",
++) -> dict[str, list[float]]:
++    """Train a recurrent model to predict next observation and reward."""
++
++    model.to(device)
++    optimizer = optim.Adam(model.parameters(), lr=lr)
++    mse = nn.MSELoss()
++    losses = {"total": [], "obs": [], "reward": []}
++
++    for epoch in range(epochs):
++        total_loss = 0.0
++        total_obs_loss = 0.0
++        total_reward_loss = 0.0
++
++        for episode in episodes:
++            obs = _to_sequence_tensor(episode["obs"], device)
++            action = _to_sequence_tensor(episode["action"], device)
++            next_obs = _to_sequence_tensor(episode["next_obs"], device)
++            reward = _to_sequence_tensor(episode["reward"], device)
++
++            pred_next_obs, pred_reward, _ = model(obs, action)
++            obs_loss = mse(pred_next_obs, next_obs)
++            reward_loss = mse(pred_reward, reward)
++            loss = obs_loss + reward_loss_weight * reward_loss
++
++            optimizer.zero_grad()
++            loss.backward()
++            optimizer.step()
++
++            total_loss += loss.item()
++            total_obs_loss += obs_loss.item()
++            total_reward_loss += reward_loss.item()
++
++        n = len(episodes)
++        losses["total"].append(total_loss / n)
++        losses["obs"].append(total_obs_loss / n)
++        losses["reward"].append(total_reward_loss / n)
++        print(
++            f"Epoch {epoch + 1:03d} | "
++            f"total={losses['total'][-1]:.6f} | "
++            f"obs={losses['obs'][-1]:.6f} | "
++            f"reward={losses['reward'][-1]:.6f}"
++        )
++
++    return losses
++
++
++@torch.no_grad()
++def predict_episode_with_reward(
++    model: GRURewardWorldModel,
++    episode: Episode,
++    device: str = "cpu",
++) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
++    """Return true/predicted observations and true/predicted rewards."""
++
++    model.eval()
++    obs = _to_sequence_tensor(episode["obs"], device)
++    action = _to_sequence_tensor(episode["action"], device)
++    pred_next_obs, pred_reward, _ = model(obs, action)
++
++    return (
++        episode["next_obs"],
++        pred_next_obs.squeeze(0).cpu().numpy(),
++        episode["reward"],
++        pred_reward.squeeze(0).cpu().numpy(),
++    )
++
++
++@torch.no_grad()
++def score_candidate_actions(
++    model: GRURewardWorldModel,
++    obs_value: float,
++    action_values: np.ndarray,
++    device: str = "cpu",
++) -> np.ndarray:
++    """Score one-step candidate actions from one current observation."""
++
++    model.eval()
++    obs = torch.tensor(
++        [[[obs_value]] for _ in action_values], dtype=torch.float32, device=device
++    )
++    actions = torch.tensor(
++        action_values.reshape(-1, 1, 1), dtype=torch.float32, device=device
++    )
++    _, pred_reward, _ = model(obs, actions)
++    return pred_reward.squeeze(-1).squeeze(-1).cpu().numpy()
+```
+
+**Update: `src/hello_world_model/visualization.py`**
+
+```diff
+@@
+ def plot_training_loss(losses: Sequence[float], output_path: Path) -> None:
+@@
+     fig.savefig(output_path, dpi=160)
+     plt.close(fig)
++
++
++def plot_reward_model_losses(
++    losses: dict[str, Sequence[float]],
++    output_path: Path,
++) -> None:
++    """Show total, observation, and reward losses for a reward world model."""
++
++    _prepare_output(output_path)
++    fig, ax = plt.subplots(figsize=(8, 4.5))
++    epochs = np.arange(1, len(losses["total"]) + 1)
++    ax.plot(epochs, losses["total"], label="total", linewidth=2)
++    ax.plot(epochs, losses["obs"], label="observation", linewidth=1.8)
++    ax.plot(epochs, losses["reward"], label="reward", linewidth=1.8)
++    ax.set_title("Reward World Model Training Losses")
++    ax.set_xlabel("epoch")
++    ax.set_ylabel("MSE loss")
++    ax.legend(loc="best")
++    ax.grid(True, alpha=0.25)
++    fig.tight_layout()
++    fig.savefig(output_path, dpi=160)
++    plt.close(fig)
+@@
+ def plot_hidden_state_velocity_probe(
+@@
+     fig.savefig(output_path, dpi=160)
+     plt.close(fig)
++
++
++def plot_reward_landscape(output_path: Path, goal: float = 0.0) -> None:
++    """Show how the toy reward depends on next position and action size."""
++
++    positions = np.linspace(-2.0, 2.0, 120)
++    actions = np.linspace(-1.0, 1.0, 100)
++    grid_x, grid_a = np.meshgrid(positions, actions)
++    rewards = -((grid_x - goal) ** 2 + 0.1 * grid_a**2)
++
++    _prepare_output(output_path)
++    fig, ax = plt.subplots(figsize=(7.5, 5))
++    mesh = ax.contourf(grid_x, grid_a, rewards, levels=24, cmap="viridis")
++    ax.axvline(goal, color="white", linewidth=1.2, linestyle="--", label="goal")
++    ax.set_title("Toy Reward Landscape")
++    ax.set_xlabel("next position")
++    ax.set_ylabel("action")
++    ax.legend(loc="best")
++    fig.colorbar(mesh, ax=ax, label="reward")
++    fig.tight_layout()
++    fig.savefig(output_path, dpi=160)
++    plt.close(fig)
++
++
++def plot_reward_predictions(
++    true_reward: np.ndarray,
++    pred_reward: np.ndarray,
++    output_path: Path,
++) -> None:
++    """Compare true rewards with model-predicted rewards."""
++
++    _prepare_output(output_path)
++    fig, axes = plt.subplots(1, 2, figsize=(10, 4.5))
++    steps = np.arange(len(true_reward))
++
++    axes[0].plot(steps, true_reward[:, 0], label="true reward", linewidth=2)
++    axes[0].plot(
++        steps,
++        pred_reward[:, 0],
++        label="predicted reward",
++        linewidth=2,
++        linestyle="--",
++    )
++    axes[0].set_title("Reward Along One Episode")
++    axes[0].set_xlabel("time step")
++    axes[0].set_ylabel("reward")
++    axes[0].legend(loc="best")
++    axes[0].grid(True, alpha=0.25)
++
++    _plot_prediction_panel(axes[1], true_reward[:, 0], pred_reward[:, 0], "reward")
++    axes[1].set_title("Reward Prediction Scatter")
++
++    fig.tight_layout()
++    fig.savefig(output_path, dpi=160)
++    plt.close(fig)
++
++
++def plot_action_reward_scores(
++    actions: np.ndarray,
++    scores: np.ndarray,
++    output_path: Path,
++) -> None:
++    """Show how predicted reward ranks candidate actions."""
++
++    best_idx = int(np.argmax(scores))
++
++    _prepare_output(output_path)
++    fig, ax = plt.subplots(figsize=(7.5, 4.5))
++    ax.plot(actions, scores, linewidth=2)
++    ax.scatter(
++        [actions[best_idx]],
++        [scores[best_idx]],
++        s=60,
++        label=f"best action = {actions[best_idx]:.2f}",
++    )
++    ax.set_title("Reward-Guided One-Step Action Scores")
++    ax.set_xlabel("candidate action")
++    ax.set_ylabel("predicted reward")
++    ax.legend(loc="best")
++    ax.grid(True, alpha=0.25)
++    fig.tight_layout()
++    fig.savefig(output_path, dpi=160)
++    plt.close(fig)
+```
+
+**Update: `src/hello_world_model/__init__.py`**
+
+```diff
+@@
+-from .memory import collect_partial_episodes, predict_episode, train_gru_world_model
+-from .models import GRUWorldModel, WorldModel
++from .memory import (
++    collect_partial_episodes,
++    predict_episode,
++    predict_episode_with_reward,
++    score_candidate_actions,
++    train_gru_reward_world_model,
++    train_gru_world_model,
++)
++from .models import GRURewardWorldModel, GRUWorldModel, WorldModel
+@@
+     plot_gru_sequence_prediction,
+     plot_hidden_state_velocity_probe,
++    plot_action_reward_scores,
+     plot_one_step_predictions,
+     plot_partial_observation_ambiguity,
+     plot_planned_trajectory,
++    plot_reward_landscape,
++    plot_reward_model_losses,
++    plot_reward_predictions,
+     plot_training_loss,
+ )
+ 
+ __all__ = [
++    "GRURewardWorldModel",
+     "GRUWorldModel",
+     "PartialPointMass1DEnv",
+@@
+     "plot_gru_sequence_prediction",
+     "plot_hidden_state_velocity_probe",
++    "plot_action_reward_scores",
+     "plot_one_step_predictions",
+     "plot_partial_observation_ambiguity",
+     "plot_planned_trajectory",
++    "plot_reward_landscape",
++    "plot_reward_model_losses",
++    "plot_reward_predictions",
+     "plot_training_loss",
+     "plan_action_random_shooting",
+     "predict_episode",
++    "predict_episode_with_reward",
+     "rollout_planner_episode",
++    "score_candidate_actions",
++    "train_gru_reward_world_model",
+     "train_gru_world_model",
+     "train_world_model",
+ ]
+```
+
+**Add: `examples/run_reward_world_model.py`**
+
+```diff
++from __future__ import annotations
++
++from pathlib import Path
++import sys
++
++import numpy as np
++
++PROJECT_ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(PROJECT_ROOT / "src"))
++
++from hello_world_model import (  # noqa: E402
++    GRURewardWorldModel,
++    PartialPointMass1DEnv,
++    collect_partial_episodes,
++    plot_action_reward_scores,
++    plot_reward_landscape,
++    plot_reward_model_losses,
++    plot_reward_predictions,
++    predict_episode_with_reward,
++    score_candidate_actions,
++    train_gru_reward_world_model,
++)
++
++
++def main() -> None:
++    output_dir = PROJECT_ROOT / "outputs" / "reward_world_model"
++
++    env = PartialPointMass1DEnv()
++    print("1. Showing the true reward landscape...")
++    plot_reward_landscape(output_dir / "01_reward_landscape.png", goal=env.goal)
++
++    print("2. Collecting partial-observation episodes with reward...")
++    episodes = collect_partial_episodes(env, episodes=300)
++
++    print("3. Training GRU reward world model...")
++    model = GRURewardWorldModel(obs_dim=1, action_dim=1, hidden_dim=32)
++    losses = train_gru_reward_world_model(model, episodes, epochs=60, lr=1e-3)
++    plot_reward_model_losses(losses, output_dir / "02_reward_model_losses.png")
++
++    print("4. Comparing true rewards with predicted rewards...")
++    _, _, true_reward, pred_reward = predict_episode_with_reward(model, episodes[0])
++    plot_reward_predictions(
++        true_reward, pred_reward, output_dir / "03_reward_prediction.png"
++    )
++
++    print("5. Scoring candidate actions with the learned reward head...")
++    action_values = np.linspace(-1.0, 1.0, 101, dtype=np.float32)
++    obs_value = float(episodes[0]["obs"][0, 0])
++    scores = score_candidate_actions(model, obs_value, action_values)
++    plot_action_reward_scores(
++        action_values, scores, output_dir / "04_reward_guided_action_scores.png"
++    )
++
++    print(f"Saved visualizations to: {output_dir}")
++
++
++if __name__ == "__main__":
++    main()
+```
+
+**Update: `examples/README.md`**
+
+```diff
+@@
+ ### Partial observation GRU world model
+@@
+ 对应笔记：
+ 
+ - [为什么世界模型需要 memory 与 latent state](../docs/notes/world-models-latent-memory.md)
++
++### Reward world model
++
++```bash
++pip install -r requirements.txt
++python examples/run_reward_world_model.py
++```
++
++运行后会在 `outputs/reward_world_model` 下生成教学图示：
++
++- `01_reward_landscape.png`：toy 环境里 reward 如何由目标距离和动作代价决定。
++- `02_reward_model_losses.png`：total / observation / reward 三种训练误差。
++- `03_reward_prediction.png`：真实 reward 与预测 reward 的对比。
++- `04_reward_guided_action_scores.png`：reward head 如何给候选动作排序。
++
++对应笔记：
++
++- [为什么世界模型需要预测 reward](../docs/notes/world-models-reward.md)
+```
+
+**Update: `src/README.md`**
+
+```diff
+@@
+ - `models.py`：MLP world model 和 GRU world model。
+-- `training.py`：数据收集、训练和评估。
+-- `memory.py`：partial observation 序列数据与 GRU 训练。
++- `training.py`：完整状态下的数据收集、训练和评估。
++- `memory.py`：partial observation 序列数据、GRU 训练和 reward head 训练。
+ - `planning.py`：random shooting 规划器。
+ - `visualization.py`：训练过程和规划结果的可视化。
+@@
+ - [MDP、POMDP 与最小世界模型](../docs/notes/world-models-basics.md)
+ - [为什么世界模型需要 memory 与 latent state](../docs/notes/world-models-latent-memory.md)
++- [为什么世界模型需要预测 reward](../docs/notes/world-models-reward.md)
+```
+
+**Update: `docs/notes/README.md`**
+
+```diff
+@@
+ - [世界模型的第一层直觉](world-models-intuition.md)
+ - [MDP、POMDP 与最小世界模型](world-models-basics.md)
+ - [为什么世界模型需要 memory 与 latent state](world-models-latent-memory.md)
++- [为什么世界模型需要预测 reward](world-models-reward.md)
+```
+
+
+```
+Exit code: 0
+Wall time: 372.8 seconds
+Output:
+Success. Updated the following files:
+A docs/notes/world-models-reward.md
+A examples/run_reward_world_model.py
+M src/hello_world_model/models.py
+M src/hello_world_model/memory.py
+M src/hello_world_model/visualization.py
+M src/hello_world_model/__init__.py
+M examples/README.md
+M src/README.md
+M docs/notes/README.md
+D docs/notes/world-models-reward.md
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-23 11:59:56Z)**_
+
+Reward 笔记和第三个演示入口已经补上。现在我做编译检查，并核对导出接口，确保三个演示脚本之间的结构保持一致。
+
+_**Agent (gpt-5.5 2026-07-23 11:59:56Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `python -m py_compile src\hello_world_model\__init__.py src\hello_world_model\envs.py src\hello_world_model\models.py src\hello_world_model\memory.py src\hello_world_model\visualization.py examples\run_reward_world_model.py examples\run_partial_observation_gru.py examples\run_point_mass_world_model.py`</summary>
+```
+Chunk ID: f6ff07
+Wall time: 1.9458 seconds
+Process exited with code 0
+Original token count: 0
+Output:
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-23 11:59:56Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git status --short --branch`</summary>
+```
+Chunk ID: 774eaf
+Wall time: 4.2396 seconds
+Process exited with code 0
+Original token count: 131
+Output:
+## main...origin/main
+ M .specstory/history/2026-07-19_03-33-50Z-github-github-https-github.md
+ M .specstory/statistics.json
+ M docs/notes/README.md
+ M examples/README.md
+ M src/README.md
+ M src/hello_world_model/__init__.py
+ M src/hello_world_model/envs.py
+ M src/hello_world_model/memory.py
+ M src/hello_world_model/models.py
+ M src/hello_world_model/visualization.py
+?? .specstory/history/2026-07-22_12-15-43Z-gru-hidden-dimension-analysis.md
+?? docs/notes/world-models-reward.md
+?? examples/run_reward_world_model.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-23 11:59:56Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git diff --stat`</summary>
+```
+Chunk ID: 3abc25
+Wall time: 1.4278 seconds
+Process exited with code 0
+Original token count: 213
+Output:
+warning: in the working copy of '.specstory/history/2026-07-19_03-33-50Z-github-github-https-github.md', CRLF will be replaced by LF the next time Git touches it
+ ...6-07-19_03-33-50Z-github-github-https-github.md | 2419 ++++++++++++++++++++
+ .specstory/statistics.json                         |   19 +-
+ docs/notes/README.md                               |    7 +
+ examples/README.md                                 |   38 +
+ src/README.md                                      |    7 +-
+ src/hello_world_model/__init__.py                  |   35 +-
+ src/hello_world_model/envs.py                      |   10 +
+ src/hello_world_model/memory.py                    |  101 +-
+ src/hello_world_model/models.py                    |   52 +
+ src/hello_world_model/visualization.py             |  206 ++
+ 10 files changed, 2883 insertions(+), 11 deletions(-)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-23 11:59:56Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Raw 'examples\README.md'`</summary>
+```
+Chunk ID: e4c1d0
+Wall time: 1.7162 seconds
+Process exited with code 0
+Original token count: 697
+Output:
+# Examples
+
+杩欓噷瀛樻斁鍙互鐩存帴杩愯鐨勫皬瀹為獙銆?
+璁″垝涓殑绗竴涓疄楠岋細
+
+- 鐢ㄤ竴涓畝鍗曠幆澧冩敹闆?`(state, action, next_state)` 鏁版嵁銆?- 璁粌涓€涓皬妯″瀷棰勬祴 `next_state`銆?- 瀵规瘮鐪熷疄涓嬩竴鐘舵€佸拰妯″瀷棰勬祴缁撴灉銆?
+姣忎釜渚嬪瓙寤鸿鍖呭惈锛?
+- 杩愯鍛戒护
+- 渚濊禆璇存槑
+- 棰勬湡杈撳嚭
+- 瀵瑰簲绗旇
+
+## 褰撳墠绀轰緥
+
+### 1D point mass world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_point_mass_world_model.py
+```
+
+杩愯鍚庝細鍦?`outputs/point_mass_world_model` 涓嬬敓鎴愭暀瀛﹀浘绀猴細
+
+- `01_random_data_phase_space.png`锛氶殢鏈轰氦浜掓暟鎹鐩栦簡鍝簺浣嶇疆鍜岄€熷害銆?- `02_training_loss.png`锛歸orld model 鐨勮缁冭宸槸鍚︿笅闄嶃€?- `03_one_step_predictions.png`锛氭ā鍨嬮娴嬬殑涓嬩竴鐘舵€佹槸鍚︽帴杩戠湡瀹炰笅涓€鐘舵€併€?- `04_planned_trajectory.png`锛歱lanner 鏄惁鎶婄偣璐ㄩ噺绯荤粺鎺ㄥ悜鐩爣浣嶇疆銆?
+瀵瑰簲绗旇锛?
+- [MDP銆丳OMDP 涓庢渶灏忎笘鐣屾ā鍨媇(../docs/notes/world-models-basics.md)
+
+### Partial observation GRU world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_partial_observation_gru.py
+```
+
+杩愯鍚庝細鍦?`outputs/partial_observation_gru` 涓嬬敓鎴愭暀瀛﹀浘绀猴細
+
+- `01_partial_observation_ambiguity.png`锛氬悓涓€涓綅缃娴嬪彲鑳藉搴斾笉鍚岄殣钘忛€熷害銆?- `02_gru_training_loss.png`锛欸RU world model 鐨勮缁冭宸€?- `03_gru_sequence_prediction.png`锛氱湡瀹炰綅缃簭鍒椾笌棰勬祴浣嶇疆搴忓垪瀵规瘮銆?- `04_hidden_state_probe.png`锛欸RU hidden state 鏄惁缂栫爜浜嗛殣钘忛€熷害淇℃伅銆?
+瀵瑰簲绗旇锛?
+- [涓轰粈涔堜笘鐣屾ā鍨嬮渶瑕?memory 涓?latent state](../docs/notes/world-models-latent-memory.md)
+
+### Reward world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_reward_world_model.py
+```
+
+杩愯鍚庝細鍦?`outputs/reward_world_model` 涓嬬敓鎴愭暀瀛﹀浘绀猴細
+
+- `01_reward_landscape.png`锛歵oy 鐜閲?reward 濡備綍鐢辩洰鏍囪窛绂诲拰鍔ㄤ綔浠ｄ环鍐冲畾銆?- `02_reward_model_losses.png`锛歵otal / observation / reward 涓夌璁粌璇樊銆?- `03_reward_prediction.png`锛氱湡瀹?reward 涓庨娴?reward 鐨勫姣斻€?- `04_reward_guided_action_scores.png`锛歳eward head 濡備綍缁欏€欓€夊姩浣滄帓搴忋€?
+瀵瑰簲绗旇锛?
+- [涓轰粈涔堜笘鐣屾ā鍨嬮渶瑕侀娴?reward](../docs/notes/world-models-reward.md)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-23 12:01:08Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Identifying mojibake and memory use issues**
+</details></think>
+
+_**Agent (gpt-5.5 2026-07-23 12:01:10Z)**_
+
+我发现一个可以让演示更准确的小点：reward head 给动作打分时，应该基于“已经滚动出的 hidden memory”，而不是只看单个位置观测。我会把候选动作评分改成“先读一段历史，再比较候选动作”，这样更贴近这篇笔记的主题。
+
+_**Agent (gpt-5.5 2026-07-23 12:01:16Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Update: `src/hello_world_model/memory.py`**
+
+```diff
+@@
+ def score_candidate_actions(
+     model: GRURewardWorldModel,
+-    obs_value: float,
++    episode: Episode,
++    step_index: int,
+     action_values: np.ndarray,
+     device: str = "cpu",
+ ) -> np.ndarray:
+-    """Score one-step candidate actions from one current observation."""
++    """Score candidate actions after summarizing history into hidden memory."""
+ 
+     model.eval()
++    step_index = int(np.clip(step_index, 0, len(episode["obs"]) - 1))
++
++    h0 = None
++    if step_index > 0:
++        history_obs = _to_sequence_tensor(episode["obs"][:step_index], device)
++        history_action = _to_sequence_tensor(episode["action"][:step_index], device)
++        _, _, h0 = model(history_obs, history_action)
++        h0 = h0.repeat(1, len(action_values), 1)
++
++    obs_value = float(episode["obs"][step_index, 0])
+     obs = torch.tensor(
+         [[[obs_value]] for _ in action_values], dtype=torch.float32, device=device
+     )
+@@
+-    _, pred_reward, _ = model(obs, actions)
++    _, pred_reward, _ = model(obs, actions, h0=h0)
+     return pred_reward.squeeze(-1).squeeze(-1).cpu().numpy()
+```
+
+**Update: `examples/run_reward_world_model.py`**
+
+```diff
+@@
+     print("5. Scoring candidate actions with the learned reward head...")
+     action_values = np.linspace(-1.0, 1.0, 101, dtype=np.float32)
+-    obs_value = float(episodes[0]["obs"][0, 0])
+-    scores = score_candidate_actions(model, obs_value, action_values)
++    scores = score_candidate_actions(model, episodes[0], step_index=20, action_values=action_values)
+     plot_action_reward_scores(
+         action_values, scores, output_dir / "04_reward_guided_action_scores.png"
+     )
+```
+
+
+```
+Exit code: 0
+Wall time: 67 seconds
+Output:
+Success. Updated the following files:
+M src/hello_world_model/memory.py
+M examples/run_reward_world_model.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-23 12:02:46Z)**_
+
+候选动作评分现在会先读入一段 episode 历史，再用 hidden state 评估动作。这个细节很关键：它让演示真正展示“memory + reward”合起来如何服务决策。
+
+_**Agent (gpt-5.5 2026-07-23 12:02:47Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Update: `examples/run_reward_world_model.py`**
+
+```diff
+@@
+-    scores = score_candidate_actions(model, episodes[0], step_index=20, action_values=action_values)
++    scores = score_candidate_actions(
++        model, episodes[0], step_index=20, action_values=action_values
++    )
+```
+
+
+```
+Exit code: 0
+Wall time: 50.2 seconds
+Output:
+Success. Updated the following files:
+M examples/run_reward_world_model.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-23 12:04:04Z)**_
+
+我现在做最后一轮检查：编译 reward 相关代码、检查导入是否完整，并确认完整运行是否因为依赖缺失而受阻。
+
+_**Agent (gpt-5.5 2026-07-23 12:04:04Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `python -m py_compile src\hello_world_model\__init__.py src\hello_world_model\envs.py src\hello_world_model\models.py src\hello_world_model\memory.py src\hello_world_model\visualization.py examples\run_reward_world_model.py examples\run_partial_observation_gru.py examples\run_point_mass_world_model.py`</summary>
+```
+Chunk ID: 048420
+Wall time: 1.0878 seconds
+Process exited with code 0
+Original token count: 0
+Output:
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-23 12:04:06Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `python -c "import numpy, torch, matplotlib; print('deps ok')"`</summary>
+```
+Chunk ID: f56753
+Wall time: 0.6658 seconds
+Process exited with code 1
+Original token count: 54
+Output:
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import numpy, torch, matplotlib; print('deps ok')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'numpy'
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-23 12:04:06Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git status --short --branch`</summary>
+```
+Chunk ID: 2fb538
+Wall time: 2.0595 seconds
+Process exited with code 0
+Original token count: 131
+Output:
+## main...origin/main
+ M .specstory/history/2026-07-19_03-33-50Z-github-github-https-github.md
+ M .specstory/statistics.json
+ M docs/notes/README.md
+ M examples/README.md
+ M src/README.md
+ M src/hello_world_model/__init__.py
+ M src/hello_world_model/envs.py
+ M src/hello_world_model/memory.py
+ M src/hello_world_model/models.py
+ M src/hello_world_model/visualization.py
+?? .specstory/history/2026-07-22_12-15-43Z-gru-hidden-dimension-analysis.md
+?? docs/notes/world-models-reward.md
+?? examples/run_reward_world_model.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-23 12:04:06Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git diff -- src\hello_world_model\memory.py examples\run_reward_world_model.py`</summary>
+```
+Chunk ID: 05f792
+Wall time: 1.0035 seconds
+Process exited with code 0
+Original token count: 1341
+Output:
+diff --git a/src/hello_world_model/memory.py b/src/hello_world_model/memory.py
+index f73652f..f0d63fe 100644
+--- a/src/hello_world_model/memory.py
++++ b/src/hello_world_model/memory.py
+@@ -7,7 +7,7 @@ import torch
+ from torch import nn, optim
+ 
+ from .envs import PartialPointMass1DEnv
+-from .models import GRUWorldModel
++from .models import GRURewardWorldModel, GRUWorldModel
+ 
+ Episode = dict[str, np.ndarray]
+ 
+@@ -24,6 +24,7 @@ def collect_partial_episodes(
+         obs_seq: list[np.ndarray] = []
+         action_seq: list[np.ndarray] = []
+         next_obs_seq: list[np.ndarray] = []
++        reward_seq: list[np.ndarray] = []
+         true_state_seq: list[np.ndarray] = []
+ 
+         obs = env.reset()
+@@ -31,11 +32,12 @@ def collect_partial_episodes(
+ 
+         while not done:
+             action_value = float(np.random.uniform(-1.0, 1.0))
+-            next_obs, _, done, _ = env.step(action_value)
++            next_obs, reward, done, _ = env.step(action_value)
+ 
+             obs_seq.append(obs.copy())
+             action_seq.append(np.array([action_value], dtype=np.float32))
+             next_obs_seq.append(next_obs.copy())
++            reward_seq.append(np.array([reward], dtype=np.float32))
+             true_state_seq.append(env.get_true_state())
+ 
+             obs = next_obs
+@@ -45,6 +47,7 @@ def collect_partial_episodes(
+                 "obs": np.stack(obs_seq),
+                 "action": np.stack(action_seq),
+                 "next_obs": np.stack(next_obs_seq),
++                "reward": np.stack(reward_seq),
+                 "true_state": np.stack(true_state_seq),
+             }
+         )
+@@ -113,5 +116,110 @@ def predict_episode(
+     )
+ 
+ 
++def train_gru_reward_world_model(
++    model: GRURewardWorldModel,
++    episodes: Sequence[Episode],
++    epochs: int = 50,
++    lr: float = 1e-3,
++    reward_loss_weight: float = 1.0,
++    device: str = "cpu",
++) -> dict[str, list[float]]:
++    """Train a recurrent model to predict next observation and reward."""
++
++    model.to(device)
++    optimizer = optim.Adam(model.parameters(), lr=lr)
++    mse = nn.MSELoss()
++    losses = {"total": [], "obs": [], "reward": []}
++
++    for epoch in range(epochs):
++        total_loss = 0.0
++        total_obs_loss = 0.0
++        total_reward_loss = 0.0
++
++        for episode in episodes:
++            obs = _to_sequence_tensor(episode["obs"], device)
++            action = _to_sequence_tensor(episode["action"], device)
++            next_obs = _to_sequence_tensor(episode["next_obs"], device)
++            reward = _to_sequence_tensor(episode["reward"], device)
++
++            pred_next_obs, pred_reward, _ = model(obs, action)
++            obs_loss = mse(pred_next_obs, next_obs)
++            reward_loss = mse(pred_reward, reward)
++            loss = obs_loss + reward_loss_weight * reward_loss
++
++            optimizer.zero_grad()
++            loss.backward()
++            optimizer.step()
++
++            total_loss += loss.item()
++            total_obs_loss += obs_loss.item()
++            total_reward_loss += reward_loss.item()
++
++        n = len(episodes)
++        losses["total"].append(total_loss / n)
++        losses["obs"].append(total_obs_loss / n)
++        losses["reward"].append(total_reward_loss / n)
++        print(
++            f"Epoch {epoch + 1:03d} | "
++            f"total={losses['total'][-1]:.6f} | "
++            f"obs={losses['obs'][-1]:.6f} | "
++            f"reward={losses['reward'][-1]:.6f}"
++        )
++
++    return losses
++
++
++@torch.no_grad()
++def predict_episode_with_reward(
++    model: GRURewardWorldModel,
++    episode: Episode,
++    device: str = "cpu",
++) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
++    """Return true/predicted observations and true/predicted rewards."""
++
++    model.eval()
++    obs = _to_sequence_tensor(episode["obs"], device)
++    action = _to_sequence_tensor(episode["action"], device)
++    pred_next_obs, pred_reward, _ = model(obs, action)
++
++    return (
++        episode["next_obs"],
++        pred_next_obs.squeeze(0).cpu().numpy(),
++        episode["reward"],
++        pred_reward.squeeze(0).cpu().numpy(),
++    )
++
++
++@torch.no_grad()
++def score_candidate_actions(
++    model: GRURewardWorldModel,
++    episode: Episode,
++    step_index: int,
++    action_values: np.ndarray,
++    device: str = "cpu",
++) -> np.ndarray:
++    """Score candidate actions after summarizing history into hidden memory."""
++
++    model.eval()
++    step_index = int(np.clip(step_index, 0, len(episode["obs"]) - 1))
++
++    h0 = None
++    if step_index > 0:
++        history_obs = _to_sequence_tensor(episode["obs"][:step_index], device)
++        history_action = _to_sequence_tensor(episode["action"][:step_index], device)
++        _, _, h0 = model(history_obs, history_action)
++        h0 = h0.repeat(1, len(action_values), 1)
++
++    obs_value = float(episode["obs"][step_index, 0])
++    obs = torch.tensor(
++       
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-23 12:04:59Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Verifying state storage alignment**
+</details></think>
+
+_**Agent (gpt-5.5 2026-07-23 12:05:09Z)**_
+
+已完成。我没有执行 `git add` 或 `commit`。
+
+这次我把新笔记整理为：[world-models-reward.md](E:/HelloWorldModel/docs/notes/world-models-reward.md)
+
+主要优化了这条逻辑线：
+
+dynamics 告诉模型“世界会怎么变”，reward 告诉模型“这个变化对任务好不好”。所以 reward head 不是附属装饰，而是让 world model 真正服务决策的关键部分。
+
+我也补齐了第三个配套演示，保持项目现在的结构是：
+
+- `run_point_mass_world_model.py`：完整状态下的 dynamics + planning
+- `run_partial_observation_gru.py`：部分可观测下的 memory / latent state
+- `run_reward_world_model.py`：在 recurrent hidden state 上加入 reward head
+
+新增/修改的核心文件：
+
+- [examples/run_reward_world_model.py](E:/HelloWorldModel/examples/run_reward_world_model.py)
+- [models.py](E:/HelloWorldModel/src/hello_world_model/models.py)：新增 `GRURewardWorldModel`
+- [memory.py](E:/HelloWorldModel/src/hello_world_model/memory.py)：新增 reward 训练、预测、候选动作评分
+- [visualization.py](E:/HelloWorldModel/src/hello_world_model/visualization.py)：新增 reward landscape、loss、reward prediction、action score 图
+- [examples/README.md](E:/HelloWorldModel/examples/README.md)
+- [src/README.md](E:/HelloWorldModel/src/README.md)
+- [docs/notes/README.md](E:/HelloWorldModel/docs/notes/README.md)
+
+运行方式：
+
+```powershell
+pip install -r requirements.txt
+python examples/run_reward_world_model.py
+```
+
+会生成：
+
+```text
+outputs/reward_world_model/
+├── 01_reward_landscape.png
+├── 02_reward_model_losses.png
+├── 03_reward_prediction.png
+└── 04_reward_guided_action_scores.png
+```
+
+我做了 Python 编译检查，已通过。完整运行仍然受阻于当前环境缺少 `numpy`，安装 `requirements.txt` 后即可运行。
+
+提交时建议不要加入 `.specstory`，它是环境记录文件。可以这样提交本次相关内容：
+
+```powershell
+git add docs\notes\world-models-reward.md docs\notes\README.md examples\README.md src\README.md examples\run_reward_world_model.py src\hello_world_model
+git commit -m "feat: add reward world model example"
+git push
+```
+
+---
+
+_**User (2026-07-27 13:58:01Z)**_
+
+现在更新了笔记：docs\notes\world-models-5-planning.md 请你作为世界模型专家，审视这个文件的内容，并按照开源项目风格，进行格式和内容的优化，你可以多生成一些图示辅助理解；我笔记离提到的代码，先在该笔记里优化格式，然后补齐其他演示运行所需要的内容，然后可以考虑把他们整理成一个完整项目放到/src 目录下，作为完整的代码配套,注意和已有代码的演示逻辑，因为这个项目每一篇笔记都会对应一个演示，演示逻辑和结构要清晰；
+
+
+_**User (2026-07-27 13:58:50Z)**_
+
+现在更新了笔记：docs\notes\world-models-5-planning.md 请你作为世界模型专家，审视这个文件的内容，并按照开源项目风格，进行格式和内容的优化，你可以多生成一些图示辅助理解；我笔记离提到的代码，先在该笔记里优化格式，然后补齐其他演示运行所需要的内容，然后可以考虑把他们整理成一个完整项目放到/src 目录下，作为完整的代码配套,注意和已有代码的演示逻辑，因为这个项目每一篇笔记都会对应一个演示，演示逻辑和结构要清晰；

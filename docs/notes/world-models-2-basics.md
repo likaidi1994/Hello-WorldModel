@@ -185,3 +185,7 @@ flowchart LR
 - 从 state prediction 走向 latent dynamics。
 - 从 random shooting 走向更强的 planning 或 actor-critic。
 - 从离线训练走向数据收集、训练、规划的闭环迭代。
+
+
+
+
