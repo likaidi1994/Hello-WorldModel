@@ -26,11 +26,12 @@
 - `models.py`：MLP world model 和 GRU world model。
 - `training.py`：完整状态下的数据收集、训练和评估。
 - `memory.py`：partial observation 序列数据、GRU 训练和 reward head 训练。
-- `planning.py`：random shooting 规划器。
+- `planning.py`：random shooting、imagined rollout 和 receding-horizon planning。
 - `visualization.py`：训练过程和规划结果的可视化。
 
 对应笔记：
 
-- [MDP、POMDP 与最小世界模型](../docs/notes/world-models-basics.md)
-- [为什么世界模型需要 memory 与 latent state](../docs/notes/world-models-latent-memory.md)
-- [为什么世界模型需要预测 reward](../docs/notes/world-models-reward.md)
+- [MDP、POMDP 与最小世界模型](../docs/notes/world-models-2-basics.md)
+- [为什么世界模型需要 memory 与 latent state](../docs/notes/world-models-3-latent-memory.md)
+- [为什么世界模型需要预测 reward](../docs/notes/world-models-4-reward.md)
+- [用世界模型做 planning](../docs/notes/world-models-5-planning.md)

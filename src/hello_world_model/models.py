@@ -76,3 +76,18 @@ class GRURewardWorldModel(nn.Module):
         pred_next_obs = self.next_obs_head(hidden_seq)
         pred_reward = self.reward_head(hidden_seq)
         return pred_next_obs, pred_reward, hn
+
+    def step(
+        self,
+        obs: torch.Tensor,
+        action: torch.Tensor,
+        h: torch.Tensor | None = None,
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        """Roll the recurrent world model forward by one imagined step."""
+
+        x = torch.cat([obs, action], dim=-1).unsqueeze(1)
+        hidden_seq, hn = self.gru(x, h)
+        hidden = hidden_seq[:, 0, :]
+        pred_next_obs = self.next_obs_head(hidden)
+        pred_reward = self.reward_head(hidden)
+        return pred_next_obs, pred_reward, hn

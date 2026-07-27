@@ -18,7 +18,8 @@ YYYY-MM-DD-topic.md
 
 ## 当前笔记
 
-- [世界模型的第一层直觉](world-models-intuition.md)
-- [MDP、POMDP 与最小世界模型](world-models-basics.md)
-- [为什么世界模型需要 memory 与 latent state](world-models-latent-memory.md)
-- [为什么世界模型需要预测 reward](world-models-reward.md)
+- [世界模型的第一层直觉](world-models-1-intuition.md)
+- [MDP、POMDP 与最小世界模型](world-models-2-basics.md)
+- [为什么世界模型需要 memory 与 latent state](world-models-3-latent-memory.md)
+- [为什么世界模型需要预测 reward](world-models-4-reward.md)
+- [用世界模型做 planning](world-models-5-planning.md)

@@ -33,7 +33,7 @@ python examples/run_point_mass_world_model.py
 
 对应笔记：
 
-- [MDP、POMDP 与最小世界模型](../docs/notes/world-models-basics.md)
+- [MDP、POMDP 与最小世界模型](../docs/notes/world-models-2-basics.md)
 
 ### Partial observation GRU world model
 
@@ -51,7 +51,7 @@ python examples/run_partial_observation_gru.py
 
 对应笔记：
 
-- [为什么世界模型需要 memory 与 latent state](../docs/notes/world-models-latent-memory.md)
+- [为什么世界模型需要 memory 与 latent state](../docs/notes/world-models-3-latent-memory.md)
 
 ### Reward world model
 
@@ -69,4 +69,22 @@ python examples/run_reward_world_model.py
 
 对应笔记：
 
-- [为什么世界模型需要预测 reward](../docs/notes/world-models-reward.md)
+- [为什么世界模型需要预测 reward](../docs/notes/world-models-4-reward.md)
+
+### Planning with a world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_planning_world_model.py
+```
+
+运行后会在 `outputs/planning_world_model` 下生成教学图示：
+
+- `01_planning_model_losses.png`：用于 planning 的 recurrent reward world model 训练误差。
+- `02_first_imagined_rollouts.png`：第一次规划时，模型想象出的多条未来轨迹。
+- `03_receding_horizon_control.png`：滚动规划在真实环境中的控制轨迹。
+- `04_imagined_vs_real_feedback.png`：模型预测的最佳 imagined return 与真实 reward 的对照。
+
+对应笔记：
+
+- [用世界模型做 planning](../docs/notes/world-models-5-planning.md)

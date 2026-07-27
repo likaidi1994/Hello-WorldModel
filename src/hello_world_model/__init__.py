@@ -11,6 +11,12 @@ from .memory import (
 )
 from .models import GRURewardWorldModel, GRUWorldModel, WorldModel
 from .planning import plan_action_random_shooting
+from .planning import (
+    imagine_action_sequence,
+    infer_hidden_from_history,
+    plan_action_with_world_model,
+    run_receding_horizon_episode,
+)
 from .training import (
     collect_random_data,
     evaluate_planner,
@@ -21,6 +27,8 @@ from .visualization import (
     plot_dataset_phase_space,
     plot_gru_sequence_prediction,
     plot_hidden_state_velocity_probe,
+    plot_first_planning_rollouts,
+    plot_imagined_vs_real_feedback,
     plot_action_reward_scores,
     plot_one_step_predictions,
     plot_partial_observation_ambiguity,
@@ -28,6 +36,7 @@ from .visualization import (
     plot_reward_landscape,
     plot_reward_model_losses,
     plot_reward_predictions,
+    plot_receding_horizon_control,
     plot_training_loss,
 )
 
@@ -43,6 +52,8 @@ __all__ = [
     "plot_dataset_phase_space",
     "plot_gru_sequence_prediction",
     "plot_hidden_state_velocity_probe",
+    "plot_first_planning_rollouts",
+    "plot_imagined_vs_real_feedback",
     "plot_action_reward_scores",
     "plot_one_step_predictions",
     "plot_partial_observation_ambiguity",
@@ -50,11 +61,16 @@ __all__ = [
     "plot_reward_landscape",
     "plot_reward_model_losses",
     "plot_reward_predictions",
+    "plot_receding_horizon_control",
     "plot_training_loss",
+    "imagine_action_sequence",
+    "infer_hidden_from_history",
     "plan_action_random_shooting",
+    "plan_action_with_world_model",
     "predict_episode",
     "predict_episode_with_reward",
     "rollout_planner_episode",
+    "run_receding_horizon_episode",
     "score_candidate_actions",
     "train_gru_reward_world_model",
     "train_gru_world_model",

@@ -347,6 +347,108 @@ def plot_action_reward_scores(
     plt.close(fig)
 
 
+def plot_first_planning_rollouts(
+    imagined_rollouts: Sequence[np.ndarray],
+    best_rollout: np.ndarray,
+    output_path: Path,
+) -> None:
+    """Show top imagined futures from the first planning step."""
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+
+    for rollout in imagined_rollouts:
+        steps = np.arange(len(rollout))
+        ax.plot(steps, rollout[:, 0], linewidth=1, alpha=0.35)
+
+    if len(best_rollout) > 0:
+        steps = np.arange(len(best_rollout))
+        ax.plot(
+            steps,
+            best_rollout[:, 0],
+            linewidth=2.5,
+            label="best imagined rollout",
+        )
+
+    ax.axhline(0.0, color="black", linewidth=1, linestyle="--", label="goal")
+    ax.set_title("First Planning Step: Imagined Position Rollouts")
+    ax.set_xlabel("imagined step")
+    ax.set_ylabel("predicted position")
+    ax.legend(loc="best")
+    ax.grid(True, alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_receding_horizon_control(
+    planning_log: dict[str, np.ndarray | list[np.ndarray]],
+    output_path: Path,
+) -> None:
+    """Show the real trajectory produced by repeated world-model planning."""
+
+    true_states = np.asarray(planning_log["true_states"])
+    actions = np.asarray(planning_log["actions"]).reshape(-1)
+    rewards = np.asarray(planning_log["real_rewards"]).reshape(-1)
+    steps = np.arange(len(true_states))
+    action_steps = np.arange(len(actions))
+
+    _prepare_output(output_path)
+    fig, axes = plt.subplots(3, 1, figsize=(8, 8), sharex=False)
+
+    axes[0].plot(steps, true_states[:, 0], linewidth=2, label="real position")
+    axes[0].axhline(0.0, color="black", linewidth=1, linestyle="--", label="goal")
+    axes[0].set_title("Receding-Horizon Planning in the Real Environment")
+    axes[0].set_ylabel("position")
+    axes[0].legend(loc="best")
+    axes[0].grid(True, alpha=0.25)
+
+    axes[1].plot(action_steps, actions, color="tab:orange", linewidth=1.5)
+    axes[1].set_title("First Action Executed After Each Replan")
+    axes[1].set_ylabel("acceleration")
+    axes[1].set_ylim(-1.05, 1.05)
+    axes[1].grid(True, alpha=0.25)
+
+    axes[2].plot(action_steps, np.cumsum(rewards), color="tab:green", linewidth=2)
+    axes[2].set_title("Real Cumulative Reward")
+    axes[2].set_xlabel("real environment step")
+    axes[2].set_ylabel("return")
+    axes[2].grid(True, alpha=0.25)
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_imagined_vs_real_feedback(
+    planning_log: dict[str, np.ndarray | list[np.ndarray]],
+    output_path: Path,
+) -> None:
+    """Compare model-estimated plan quality with real received rewards."""
+
+    imagined_returns = np.asarray(planning_log["imagined_returns"]).reshape(-1)
+    real_rewards = np.asarray(planning_log["real_rewards"]).reshape(-1)
+    steps = np.arange(len(real_rewards))
+
+    _prepare_output(output_path)
+    fig, axes = plt.subplots(2, 1, figsize=(8, 6), sharex=True)
+
+    axes[0].plot(steps, imagined_returns, linewidth=2)
+    axes[0].set_title("Best Imagined Return at Each Replan")
+    axes[0].set_ylabel("imagined return")
+    axes[0].grid(True, alpha=0.25)
+
+    axes[1].plot(steps, real_rewards, color="tab:green", linewidth=2)
+    axes[1].set_title("Real Reward Received After Executing First Action")
+    axes[1].set_xlabel("real environment step")
+    axes[1].set_ylabel("real reward")
+    axes[1].grid(True, alpha=0.25)
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
 def _plot_prediction_panel(
     ax: plt.Axes,
     target: np.ndarray,
