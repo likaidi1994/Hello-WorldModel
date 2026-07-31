@@ -88,3 +88,22 @@ python examples/run_planning_world_model.py
 对应笔记：
 
 - [用世界模型做 planning](../docs/notes/world-models-5-planning.md)
+
+### Latent dynamics world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_latent_dynamics_world_model.py
+```
+
+运行后会在 `outputs/latent_dynamics_world_model` 下生成教学图示：
+
+- `01_observation_model_loss.png`：observation-space baseline 的训练误差。
+- `02_latent_model_losses.png`：latent dynamics model 的训练误差。
+- `03_open_loop_rollout_comparison.png`：真实轨迹、observation rollout、latent rollout 的对比。
+- `04_rollout_error_growth.png`：open-loop 误差如何随 rollout horizon 增长。
+- `05_latent_space_rollout.png`：模型在 latent space 中想象出的轨迹。
+
+对应笔记：
+
+- [为什么要转向 latent dynamics](../docs/notes/world-models-6-latent-dynamics.md)

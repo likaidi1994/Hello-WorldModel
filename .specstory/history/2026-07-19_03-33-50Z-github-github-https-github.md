@@ -7701,3 +7701,2173 @@ _**User (2026-07-27 14:00:10Z)**_
 _**User (2026-07-27 14:05:31Z)**_
 
 现在更新了笔记：docs\notes\world-models-5-planning.md 请你作为世界模型专家，审视这个文件的内容，并按照开源项目风格，进行格式和内容的优化，你可以多生成一些图示辅助理解；我笔记离提到的代码，先在该笔记里优化格式，然后补齐其他演示运行所需要的内容，然后可以考虑把他们整理成一个完整项目放到/src 目录下，作为完整的代码配套,注意和已有代码的演示逻辑，因为这个项目每一篇笔记都会对应一个演示，演示逻辑和结构要清晰；
+
+
+_**User (2026-07-27 14:07:23Z)**_
+
+现在更新了笔记：docs\notes\world-models-5-planning.md 请你作为世界模型专家，审视这个文件的内容，并按照开源项目风格，进行格式和内容的优化，你可以多生成一些图示辅助理解；我笔记离提到的代码，先在该笔记里优化格式，然后补齐其他演示运行所需要的内容，然后可以考虑把他们整理成一个完整项目放到/src 目录下，作为完整的代码配套,注意和已有代码的演示逻辑，因为这个项目每一篇笔记都会对应一个演示，演示逻辑和结构要清晰；
+
+
+---
+
+_**Agent (gpt-5.5 2026-07-27 14:07:45Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Clarifying visualization skill usage**
+</details></think>
+
+_**Agent (gpt-5.5 2026-07-27 14:07:46Z)**_
+
+我会按你现在形成的项目节奏来做：先审视这篇 planning 笔记，再补一个对应的第 5 个演示入口，保持“每篇笔记都有清晰代码配套”的结构。因为你希望多用图示辅助理解，我会先读取 `visualize:visualize` 规范，再把适合静态解释的部分放进 Markdown Mermaid 图里。
+
+_**Agent (gpt-5.5 2026-07-27 14:07:48Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Raw 'C:\Users\Lenovo\.codex\plugins\cache\openai-bundled\visualize\1.0.15\skills\visualize\SKILL.md'`</summary>
+```
+Chunk ID: 179aa2
+Wall time: 0.3586 seconds
+Process exited with code 0
+Original token count: 5164
+Output:
+---
+name: visualize
+description: "Create visualizations and interactive tools directly in conversation. Use when asked to show how something works, make simulators or labs, maps, plots, charts or graphs, comparisons, scenarios, adjustable inputs, and exploration beyond regular text."
+---
+
+# Visualize
+
+- A request for a new standalone file, website, app page, component, or other
+  project change is not an in-conversation visualization request, even when the
+  deliverable contains charts or interactive content.
+- Create a visual only when the user needs to see or explore it in the
+  conversation and it materially improves the explanation. Do not create an
+  inline visual merely because the request involves data, charts, or an
+  interactive page.
+- Use Mermaid when labeled nodes and edges fully explain a static structure;
+  return a normal fenced Mermaid block and no visualization file. Use HTML for
+  dynamics, spatial motion, adjustable inputs, and other visuals.
+- Work silently unless blocked or the user explicitly asks for progress. Never
+  send commentary or progress updates while reading this skill or writing or
+  updating the file; the final response must be your first user-facing message.
+- In user-facing prose, describe only what the visual helps the user see or
+  decide. Keep it concise and do not repeat information already clear from the
+  visual. Never announce this skill, a visualization surface, widgets, HTML,
+  SVG, scripts, local files, inline data, or implementation details.
+
+## Context compaction
+
+Copy into every compaction summary:
+`Reload the full visualize skill before creating or updating a visualization.`
+
+## Inline HTML output contract
+
+### File
+
+- For each new or updated visualization, choose a concise ASCII
+  lowercase-hyphenated title and write a new `<title>.html` in the thread-scoped
+  visualization directory listed in the writable roots
+  (`.codex/visualizations/YYYY/MM/DD/<thread-id>`).
+- Build the visual in the conversation. Use the open project when the user asks
+  for a site, app page, component, or change to existing project files.
+
+### Fragment
+
+- Write only an HTML fragment: no `<!doctype>`, `<html>`, `<head>`, or `<body>`.
+- Write literal markup: use `<div class="card">Hi</div>` plus a real newline,
+  never `<div class=\"card\">Hi</div>\n`. Never embed the fragment in an inline
+  Python, JavaScript, or shell string. Read it back; rewrite literal `\"` or
+  `\n`.
+- Keep CSS and JavaScript in the fragment only when base classes are
+  insufficient. Load static resources only from the CDN allowlist. Never use
+  `fetch`, XHR, WebSocket, or other API calls.
+- Give the fragment root a unique ID and select it with
+  `document.getElementById(...)`. Never derive the root from
+  `document.currentScript`; scripts may sit outside the root.
+- Keep visualizations under 2 MB. Aggregate, bin, downsample, reduce precision,
+  or drop unused fields from large inline datasets.
+- Check that JavaScript has no undefined identifiers, every queried element
+  exists, and the primary interaction updates the visual. The bundled
+  `python3 scripts/render.py <absolute-fragment-path> [<destination>.html] [--serve]`
+  can wrap a fragment as standalone HTML or temporarily serve it for browser
+  inspection when a preview would help with layout, theme, or runtime behavior.
+
+### Content and response
+
+- Keep the fragment focused on the visualization. Do not include explanatory
+  paragraphs, formulas, instructions, or narrative callouts. Include only
+  necessary labels, legends, values, and accessible text alternatives.
+- Use the normal response flow. Put any necessary concise explanation outside
+  the fragment, and add this exact directive on its own line where the visual
+  should appear:
+
+```text
+::codex-inline-vis{file="<title>.html"}
+```
+
+- Emit only the directive for the fragment. Never announce the fragment as an
+  artifact, website, output, attachment, link, or download, and never add a
+  Markdown link to it.
+
+### External resources
+
+- The CSP allows only `cdnjs.cloudflare.com`, `esm.sh`, `cdn.jsdelivr.net`,
+  `unpkg.com`, `fonts.googleapis.com`, `fonts.gstatic.com`, and
+  `fonts.bunny.net`. Other origins are blocked and fail silently.
+
+## Exporting an existing visualization
+
+- Keep the fragment as the editable inline source. When the user explicitly asks
+  to save, export, or publish a visualization that is already shown in the
+  conversation, render it with
+  `python3 scripts/render.py <absolute-fragment-path> <destination>.html`.
+- Apply this export flow only when the user explicitly asks to turn the existing
+  inline source or visualization into a website. For a general website request,
+  build a new responsive site in the output directory or open project, using
+  Sites when appropriate, without applying th
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-27 14:08:01Z)**_
+
+我先检查一下当前工作区，尤其是刚才几次中断后有没有半写入文件；然后读取 planning 笔记和现有 `planning.py`/示例入口，保证新演示接在已有三套示例后面。
+
+_**Agent (gpt-5.5 2026-07-27 14:08:01Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 -Raw 'docs\notes\world-models-5-planning.md'`</summary>
+```
+Chunk ID: 1676f3
+Wall time: 0.4726 seconds
+Process exited with code 0
+Original token count: 2384
+Output:
+什么是world model planning ? ans:让世界模型“在脑中试动作”，再决定现实里做什么；不直接盲目执行动作，而是在模型里先模拟几种未来，再选最好的那个。
+
+这就是最朴素的 planning with a world model。
+先把这件事说成人话
+
+假设你现在在某个状态，手里有 3 种可能动作：
+
+往左一点
+不动
+往右一点
+
+你不急着马上做，而是先在脑子里想：
+
+如果我连续往左几步，会发生什么？
+如果我先右后左，会怎样？
+哪种动作序列累计 reward 更高？
+
+最后你只执行那个最好序列的第一步动作。
+走完这一步，再重新观察、重新想。
+
+这叫：
+
+receding horizon planning
+也就是“滚动规划”。
+为什么只执行第一步，而不是整串都执行
+
+因为模型不是完美的。
+
+如果你现在直接把未来 10 步都押上去，后面可能越来越偏。
+更稳妥的做法是：
+
+用模型想象未来 10 步
+选出最好的一条动作序列
+只执行第一步
+回到真实环境重新观察
+再规划下一步
+
+这是 model-based control 里非常经典的思路。
+
+4. 先给模型加一个“单步 rollout”接口
+
+我们现在的 GRU 模型是按整段序列跑的。
+为了 planning，更方便的做法是加一个单步接口：
+
+输入：
+
+当前观测 obs_t
+当前动作 a_t
+当前 hidden h_t
+
+输出：
+
+预测下一观测
+预测 reward
+下一 hidden
+import torch
+import torch.nn as nn
+
+class GRUWorldModelWithReward(nn.Module):
+    def __init__(self, obs_dim=1, act_dim=1, hidden_dim=32):
+        super().__init__()
+        self.input_dim = obs_dim + act_dim
+        self.hidden_dim = hidden_dim
+
+        self.gru = nn.GRU(
+            input_size=self.input_dim,
+            hidden_size=hidden_dim,
+            batch_first=True
+        )
+        self.next_obs_head = nn.Linear(hidden_dim, obs_dim)
+        self.reward_head = nn.Linear(hidden_dim, 1)
+
+    def forward(self, obs_seq, act_seq, h0=None):
+        x = torch.cat([obs_seq, act_seq], dim=-1)   # [B, T, obs_dim+act_dim]
+        out, hn = self.gru(x, h0)
+        pred_next_obs = self.next_obs_head(out)
+        pred_reward = self.reward_head(out)
+        return pred_next_obs, pred_reward, hn
+
+    def step(self, obs, act, h):
+        """
+        obs: [B, obs_dim]
+        act: [B, act_dim]
+        h:   [1, B, hidden_dim] or None
+        """
+        x = torch.cat([obs, act], dim=-1).unsqueeze(1)  # [B, 1, input_dim]
+        out, hn = self.gru(x, h)                        # out: [B, 1, hidden_dim]
+        out = out[:, 0, :]                              # [B, hidden_dim]
+
+        pred_next_obs = self.next_obs_head(out)         # [B, obs_dim]
+        pred_reward = self.reward_head(out)             # [B, 1]
+        return pred_next_obs, pred_reward, hn
+5. 当前 hidden state 从哪里来
+
+这个问题很重要。
+
+模型做 planning 时，不能从空白脑子开始。
+它需要一个已经编码了历史的 hidden state。
+
+所以我们先写一个函数：
+把到当前为止的真实历史喂进去，得到当前 hidden。
+
+@torch.no_grad()
+def infer_hidden_from_history(model, obs_hist, act_hist, device="cpu"):
+    """
+    obs_hist: numpy array [T, obs_dim]
+    act_hist: numpy array [T, act_dim]
+    return: hidden state [1, 1, hidden_dim]
+    """
+    model.eval()
+
+    obs = torch.tensor(obs_hist, dtype=torch.float32, device=device).unsqueeze(0)  # [1, T, obs_dim]
+    act = torch.tensor(act_hist, dtype=torch.float32, device=device).unsqueeze(0)  # [1, T, act_dim]
+
+    _, _, hn = model(obs, act, h0=None)
+    return hn
+
+这个 hn 就是：
+
+模型基于真实历史形成的当前内部信念。
+
+6. 在模型里评估一条动作序列
+
+这是 planning 的核心函数。
+
+import numpy as np
+
+@torch.no_grad()
+def evaluate_action_sequence(model, current_obs, current_hidden, action_seq, device="cpu"):
+    """
+    current_obs: numpy array [obs_dim]
+    current_hidden: torch tensor [1, 1, hidden_dim]
+    action_seq: numpy array [H, act_dim]
+    """
+    model.eval()
+
+    obs = torch.tensor(current_obs, dtype=torch.float32, device=device).unsqueeze(0)  # [1, obs_dim]
+    h = current_hidden.clone()
+    total_reward = 0.0
+
+    for t in range(len(action_seq)):
+        act = torch.tensor(action_seq[t], dtype=torch.float32, device=device).unsqueeze(0)  # [1, act_dim]
+        pred_next_obs, pred_reward, h = model.step(obs, act, h)
+
+        total_reward += pred_reward.item()
+        obs = pred_next_obs   # 关键：把预测出来的 next_obs 继续喂回去
+
+    return total_reward
+
+这里最关键的一句是：
+
+obs = pred_next_obs
+
+这意味着：
+
+你已经不依赖真实环境了，而是在模型里“想象未来”。
+
+这就是世界模型真正开始工作的时刻。
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-27 14:08:01Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git status --short --branch`</summary>
+```
+Chunk ID: 54ac45
+Wall time: 0.3059 seconds
+Process exited with code 0
+Original token count: 32
+Output:
+## main...origin/main
+ M .specstory/history/2026-07-19_03-33-50Z-github-github-https-github.md
+ M .specstory/statistics.json
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-27 14:08:01Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `rg --files -uu src examples docs requirements.txt`</summary>
+```
+Chunk ID: d7bbfb
+Wall time: 0.2468 seconds
+Process exited with code 0
+Original token count: 317
+Output:
+requirements.txt
+docs\00-start-here.md
+src\README.md
+docs\roadmap.md
+docs\glossary.md
+examples\run_partial_observation_gru.py
+examples\README.md
+examples\run_point_mass_world_model.py
+examples\run_reward_world_model.py
+docs\notes\world-models-1-intuition.md
+docs\notes\world-models-5-planning.md
+docs\notes\world-models-4-reward.md
+docs\notes\world-models-3-latent-memory.md
+docs\notes\README.md
+docs\notes\world-models-2-basics.md
+src\hello_world_model\planning.py
+src\hello_world_model\models.py
+src\hello_world_model\memory.py
+src\hello_world_model\envs.py
+src\hello_world_model\visualization.py
+src\hello_world_model\training.py
+src\hello_world_model\__init__.py
+examples\__pycache__\run_reward_world_model.cpython-314.pyc
+examples\__pycache__\run_point_mass_world_model.cpython-314.pyc
+examples\__pycache__\run_partial_observation_gru.cpython-314.pyc
+src\hello_world_model\__pycache__\__init__.cpython-314.pyc
+src\hello_world_model\__pycache__\visualization.cpython-314.pyc
+src\hello_world_model\__pycache__\training.cpython-314.pyc
+src\hello_world_model\__pycache__\planning.cpython-314.pyc
+src\hello_world_model\__pycache__\models.cpython-314.pyc
+src\hello_world_model\__pycache__\memory.cpython-314.pyc
+src\hello_world_model\__pycache__\envs.cpython-314.pyc
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-27 14:08:01Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 -Raw 'src\hello_world_model\planning.py'`</summary>
+```
+Chunk ID: 197559
+Wall time: 0.4596 seconds
+Process exited with code 0
+Original token count: 309
+Output:
+from __future__ import annotations
+
+import numpy as np
+import torch
+
+from .models import WorldModel
+
+
+@torch.no_grad()
+def plan_action_random_shooting(
+    model: WorldModel,
+    current_state: np.ndarray,
+    horizon: int = 15,
+    num_samples: int = 500,
+    device: str = "cpu",
+) -> float:
+    """Sample candidate action sequences and return the best first action."""
+
+    model.eval()
+    best_return = -float("inf")
+    best_first_action = 0.0
+
+    initial_state = torch.tensor(
+        current_state, dtype=torch.float32, device=device
+    ).unsqueeze(0)
+
+    for _ in range(num_samples):
+        state = initial_state.clone()
+        total_return = 0.0
+        action_seq = np.random.uniform(-1.0, 1.0, size=(horizon, 1)).astype(
+            np.float32
+        )
+
+        for action_np in action_seq:
+            action = torch.tensor(action_np, dtype=torch.float32, device=device).unsqueeze(
+                0
+            )
+            next_state, reward = model(state, action)
+            total_return += float(reward.item())
+            state = next_state
+
+        if total_return > best_return:
+            best_return = total_return
+            best_first_action = float(action_seq[0, 0])
+
+    return best_first_action
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-27 14:08:21Z)**_
+
+很好，仓库现在的笔记已经按 `world-models-1...5` 编号了，当前工作区除了 `.specstory` 记录外很干净。我会把第 5 篇规划笔记整理成正式章节，并新增 `run_planning_world_model.py` 作为第五个演示入口。
+
+_**Agent (gpt-5.5 2026-07-27 14:08:21Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 -Raw 'src\hello_world_model\models.py'`</summary>
+```
+Chunk ID: fb7f1d
+Wall time: 0.5047 seconds
+Process exited with code 0
+Original token count: 667
+Output:
+from __future__ import annotations
+
+import torch
+from torch import nn
+
+
+class WorldModel(nn.Module):
+    """Predict next state and reward from current state-action pair."""
+
+    def __init__(self, state_dim: int = 2, action_dim: int = 1, hidden_dim: int = 128):
+        super().__init__()
+        self.backbone = nn.Sequential(
+            nn.Linear(state_dim + action_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.ReLU(),
+        )
+        self.next_state_head = nn.Linear(hidden_dim, state_dim)
+        self.reward_head = nn.Linear(hidden_dim, 1)
+
+    def forward(
+        self, state: torch.Tensor, action: torch.Tensor
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        x = torch.cat([state, action], dim=-1)
+        h = self.backbone(x)
+        return self.next_state_head(h), self.reward_head(h)
+
+
+class GRUWorldModel(nn.Module):
+    """Predict next observation from a sequence of observations and actions."""
+
+    def __init__(self, obs_dim: int = 1, action_dim: int = 1, hidden_dim: int = 32):
+        super().__init__()
+        self.hidden_dim = hidden_dim
+        self.gru = nn.GRU(
+            input_size=obs_dim + action_dim,
+            hidden_size=hidden_dim,
+            batch_first=True,
+        )
+        self.next_obs_head = nn.Linear(hidden_dim, obs_dim)
+
+    def forward(
+        self,
+        obs_seq: torch.Tensor,
+        action_seq: torch.Tensor,
+        h0: torch.Tensor | None = None,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        x = torch.cat([obs_seq, action_seq], dim=-1)
+        hidden_seq, hn = self.gru(x, h0)
+        pred_next_obs = self.next_obs_head(hidden_seq)
+        return pred_next_obs, hn
+
+
+class GRURewardWorldModel(nn.Module):
+    """Predict next observation and reward from recurrent world-model state."""
+
+    def __init__(self, obs_dim: int = 1, action_dim: int = 1, hidden_dim: int = 32):
+        super().__init__()
+        self.hidden_dim = hidden_dim
+        self.gru = nn.GRU(
+            input_size=obs_dim + action_dim,
+            hidden_size=hidden_dim,
+            batch_first=True,
+        )
+        self.next_obs_head = nn.Linear(hidden_dim, obs_dim)
+        self.reward_head = nn.Linear(hidden_dim, 1)
+
+    def forward(
+        self,
+        obs_seq: torch.Tensor,
+        action_seq: torch.Tensor,
+        h0: torch.Tensor | None = None,
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        x = torch.cat([obs_seq, action_seq], dim=-1)
+        hidden_seq, hn = self.gru(x, h0)
+        pred_next_obs = self.next_obs_head(hidden_seq)
+        pred_reward = self.reward_head(hidden_seq)
+        return pred_next_obs, pred_reward, hn
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-27 14:08:21Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 -Raw 'src\hello_world_model\memory.py'`</summary>
+```
+Chunk ID: db01f8
+Wall time: 0.4554 seconds
+Process exited with code 0
+Original token count: 1719
+Output:
+from __future__ import annotations
+
+from collections.abc import Sequence
+
+import numpy as np
+import torch
+from torch import nn, optim
+
+from .envs import PartialPointMass1DEnv
+from .models import GRURewardWorldModel, GRUWorldModel
+
+Episode = dict[str, np.ndarray]
+
+
+def collect_partial_episodes(
+    env: PartialPointMass1DEnv,
+    episodes: int = 200,
+) -> list[Episode]:
+    """Collect full episodes where observations hide the true velocity."""
+
+    all_episodes: list[Episode] = []
+
+    for _ in range(episodes):
+        obs_seq: list[np.ndarray] = []
+        action_seq: list[np.ndarray] = []
+        next_obs_seq: list[np.ndarray] = []
+        reward_seq: list[np.ndarray] = []
+        true_state_seq: list[np.ndarray] = []
+
+        obs = env.reset()
+        done = False
+
+        while not done:
+            action_value = float(np.random.uniform(-1.0, 1.0))
+            next_obs, reward, done, _ = env.step(action_value)
+
+            obs_seq.append(obs.copy())
+            action_seq.append(np.array([action_value], dtype=np.float32))
+            next_obs_seq.append(next_obs.copy())
+            reward_seq.append(np.array([reward], dtype=np.float32))
+            true_state_seq.append(env.get_true_state())
+
+            obs = next_obs
+
+        all_episodes.append(
+            {
+                "obs": np.stack(obs_seq),
+                "action": np.stack(action_seq),
+                "next_obs": np.stack(next_obs_seq),
+                "reward": np.stack(reward_seq),
+                "true_state": np.stack(true_state_seq),
+            }
+        )
+
+    return all_episodes
+
+
+def train_gru_world_model(
+    model: GRUWorldModel,
+    episodes: Sequence[Episode],
+    epochs: int = 50,
+    lr: float = 1e-3,
+    device: str = "cpu",
+) -> list[float]:
+    """Train a GRU model to predict the next position-only observation."""
+
+    model.to(device)
+    optimizer = optim.Adam(model.parameters(), lr=lr)
+    mse = nn.MSELoss()
+    losses: list[float] = []
+
+    for epoch in range(epochs):
+        total_loss = 0.0
+
+        for episode in episodes:
+            obs = _to_sequence_tensor(episode["obs"], device)
+            action = _to_sequence_tensor(episode["action"], device)
+            next_obs = _to_sequence_tensor(episode["next_obs"], device)
+
+            pred_next_obs, _ = model(obs, action)
+            loss = mse(pred_next_obs, next_obs)
+
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+
+            total_loss += loss.item()
+
+        avg_loss = total_loss / len(episodes)
+        losses.append(avg_loss)
+        print(f"Epoch {epoch + 1:03d} | loss = {avg_loss:.6f}")
+
+    return losses
+
+
+@torch.no_grad()
+def predict_episode(
+    model: GRUWorldModel,
+    episode: Episode,
+    device: str = "cpu",
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Return true next observations, predicted next observations, and hidden states."""
+
+    model.eval()
+    obs = _to_sequence_tensor(episode["obs"], device)
+    action = _to_sequence_tensor(episode["action"], device)
+    pred_next_obs, _ = model(obs, action)
+
+    x = torch.cat([obs, action], dim=-1)
+    hidden_seq, _ = model.gru(x)
+
+    return (
+        episode["next_obs"],
+        pred_next_obs.squeeze(0).cpu().numpy(),
+        hidden_seq.squeeze(0).cpu().numpy(),
+    )
+
+
+def train_gru_reward_world_model(
+    model: GRURewardWorldModel,
+    episodes: Sequence[Episode],
+    epochs: int = 50,
+    lr: float = 1e-3,
+    reward_loss_weight: float = 1.0,
+    device: str = "cpu",
+) -> dict[str, list[float]]:
+    """Train a recurrent model to predict next observation and reward."""
+
+    model.to(device)
+    optimizer = optim.Adam(model.parameters(), lr=lr)
+    mse = nn.MSELoss()
+    losses = {"total": [], "obs": [], "reward": []}
+
+    for epoch in range(epochs):
+        total_loss = 0.0
+        total_obs_loss = 0.0
+        total_reward_loss = 0.0
+
+        for episode in episodes:
+            obs = _to_sequence_tensor(episode["obs"], device)
+            action = _to_sequence_tensor(episode["action"], device)
+            next_obs = _to_sequence_tensor(episode["next_obs"], device)
+            reward = _to_sequence_tensor(episode["reward"], device)
+
+            pred_next_obs, pred_reward, _ = model(obs, action)
+            obs_loss = mse(pred_next_obs, next_obs)
+            reward_loss = mse(pred_reward, reward)
+            loss = obs_loss + reward_loss_weight * reward_loss
+
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+
+            total_loss += loss.item()
+            total_obs_loss += obs_loss.item()
+            total_reward_loss += reward_loss.item()
+
+        n = len(episodes)
+        losses["total"].append(total_loss / n)
+        losses["obs"].append(total_obs_loss / n)
+        losses["reward"].append(total_reward_loss / n)
+        print(
+            f"Epoch {epoch + 1:03d} | "
+            f"total={losses['tot
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-27 14:08:21Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 -Raw 'src\hello_world_model\visualization.py'`</summary>
+```
+Chunk ID: 17c0c4
+Wall time: 0.4765 seconds
+Process exited with code 0
+Original token count: 2799
+Output:
+from __future__ import annotations
+
+from pathlib import Path
+from collections.abc import Sequence
+
+import matplotlib.pyplot as plt
+import numpy as np
+import torch
+
+from .models import WorldModel
+from .memory import Episode
+from .training import Transition
+
+
+def plot_dataset_phase_space(data: Sequence[Transition], output_path: Path) -> None:
+    """Show what states the random data collection covered."""
+
+    states = np.stack([transition[0] for transition in data])
+    actions = np.stack([transition[1] for transition in data]).reshape(-1)
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(7, 5))
+    scatter = ax.scatter(
+        states[:, 0],
+        states[:, 1],
+        c=actions,
+        s=8,
+        alpha=0.55,
+        cmap="coolwarm",
+    )
+    ax.axvline(0.0, color="black", linewidth=1, linestyle="--", label="goal")
+    ax.set_title("Random Data Coverage")
+    ax.set_xlabel("position")
+    ax.set_ylabel("velocity")
+    ax.legend(loc="best")
+    fig.colorbar(scatter, ax=ax, label="action")
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_training_loss(losses: Sequence[float], output_path: Path) -> None:
+    """Show whether the learned dynamics/reward model is fitting the data."""
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(7, 4))
+    ax.plot(np.arange(1, len(losses) + 1), losses, linewidth=2)
+    ax.set_title("World Model Training Loss")
+    ax.set_xlabel("epoch")
+    ax.set_ylabel("MSE loss")
+    ax.grid(True, alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_reward_model_losses(
+    losses: dict[str, Sequence[float]],
+    output_path: Path,
+) -> None:
+    """Show total, observation, and reward losses for a reward world model."""
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    epochs = np.arange(1, len(losses["total"]) + 1)
+    ax.plot(epochs, losses["total"], label="total", linewidth=2)
+    ax.plot(epochs, losses["obs"], label="observation", linewidth=1.8)
+    ax.plot(epochs, losses["reward"], label="reward", linewidth=1.8)
+    ax.set_title("Reward World Model Training Losses")
+    ax.set_xlabel("epoch")
+    ax.set_ylabel("MSE loss")
+    ax.legend(loc="best")
+    ax.grid(True, alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+@torch.no_grad()
+def plot_one_step_predictions(
+    model: WorldModel,
+    data: Sequence[Transition],
+    output_path: Path,
+    max_points: int = 800,
+    device: str = "cpu",
+) -> None:
+    """Compare real next states with one-step predictions."""
+
+    model.eval()
+    sample = list(data[:max_points])
+
+    states = torch.tensor(
+        np.stack([transition[0] for transition in sample]),
+        dtype=torch.float32,
+        device=device,
+    )
+    actions = torch.tensor(
+        np.stack([transition[1] for transition in sample]),
+        dtype=torch.float32,
+        device=device,
+    )
+    true_next = np.stack([transition[2] for transition in sample])
+    pred_next, _ = model(states, actions)
+    pred_next_np = pred_next.cpu().numpy()
+
+    _prepare_output(output_path)
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4))
+
+    _plot_prediction_panel(
+        axes[0],
+        true_next[:, 0],
+        pred_next_np[:, 0],
+        "next position",
+    )
+    _plot_prediction_panel(
+        axes[1],
+        true_next[:, 1],
+        pred_next_np[:, 1],
+        "next velocity",
+    )
+
+    fig.suptitle("One-Step Prediction: Real Environment vs Learned Model")
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_planned_trajectory(
+    states: np.ndarray,
+    actions: np.ndarray,
+    rewards: Sequence[float],
+    output_path: Path,
+) -> None:
+    """Show how planning moves the point mass toward the goal."""
+
+    steps = np.arange(len(states))
+    action_steps = np.arange(len(actions))
+    cumulative_reward = np.cumsum(rewards)
+
+    _prepare_output(output_path)
+    fig, axes = plt.subplots(3, 1, figsize=(8, 8), sharex=False)
+
+    axes[0].plot(steps, states[:, 0], linewidth=2, label="position")
+    axes[0].axhline(0.0, color="black", linewidth=1, linestyle="--", label="goal")
+    axes[0].set_title("Planner-Controlled Position")
+    axes[0].set_ylabel("position")
+    axes[0].legend(loc="best")
+    axes[0].grid(True, alpha=0.25)
+
+    axes[1].plot(action_steps, actions, color="tab:orange", linewidth=1.5)
+    axes[1].set_title("Actions Selected by Random Shooting")
+    axes[1].set_ylabel("acceleration")
+    axes[1].set_ylim(-1.05, 1.05)
+    axes[1].grid(True, alpha=0.25)
+
+    axes[2].plot(action_steps, cumulative_reward, color="tab:green", linewidth=2)
+    axes[2].set_title("Cumulative Reward")
+    axes[2].set_xlabel("step")
+    axes[2].set_ylabel("return")
+    axes[2].grid(True, alpha=0.25)
+
+    fig.tight_layout()
+    fig.savefig(output_
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-27 14:08:21Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 -Raw 'src\hello_world_model\__init__.py'`</summary>
+```
+Chunk ID: 96ecb0
+Wall time: 0.4424 seconds
+Process exited with code 0
+Original token count: 437
+Output:
+"""Minimal world model examples for learning."""
+
+from .envs import PartialPointMass1DEnv, PointMass1DEnv
+from .memory import (
+    collect_partial_episodes,
+    predict_episode,
+    predict_episode_with_reward,
+    score_candidate_actions,
+    train_gru_reward_world_model,
+    train_gru_world_model,
+)
+from .models import GRURewardWorldModel, GRUWorldModel, WorldModel
+from .planning import plan_action_random_shooting
+from .training import (
+    collect_random_data,
+    evaluate_planner,
+    rollout_planner_episode,
+    train_world_model,
+)
+from .visualization import (
+    plot_dataset_phase_space,
+    plot_gru_sequence_prediction,
+    plot_hidden_state_velocity_probe,
+    plot_action_reward_scores,
+    plot_one_step_predictions,
+    plot_partial_observation_ambiguity,
+    plot_planned_trajectory,
+    plot_reward_landscape,
+    plot_reward_model_losses,
+    plot_reward_predictions,
+    plot_training_loss,
+)
+
+__all__ = [
+    "GRURewardWorldModel",
+    "GRUWorldModel",
+    "PartialPointMass1DEnv",
+    "PointMass1DEnv",
+    "WorldModel",
+    "collect_partial_episodes",
+    "collect_random_data",
+    "evaluate_planner",
+    "plot_dataset_phase_space",
+    "plot_gru_sequence_prediction",
+    "plot_hidden_state_velocity_probe",
+    "plot_action_reward_scores",
+    "plot_one_step_predictions",
+    "plot_partial_observation_ambiguity",
+    "plot_planned_trajectory",
+    "plot_reward_landscape",
+    "plot_reward_model_losses",
+    "plot_reward_predictions",
+    "plot_training_loss",
+    "plan_action_random_shooting",
+    "predict_episode",
+    "predict_episode_with_reward",
+    "rollout_planner_episode",
+    "score_candidate_actions",
+    "train_gru_reward_world_model",
+    "train_gru_world_model",
+    "train_world_model",
+]
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-27 14:08:39Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Designing world model planning functions**
+</details></think>
+
+_**Agent (gpt-5.5 2026-07-27 14:08:41Z)**_
+
+我会在现有代码上小步扩展，而不是另起一套：给 `GRURewardWorldModel` 加单步 `step()`，在 `planning.py` 里放世界模型 rollout / random shooting / receding horizon 控制，再在 `visualization.py` 里补 planning 专用图。这样第 5 篇会自然接住第 3、4 篇。
+
+_**Agent (gpt-5.5 2026-07-27 14:08:43Z)**_
+
+先改模型和 planning 模块：这一步让模型能在“脑内”一步一步滚动未来，而不是只能整段训练时 forward。
+
+_**Agent (gpt-5.5 2026-07-27 14:09:13Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Update: `src/hello_world_model/models.py`**
+
+```diff
+@@
+ class GRURewardWorldModel(nn.Module):
+@@
+         pred_next_obs = self.next_obs_head(hidden_seq)
+         pred_reward = self.reward_head(hidden_seq)
+         return pred_next_obs, pred_reward, hn
++
++    def step(
++        self,
++        obs: torch.Tensor,
++        action: torch.Tensor,
++        h: torch.Tensor | None = None,
++    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
++        """Roll the recurrent world model forward by one imagined step."""
++
++        x = torch.cat([obs, action], dim=-1).unsqueeze(1)
++        hidden_seq, hn = self.gru(x, h)
++        hidden = hidden_seq[:, 0, :]
++        pred_next_obs = self.next_obs_head(hidden)
++        pred_reward = self.reward_head(hidden)
++        return pred_next_obs, pred_reward, hn
+```
+
+**Update: `src/hello_world_model/planning.py`**
+
+```diff
+@@
+ from __future__ import annotations
+ 
+ import numpy as np
+ import torch
+ 
+-from .models import WorldModel
++from .envs import PartialPointMass1DEnv
++from .models import GRURewardWorldModel, WorldModel
+@@
+ def plan_action_random_shooting(
+@@
+ 
+     return best_first_action
++
++
++@torch.no_grad()
++def infer_hidden_from_history(
++    model: GRURewardWorldModel,
++    obs_history: np.ndarray,
++    action_history: np.ndarray,
++    device: str = "cpu",
++) -> torch.Tensor | None:
++    """Infer the current recurrent hidden state from real interaction history."""
++
++    if len(obs_history) == 0:
++        return None
++
++    model.eval()
++    obs = torch.tensor(obs_history, dtype=torch.float32, device=device).unsqueeze(0)
++    action = torch.tensor(action_history, dtype=torch.float32, device=device).unsqueeze(0)
++    _, _, hidden = model(obs, action)
++    return hidden
++
++
++@torch.no_grad()
++def imagine_action_sequence(
++    model: GRURewardWorldModel,
++    current_obs: np.ndarray,
++    current_hidden: torch.Tensor | None,
++    action_sequence: np.ndarray,
++    device: str = "cpu",
++) -> tuple[float, np.ndarray, np.ndarray]:
++    """Roll out one candidate action sequence inside the learned world model."""
++
++    model.eval()
++    obs = torch.tensor(current_obs, dtype=torch.float32, device=device).unsqueeze(0)
++    hidden = None if current_hidden is None else current_hidden.clone()
++    imagined_obs: list[np.ndarray] = [obs.squeeze(0).cpu().numpy()]
++    imagined_rewards: list[float] = []
++    total_reward = 0.0
++
++    for action_np in action_sequence:
++        action = torch.tensor(action_np, dtype=torch.float32, device=device).unsqueeze(0)
++        pred_next_obs, pred_reward, hidden = model.step(obs, action, hidden)
++        reward_value = float(pred_reward.item())
++        total_reward += reward_value
++        imagined_rewards.append(reward_value)
++        obs = pred_next_obs
++        imagined_obs.append(obs.squeeze(0).cpu().numpy())
++
++    return total_reward, np.stack(imagined_obs), np.array(imagined_rewards)
++
++
++@torch.no_grad()
++def plan_action_with_world_model(
++    model: GRURewardWorldModel,
++    current_obs: np.ndarray,
++    current_hidden: torch.Tensor | None,
++    horizon: int = 15,
++    num_samples: int = 300,
++    action_low: float = -1.0,
++    action_high: float = 1.0,
++    top_k: int = 8,
++    device: str = "cpu",
++) -> dict[str, np.ndarray | float]:
++    """Random-shooting planner over imagined recurrent world-model rollouts."""
++
++    top_rollouts: list[tuple[float, np.ndarray, np.ndarray, np.ndarray]] = []
++
++    for _ in range(num_samples):
++        action_sequence = np.random.uniform(
++            action_low, action_high, size=(horizon, 1)
++        ).astype(np.float32)
++        total_reward, imagined_obs, imagined_rewards = imagine_action_sequence(
++            model=model,
++            current_obs=current_obs,
++            current_hidden=current_hidden,
++            action_sequence=action_sequence,
++            device=device,
++        )
++        top_rollouts.append(
++            (total_reward, action_sequence, imagined_obs, imagined_rewards)
++        )
++        top_rollouts.sort(key=lambda item: item[0], reverse=True)
++        top_rollouts = top_rollouts[:top_k]
++
++    best_return, best_sequence, best_obs, best_rewards = top_rollouts[0]
++    return {
++        "first_action": best_sequence[0].copy(),
++        "best_sequence": best_sequence.copy(),
++        "best_return": float(best_return),
++        "best_imagined_obs": best_obs.copy(),
++        "best_imagined_rewards": best_rewards.copy(),
++        "top_returns": np.array([item[0] for item in top_rollouts], dtype=np.float32),
++        "top_imagined_obs": [item[2].copy() for item in top_rollouts],
++    }
++
++
++def run_receding_horizon_episode(
++    env: PartialPointMass1DEnv,
++    model: GRURewardWorldModel,
++    horizon: int = 15,
++    num_samples: int = 300,
++    device: str = "cpu",
++) -> dict[str, np.ndarray | list[np.ndarray]]:
++    """Control the real environment by repeatedly replanning in the world model."""
++
++    obs = env.reset()
++    done = False
++    obs_history: list[np.ndarray] = []
++    action_history: list[np.ndarray] = []
++    true_states = [env.get_true_state()]
++    real_rewards: list[float] = []
++    imagined_returns: list[float] = []
++    first_plan_rollouts: list[np.ndarray] | None = None
++    first_best_plan: np.ndarray | None = None
++
++    while not done:
++        current_hidden = infer_hidden_from_history(
++            model=model,
++            obs_history=np.stack(obs_history) if obs_history else np.empty((0, 1)),
++            action_history=np.stack(action_history) if action_history else np.empty((0, 1)),
++            device=device,
++        )
++        plan = plan_action_with_world_model(
++            model=model,
++            current_obs=obs,
++            current_hidden=current_hidden,
++            horizon=horizon,
++            num_samples=num_samples,
++            device=device,
++        )
++        first_action = np.asarray(plan["first_action"], dtype=np.float32)
++
++        if first_plan_rollouts is None:
++            first_plan_rollouts = list(plan["top_imagined_obs"])
++            first_best_plan = np.asarray(plan["best_imagined_obs"])
++
++        next_obs, reward, done, _ = env.step(float(first_action[0]))
++        obs_history.append(obs.copy())
++        action_history.append(first_action.copy())
++        real_rewards.append(float(reward))
++        imagined_returns.append(float(plan["best_return"]))
++        obs = next_obs
++        true_states.append(env.get_true_state())
++
++    return {
++        "observations": np.vstack([item.reshape(1, -1) for item in obs_history] + [obs.reshape(1, -1)]),
++        "actions": np.vstack(action_history),
++        "true_states": np.vstack(true_states),
++        "real_rewards": np.array(real_rewards, dtype=np.float32),
++        "imagined_returns": np.array(imagined_returns, dtype=np.float32),
++        "first_plan_rollouts": first_plan_rollouts or [],
++        "first_best_plan": first_best_plan if first_best_plan is not None else np.empty((0, 1)),
++    }
+```
+
+
+```
+Exit code: 0
+Wall time: 8.1 seconds
+Output:
+Success. Updated the following files:
+M src/hello_world_model/models.py
+M src/hello_world_model/planning.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-27 14:09:52Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Adjusting environment horizon and episodes**
+</details></think>
+
+_**Agent (gpt-5.5 2026-07-27 14:09:52Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Planning visualization function designing**
+</details></think>
+
+_**Agent (gpt-5.5 2026-07-27 14:09:52Z)**_
+
+接下来补教学图：一张看第一次规划时模型想象出的多条未来，一张看滚动规划在真实环境中的轨迹，一张对比每一步 imagined return 与真实 reward。这样读者能看到“模型里想”和“现实中做”的张力。
+
+_**Agent (gpt-5.5 2026-07-27 14:10:02Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Update: `src/hello_world_model/visualization.py`**
+
+```diff
+@@
+ def plot_action_reward_scores(
+@@
+     fig.savefig(output_path, dpi=160)
+     plt.close(fig)
++
++
++def plot_first_planning_rollouts(
++    imagined_rollouts: Sequence[np.ndarray],
++    best_rollout: np.ndarray,
++    output_path: Path,
++) -> None:
++    """Show top imagined futures from the first planning step."""
++
++    _prepare_output(output_path)
++    fig, ax = plt.subplots(figsize=(8, 4.5))
++
++    for rollout in imagined_rollouts:
++        steps = np.arange(len(rollout))
++        ax.plot(steps, rollout[:, 0], linewidth=1, alpha=0.35)
++
++    if len(best_rollout) > 0:
++        steps = np.arange(len(best_rollout))
++        ax.plot(
++            steps,
++            best_rollout[:, 0],
++            linewidth=2.5,
++            label="best imagined rollout",
++        )
++
++    ax.axhline(0.0, color="black", linewidth=1, linestyle="--", label="goal")
++    ax.set_title("First Planning Step: Imagined Position Rollouts")
++    ax.set_xlabel("imagined step")
++    ax.set_ylabel("predicted position")
++    ax.legend(loc="best")
++    ax.grid(True, alpha=0.25)
++    fig.tight_layout()
++    fig.savefig(output_path, dpi=160)
++    plt.close(fig)
++
++
++def plot_receding_horizon_control(
++    planning_log: dict[str, np.ndarray | list[np.ndarray]],
++    output_path: Path,
++) -> None:
++    """Show the real trajectory produced by repeated world-model planning."""
++
++    true_states = np.asarray(planning_log["true_states"])
++    actions = np.asarray(planning_log["actions"]).reshape(-1)
++    rewards = np.asarray(planning_log["real_rewards"]).reshape(-1)
++    steps = np.arange(len(true_states))
++    action_steps = np.arange(len(actions))
++
++    _prepare_output(output_path)
++    fig, axes = plt.subplots(3, 1, figsize=(8, 8), sharex=False)
++
++    axes[0].plot(steps, true_states[:, 0], linewidth=2, label="real position")
++    axes[0].axhline(0.0, color="black", linewidth=1, linestyle="--", label="goal")
++    axes[0].set_title("Receding-Horizon Planning in the Real Environment")
++    axes[0].set_ylabel("position")
++    axes[0].legend(loc="best")
++    axes[0].grid(True, alpha=0.25)
++
++    axes[1].plot(action_steps, actions, color="tab:orange", linewidth=1.5)
++    axes[1].set_title("First Action Executed After Each Replan")
++    axes[1].set_ylabel("acceleration")
++    axes[1].set_ylim(-1.05, 1.05)
++    axes[1].grid(True, alpha=0.25)
++
++    axes[2].plot(action_steps, np.cumsum(rewards), color="tab:green", linewidth=2)
++    axes[2].set_title("Real Cumulative Reward")
++    axes[2].set_xlabel("real environment step")
++    axes[2].set_ylabel("return")
++    axes[2].grid(True, alpha=0.25)
++
++    fig.tight_layout()
++    fig.savefig(output_path, dpi=160)
++    plt.close(fig)
++
++
++def plot_imagined_vs_real_feedback(
++    planning_log: dict[str, np.ndarray | list[np.ndarray]],
++    output_path: Path,
++) -> None:
++    """Compare model-estimated plan quality with real received rewards."""
++
++    imagined_returns = np.asarray(planning_log["imagined_returns"]).reshape(-1)
++    real_rewards = np.asarray(planning_log["real_rewards"]).reshape(-1)
++    steps = np.arange(len(real_rewards))
++
++    _prepare_output(output_path)
++    fig, axes = plt.subplots(2, 1, figsize=(8, 6), sharex=True)
++
++    axes[0].plot(steps, imagined_returns, linewidth=2)
++    axes[0].set_title("Best Imagined Return at Each Replan")
++    axes[0].set_ylabel("imagined return")
++    axes[0].grid(True, alpha=0.25)
++
++    axes[1].plot(steps, real_rewards, color="tab:green", linewidth=2)
++    axes[1].set_title("Real Reward Received After Executing First Action")
++    axes[1].set_xlabel("real environment step")
++    axes[1].set_ylabel("real reward")
++    axes[1].grid(True, alpha=0.25)
++
++    fig.tight_layout()
++    fig.savefig(output_path, dpi=160)
++    plt.close(fig)
+```
+
+
+```
+Exit code: 0
+Wall time: 4 seconds
+Output:
+Success. Updated the following files:
+M src/hello_world_model/visualization.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-27 14:10:12Z)**_
+
+现在把新 planning API 和图示函数导出，并新增第 5 篇的演示脚本。演示脚本会沿用前一篇 reward model 的训练方式，然后用它做滚动规划。
+
+_**Agent (gpt-5.5 2026-07-27 14:10:27Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Update: `src/hello_world_model/__init__.py`**
+
+```diff
+@@
+ from .planning import plan_action_random_shooting
++from .planning import (
++    imagine_action_sequence,
++    infer_hidden_from_history,
++    plan_action_with_world_model,
++    run_receding_horizon_episode,
++)
+@@
+     plot_gru_sequence_prediction,
+     plot_hidden_state_velocity_probe,
++    plot_first_planning_rollouts,
++    plot_imagined_vs_real_feedback,
+     plot_action_reward_scores,
+@@
+     plot_reward_predictions,
++    plot_receding_horizon_control,
+     plot_training_loss,
+ )
+@@
+     "plot_gru_sequence_prediction",
+     "plot_hidden_state_velocity_probe",
++    "plot_first_planning_rollouts",
++    "plot_imagined_vs_real_feedback",
+     "plot_action_reward_scores",
+@@
+     "plot_reward_predictions",
++    "plot_receding_horizon_control",
+     "plot_training_loss",
++    "imagine_action_sequence",
++    "infer_hidden_from_history",
+     "plan_action_random_shooting",
++    "plan_action_with_world_model",
+@@
+     "rollout_planner_episode",
++    "run_receding_horizon_episode",
+```
+
+**Add: `examples/run_planning_world_model.py`**
+
+```diff
++from __future__ import annotations
++
++from pathlib import Path
++import sys
++
++PROJECT_ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(PROJECT_ROOT / "src"))
++
++from hello_world_model import (  # noqa: E402
++    GRURewardWorldModel,
++    PartialPointMass1DEnv,
++    collect_partial_episodes,
++    plot_first_planning_rollouts,
++    plot_imagined_vs_real_feedback,
++    plot_receding_horizon_control,
++    plot_reward_model_losses,
++    run_receding_horizon_episode,
++    train_gru_reward_world_model,
++)
++
++
++def main() -> None:
++    output_dir = PROJECT_ROOT / "outputs" / "planning_world_model"
++
++    print("1. Collecting data for the recurrent reward world model...")
++    training_env = PartialPointMass1DEnv(horizon=60)
++    episodes = collect_partial_episodes(training_env, episodes=220)
++
++    print("2. Training the model used for imagination and reward scoring...")
++    model = GRURewardWorldModel(obs_dim=1, action_dim=1, hidden_dim=32)
++    losses = train_gru_reward_world_model(model, episodes, epochs=50, lr=1e-3)
++    plot_reward_model_losses(losses, output_dir / "01_planning_model_losses.png")
++
++    print("3. Running receding-horizon planning in the real environment...")
++    control_env = PartialPointMass1DEnv(horizon=60)
++    planning_log = run_receding_horizon_episode(
++        control_env,
++        model,
++        horizon=12,
++        num_samples=160,
++    )
++
++    print("4. Saving planning visualizations...")
++    plot_first_planning_rollouts(
++        planning_log["first_plan_rollouts"],
++        planning_log["first_best_plan"],
++        output_dir / "02_first_imagined_rollouts.png",
++    )
++    plot_receding_horizon_control(
++        planning_log,
++        output_dir / "03_receding_horizon_control.png",
++    )
++    plot_imagined_vs_real_feedback(
++        planning_log,
++        output_dir / "04_imagined_vs_real_feedback.png",
++    )
++
++    print(f"Saved visualizations to: {output_dir}")
++
++
++if __name__ == "__main__":
++    main()
+```
+
+
+```
+Exit code: 0
+Wall time: 7.5 seconds
+Output:
+Success. Updated the following files:
+A examples/run_planning_world_model.py
+M src/hello_world_model/__init__.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-27 14:10:42Z)**_
+
+我接着把笔记本身重写成开源风格章节：保留你的核心直觉，但把 planning、random shooting、receding horizon、compounding error 之间的关系梳理清楚。
+
+_**Agent (gpt-5.5 2026-07-27 14:11:31Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Delete: `docs/notes/world-models-5-planning.md`**
+
+**Add: `docs/notes/world-models-5-planning.md`**
+
+```diff
++# 5. 用世界模型做 planning
++
++日期：2026-07-27
++
++状态：学习笔记草稿
++
++## 这篇笔记解决什么问题
++
++前几篇笔记已经搭起了世界模型的几个关键部件：
++
++- dynamics：预测世界会如何变化。
++- memory / latent state：在部分可观测环境里，用历史形成内部信念。
++- reward head：判断某个未来对任务来说是好还是坏。
++
++这一篇进入世界模型真正“开始像智能体”的地方：planning。
++
++一句话理解：
++
++> Planning with a world model，就是让模型先在内部试很多动作序列，再把预测回报最高的那个动作拿到真实环境里执行。
++
++它不是盲目执行动作，而是先想象、比较、再行动。
++
++## 1. 先说人话：为什么需要 planning
++
++假设你现在处在某个状态，手里有三种动作：
++
++- 往左一点。
++- 不动。
++- 往右一点。
++
++你不急着马上执行，而是先在模型里想：
++
++- 如果我连续往左几步，会发生什么？
++- 如果我先右后左，会怎样？
++- 哪条动作序列的累计 reward 更高？
++
++最后你只执行最好序列的第一步。走完这一步之后，再重新观察、重新规划。
++
++这个过程叫 receding horizon planning，也叫滚动时域规划。
++
++```mermaid
++flowchart LR
++    O["observe current state / observation"] --> H["infer hidden state from history"]
++    H --> S["sample candidate action sequences"]
++    S --> R["roll out futures in world model"]
++    R --> C["compare imagined cumulative rewards"]
++    C --> A["execute only the first action"]
++    A --> O
++```
++
++## 2. 为什么只执行第一步
++
++因为模型不是完美的。
++
++如果你一次性把未来 10 步动作都执行完，后面的动作可能已经基于错误预测。更稳妥的做法是：
++
++1. 用模型想象未来 \(H\) 步。
++2. 选出预测累计 reward 最高的动作序列。
++3. 只执行这条序列的第一步。
++4. 回到真实环境重新观察。
++5. 根据新历史重新 planning。
++
++这就是 model-based control 里很经典的思想：计划可以长一点，但现实中每次只迈一步。
++
++```mermaid
++sequenceDiagram
++    participant Env as Real environment
++    participant Agent as Agent
++    participant WM as World model
++
++    Agent->>Env: observe o_t
++    Agent->>WM: infer h_t from history
++    Agent->>WM: imagine many action sequences
++    WM-->>Agent: predicted returns
++    Agent->>Env: execute first action only
++    Env-->>Agent: o_{t+1}, r_t
++    Agent->>Agent: append real transition to history
++```
++
++## 3. Planning 需要模型支持单步 rollout
++
++训练时，我们的 `GRURewardWorldModel` 可以吃一整段序列：
++
++$$
++(o_{1:t}, a_{1:t}) \rightarrow (\hat{o}_{2:t+1}, \hat{r}_{1:t})
++$$
++
++但 planning 时更需要一个单步接口：
++
++$$
++(o_t, a_t, h_{t-1}) \rightarrow (\hat{o}_{t+1}, \hat{r}_t, h_t)
++$$
++
++这个接口做三件事：
++
++- 用当前观测和动作更新 hidden state。
++- 预测下一步观测。
++- 预测当前动作带来的 reward。
++
++在代码里，这对应 `GRURewardWorldModel.step()`。
++
++```mermaid
++flowchart TD
++    O["current observation o_t"] --> M["GRURewardWorldModel.step"]
++    A["candidate action a_t"] --> M
++    H["previous hidden h_{t-1}"] --> M
++    M --> NO["predicted next observation o_{t+1}"]
++    M --> R["predicted reward r_t"]
++    M --> NH["next hidden h_t"]
++```
++
++## 4. 当前 hidden state 从哪里来
++
++Planning 不能从空白状态开始。模型需要先根据真实历史形成当前内部信念：
++
++$$
++h_t = f(o_{1:t}, a_{1:t-1})
++$$
++
++也就是说，智能体在真实环境里走到当前这一步时，已经看过一段历史。我们先把这段历史喂给 recurrent world model，得到当前 hidden state，然后从这个 hidden state 开始想象未来。
++
++这一步对应代码里的 `infer_hidden_from_history()`。
++
++## 5. 在模型里评估一条动作序列
++
++给定当前观测、当前 hidden state 和一条候选动作序列：
++
++$$
++a_t, a_{t+1}, \dots, a_{t+H-1}
++$$
++
++world model 会在内部做 imagined rollout：
++
++$$
++(\hat{o}_{t+1}, \hat{r}_t, h_{t+1}) = model.step(o_t, a_t, h_t)
++$$
++
++然后把预测出来的下一观测继续喂回模型：
++
++$$
++(\hat{o}_{t+2}, \hat{r}_{t+1}, h_{t+2}) = model.step(\hat{o}_{t+1}, a_{t+1}, h_{t+1})
++$$
++
++最关键的一点是：
++
++> rollout 过程中，后续输入不再来自真实环境，而来自模型自己的预测。
++
++这就是“在脑中想象未来”的具体含义。
++
++```mermaid
++flowchart LR
++    O0["real o_t"] --> M0["step with a_t"]
++    M0 --> O1["imagined o_{t+1}"]
++    M0 --> R0["imagined r_t"]
++    O1 --> M1["step with a_{t+1}"]
++    M1 --> O2["imagined o_{t+2}"]
++    M1 --> R1["imagined r_{t+1}"]
++    O2 --> M2["..."]
++```
++
++一条动作序列的分数就是 imagined cumulative reward：
++
++$$
++J(a_{t:t+H-1}) = \sum_{k=0}^{H-1} \hat{r}_{t+k}
++$$
++
++## 6. Random shooting：最简单的 planner
++
++本项目先实现最朴素的 random shooting：
++
++1. 随机采样很多条动作序列。
++2. 用世界模型 rollout 每条序列。
++3. 计算每条序列的 imagined cumulative reward。
++4. 选择分数最高的序列。
++5. 只执行它的第一个动作。
++
++```mermaid
++flowchart TD
++    S["sample N action sequences"] --> W["world-model rollout"]
++    W --> J["compute imagined returns"]
++    J --> B["select best sequence"]
++    B --> F["execute first action only"]
++```
++
++Random shooting 很粗糙，但它非常适合入门，因为它让 planning 的核心思想完全暴露出来：比较未来，而不是直接反应。
++
++## 7. 把 planning 接回真实环境
++
++完整控制闭环是：
++
++1. 在真实环境中观察当前 \(o_t\)。
++2. 根据真实历史推断 hidden state \(h_t\)。
++3. 在世界模型中采样并评估很多条未来动作序列。
++4. 执行最好序列的第一步动作。
++5. 从真实环境得到 \(o_{t+1}, r_t\)。
++6. 把真实 transition 加入历史，回到第 1 步。
++
++注意一个很重要的区别：
++
++- planning 时比较的是模型预测的 imagined reward。
++- 最终成绩由真实环境返回的 real reward 决定。
++
++这正是世界模型方法最核心的张力：
++
++> 你靠模型思考，但最后由真实世界裁判。
++
++## 8. 配套代码演示
++
++这一篇对应的完整演示是：
++
++- [examples/run_planning_world_model.py](../../examples/run_planning_world_model.py)
++- [src/hello_world_model/planning.py](../../src/hello_world_model/planning.py)
++
++运行方式：
++
++```bash
++pip install -r requirements.txt
++python examples/run_planning_world_model.py
++```
++
++运行后会生成：
++
++- `01_planning_model_losses.png`：用于 planning 的 recurrent reward world model 训练误差。
++- `02_first_imagined_rollouts.png`：第一次规划时，模型想象出的多条未来轨迹。
++- `03_receding_horizon_control.png`：滚动规划在真实环境中的控制轨迹。
++- `04_imagined_vs_real_feedback.png`：模型预测的最佳 imagined return 与真实 reward 的对照。
++
++## 9. 最小版本的明显限制
++
++这个最小版本有几个重要限制：
++
++- 它在 observation space 里 rollout，长 horizon 下容易累计误差。
++- hidden state 是确定性的，还不能显式表达多种可能未来。
++- planner 使用 random shooting，采样效率很低。
++- reward model 一旦不准，planner 可能会选择“模型以为好、现实很差”的动作。
++
++其中最值得盯住的是 compounding error。
++
++当模型把 \(\hat{o}_{t+1}\) 继续当作下一步输入时，误差会一步步滚大：
++
++```mermaid
++flowchart LR
++    E1["small one-step error"] --> E2["larger two-step error"]
++    E2 --> E3["trajectory drift"]
++    E3 --> E4["bad action choice"]
++```
++
++这也是为什么更高级的 world model 往往会：
++
++- 在 latent space 而不是 pixel / observation space 中 rollout。
++- 用 stochastic latent state 表达不确定性。
++- 学 value function 或 actor，减少纯采样 planning 的成本。
++- 做多步一致性训练或其他稳健化处理。
++
++## 10. 和 PlaNet / Dreamer 的关系
++
++到这里，我们的最小系统已经有了 PlaNet / Dreamer 的雏形：
++
++- 有内部状态。
++- 有 dynamics。
++- 有 reward prediction。
++- 有 imagined rollout。
++- 有基于 imagined return 的动作选择。
++
++但它还很初级：
++
++- PlaNet 在 latent state 中做 planning。
++- Dreamer 在 latent imagination 中训练 actor-critic。
++- MuZero 更进一步，不要求重建观测，而是学习对 planning 有用的表征、动态和价值。
++
++所以这篇笔记的位置很关键：它把“世界模型会预测”推进到了“世界模型能辅助决策”。
++
++## 11. 这一篇只要抓住三句话
++
++第一句：
++
++> Planning 的本质，是在模型内部比较不同动作序列带来的未来累计 reward。
++
++第二句：
++
++> 真正执行时，通常只执行最好序列的第一步，然后重新观察、重新规划。
++
++第三句：
++
++> World model 的价值不在于“会预测下一帧”，而在于“能帮助你选择动作”。
++
++## 下一步
++
++下一篇笔记可以继续拆：
++
++> 为什么在 observation space 中 rollout 容易出错？latent rollout 为什么更稳？
+```
+
+
+```
+Exit code: 0
+Wall time: 9.6 seconds
+Output:
+Success. Updated the following files:
+A docs/notes/world-models-5-planning.md
+D docs/notes/world-models-5-planning.md
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-27 14:11:51Z)**_
+
+笔记已经整理好。现在我更新索引和 README，让第 5 个演示能从 `examples/README.md` 和 `src/README.md` 找到，项目结构继续保持“一篇笔记一个演示入口”。
+
+_**Agent (gpt-5.5 2026-07-27 14:11:51Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 -Raw 'examples\README.md'`</summary>
+```
+Chunk ID: 3015c7
+Wall time: 0.3482 seconds
+Process exited with code 0
+Original token count: 572
+Output:
+# Examples
+
+这里存放可以直接运行的小实验。
+
+计划中的第一个实验：
+
+- 用一个简单环境收集 `(state, action, next_state)` 数据。
+- 训练一个小模型预测 `next_state`。
+- 对比真实下一状态和模型预测结果。
+
+每个例子建议包含：
+
+- 运行命令
+- 依赖说明
+- 预期输出
+- 对应笔记
+
+## 当前示例
+
+### 1D point mass world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_point_mass_world_model.py
+```
+
+运行后会在 `outputs/point_mass_world_model` 下生成教学图示：
+
+- `01_random_data_phase_space.png`：随机交互数据覆盖了哪些位置和速度。
+- `02_training_loss.png`：world model 的训练误差是否下降。
+- `03_one_step_predictions.png`：模型预测的下一状态是否接近真实下一状态。
+- `04_planned_trajectory.png`：planner 是否把点质量系统推向目标位置。
+
+对应笔记：
+
+- [MDP、POMDP 与最小世界模型](../docs/notes/world-models-basics.md)
+
+### Partial observation GRU world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_partial_observation_gru.py
+```
+
+运行后会在 `outputs/partial_observation_gru` 下生成教学图示：
+
+- `01_partial_observation_ambiguity.png`：同一个位置观测可能对应不同隐藏速度。
+- `02_gru_training_loss.png`：GRU world model 的训练误差。
+- `03_gru_sequence_prediction.png`：真实位置序列与预测位置序列对比。
+- `04_hidden_state_probe.png`：GRU hidden state 是否编码了隐藏速度信息。
+
+对应笔记：
+
+- [为什么世界模型需要 memory 与 latent state](../docs/notes/world-models-latent-memory.md)
+
+### Reward world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_reward_world_model.py
+```
+
+运行后会在 `outputs/reward_world_model` 下生成教学图示：
+
+- `01_reward_landscape.png`：toy 环境里 reward 如何由目标距离和动作代价决定。
+- `02_reward_model_losses.png`：total / observation / reward 三种训练误差。
+- `03_reward_prediction.png`：真实 reward 与预测 reward 的对比。
+- `04_reward_guided_action_scores.png`：reward head 如何给候选动作排序。
+
+对应笔记：
+
+- [为什么世界模型需要预测 reward](../docs/notes/world-models-reward.md)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-27 14:11:51Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 -Raw 'src\README.md'`</summary>
+```
+Chunk ID: cc3ac6
+Wall time: 0.3321 seconds
+Process exited with code 0
+Original token count: 284
+Output:
+# Source Code
+
+这里存放世界模型相关的可复用代码。
+
+初期可以先从最小模块开始：
+
+- 环境交互代码
+- 数据收集代码
+- 状态预测模型
+- 训练脚本
+- 评估脚本
+
+建议原则：
+
+- 每个实验都能从 README 或注释中看懂入口。
+- 优先写小而清楚的代码，再逐步抽象。
+- 每次实验都记录对应的笔记链接。
+
+## 当前代码
+
+- [hello_world_model](hello_world_model)：最小 world model 教学代码。
+
+它包含：
+
+- `envs.py`：一维点质量环境。
+- `models.py`：MLP world model 和 GRU world model。
+- `training.py`：完整状态下的数据收集、训练和评估。
+- `memory.py`：partial observation 序列数据、GRU 训练和 reward head 训练。
+- `planning.py`：random shooting 规划器。
+- `visualization.py`：训练过程和规划结果的可视化。
+
+对应笔记：
+
+- [MDP、POMDP 与最小世界模型](../docs/notes/world-models-basics.md)
+- [为什么世界模型需要 memory 与 latent state](../docs/notes/world-models-latent-memory.md)
+- [为什么世界模型需要预测 reward](../docs/notes/world-models-reward.md)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-27 14:11:51Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 -Raw 'docs\notes\README.md'`</summary>
+```
+Chunk ID: dc8a4a
+Wall time: 0.3211 seconds
+Process exited with code 0
+Original token count: 163
+Output:
+# 学习笔记
+
+这里存放世界模型学习过程中的笔记、思考和论文阅读记录。
+
+建议命名方式：
+
+```text
+YYYY-MM-DD-topic.md
+```
+
+建议每篇笔记包含：
+
+- 今天解决了什么问题。
+- 我现在怎么理解这个概念。
+- 有哪些例子或代码帮助理解。
+- 还不理解什么。
+- 下一步准备做什么。
+
+## 当前笔记
+
+- [世界模型的第一层直觉](world-models-intuition.md)
+- [MDP、POMDP 与最小世界模型](world-models-basics.md)
+- [为什么世界模型需要 memory 与 latent state](world-models-latent-memory.md)
+- [为什么世界模型需要预测 reward](world-models-reward.md)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-27 14:12:02Z)**_
+
+我发现索引里还保留着旧文件名，比如 `world-models-basics.md`，但现在仓库实际是编号文件 `world-models-2-basics.md` 等。我会顺手把这些链接修正，避免开源读者点到 404。
+
+_**Agent (gpt-5.5 2026-07-27 14:12:16Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Update: `examples/README.md`**
+
+```diff
+@@
+-- [MDP、POMDP 与最小世界模型](../docs/notes/world-models-basics.md)
++- [MDP、POMDP 与最小世界模型](../docs/notes/world-models-2-basics.md)
+@@
+-- [为什么世界模型需要 memory 与 latent state](../docs/notes/world-models-latent-memory.md)
++- [为什么世界模型需要 memory 与 latent state](../docs/notes/world-models-3-latent-memory.md)
+@@
+-- [为什么世界模型需要预测 reward](../docs/notes/world-models-reward.md)
++- [为什么世界模型需要预测 reward](../docs/notes/world-models-4-reward.md)
++
++### Planning with a world model
++
++```bash
++pip install -r requirements.txt
++python examples/run_planning_world_model.py
++```
++
++运行后会在 `outputs/planning_world_model` 下生成教学图示：
++
++- `01_planning_model_losses.png`：用于 planning 的 recurrent reward world model 训练误差。
++- `02_first_imagined_rollouts.png`：第一次规划时，模型想象出的多条未来轨迹。
++- `03_receding_horizon_control.png`：滚动规划在真实环境中的控制轨迹。
++- `04_imagined_vs_real_feedback.png`：模型预测的最佳 imagined return 与真实 reward 的对照。
++
++对应笔记：
++
++- [用世界模型做 planning](../docs/notes/world-models-5-planning.md)
+```
+
+**Update: `src/README.md`**
+
+```diff
+@@
+-- `planning.py`：random shooting 规划器。
++- `planning.py`：random shooting、imagined rollout 和 receding-horizon planning。
+@@
+-- [MDP、POMDP 与最小世界模型](../docs/notes/world-models-basics.md)
+-- [为什么世界模型需要 memory 与 latent state](../docs/notes/world-models-latent-memory.md)
+-- [为什么世界模型需要预测 reward](../docs/notes/world-models-reward.md)
++- [MDP、POMDP 与最小世界模型](../docs/notes/world-models-2-basics.md)
++- [为什么世界模型需要 memory 与 latent state](../docs/notes/world-models-3-latent-memory.md)
++- [为什么世界模型需要预测 reward](../docs/notes/world-models-4-reward.md)
++- [用世界模型做 planning](../docs/notes/world-models-5-planning.md)
+```
+
+**Update: `docs/notes/README.md`**
+
+```diff
+@@
+-- [世界模型的第一层直觉](world-models-intuition.md)
+-- [MDP、POMDP 与最小世界模型](world-models-basics.md)
+-- [为什么世界模型需要 memory 与 latent state](world-models-latent-memory.md)
+-- [为什么世界模型需要预测 reward](world-models-reward.md)
++- [世界模型的第一层直觉](world-models-1-intuition.md)
++- [MDP、POMDP 与最小世界模型](world-models-2-basics.md)
++- [为什么世界模型需要 memory 与 latent state](world-models-3-latent-memory.md)
++- [为什么世界模型需要预测 reward](world-models-4-reward.md)
++- [用世界模型做 planning](world-models-5-planning.md)
+```
+
+
+```
+Exit code: 0
+Wall time: 6.5 seconds
+Output:
+Success. Updated the following files:
+M examples/README.md
+M src/README.md
+M docs/notes/README.md
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-27 14:12:36Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Inspecting import dependencies and data shapes**
+</details></think>
+
+_**Agent (gpt-5.5 2026-07-27 14:12:42Z)**_
+
+最后我会做静态检查：Python 编译、Git 状态、以及 diff 摘要。完整运行如果本地还没装 `numpy/torch/matplotlib`，我会照实说明。
+
+_**Agent (gpt-5.5 2026-07-27 14:12:42Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `python -m py_compile src\hello_world_model\__init__.py src\hello_world_model\envs.py src\hello_world_model\models.py src\hello_world_model\memory.py src\hello_world_model\planning.py src\hello_world_model\visualization.py examples\run_planning_world_model.py examples\run_reward_world_model.py examples\run_partial_observation_gru.py examples\run_point_mass_world_model.py`</summary>
+```
+Chunk ID: 3921e6
+Wall time: 0.3799 seconds
+Process exited with code 0
+Original token count: 0
+Output:
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-27 14:12:42Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `python -c "import numpy, torch, matplotlib; print('deps ok')"`</summary>
+```
+Chunk ID: 6522ed
+Wall time: 0.3482 seconds
+Process exited with code 1
+Original token count: 54
+Output:
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import numpy, torch, matplotlib; print('deps ok')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'numpy'
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-27 14:12:42Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git status --short --branch`</summary>
+```
+Chunk ID: 268901
+Wall time: 0.2128 seconds
+Process exited with code 0
+Original token count: 105
+Output:
+## main...origin/main
+ M .specstory/history/2026-07-19_03-33-50Z-github-github-https-github.md
+ M .specstory/statistics.json
+ M docs/notes/README.md
+ M docs/notes/world-models-5-planning.md
+ M examples/README.md
+ M src/README.md
+ M src/hello_world_model/__init__.py
+ M src/hello_world_model/models.py
+ M src/hello_world_model/planning.py
+ M src/hello_world_model/visualization.py
+?? examples/run_planning_world_model.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-27 14:12:42Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git diff --stat`</summary>
+```
+Chunk ID: ae462b
+Wall time: 0.2567 seconds
+Process exited with code 0
+Original token count: 213
+Output:
+warning: in the working copy of '.specstory/history/2026-07-19_03-33-50Z-github-github-https-github.md', CRLF will be replaced by LF the next time Git touches it
+ ...6-07-19_03-33-50Z-github-github-https-github.md |  10 +
+ .specstory/statistics.json                         |   6 +-
+ docs/notes/README.md                               |   9 +-
+ docs/notes/world-models-5-planning.md              | 473 ++++++++++-----------
+ examples/README.md                                 |  24 +-
+ src/README.md                                      |   9 +-
+ src/hello_world_model/__init__.py                  |  16 +
+ src/hello_world_model/models.py                    |  15 +
+ src/hello_world_model/planning.py                  | 155 ++++++-
+ src/hello_world_model/visualization.py             | 102 +++++
+ 10 files changed, 547 insertions(+), 272 deletions(-)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-27 14:13:04Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Inspecting import order and syntax**
+</details></think>
+
+_**Agent (gpt-5.5 2026-07-27 14:13:04Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Evaluating dependency installation options**
+</details></think>
+
+_**Agent (gpt-5.5 2026-07-27 14:13:13Z)**_
+
+已完成。我没有执行 `git add` 或 `commit`。
+
+这次把第 5 篇整理成了正式开源笔记：[world-models-5-planning.md](E:/HelloWorldModel/docs/notes/world-models-5-planning.md)
+
+我主要优化了这条主线：前几篇已经有 `dynamics + memory + reward`，这一篇说明 world model 如何真正用于决策，也就是在模型内部 rollout 多条未来，比较 imagined cumulative reward，然后只执行最好动作序列的第一步。
+
+代码配套也补齐了一个新的演示入口：
+
+- [examples/run_planning_world_model.py](E:/HelloWorldModel/examples/run_planning_world_model.py)
+- [planning.py](E:/HelloWorldModel/src/hello_world_model/planning.py)：新增 hidden inference、imagined rollout、random shooting、receding-horizon planning
+- [models.py](E:/HelloWorldModel/src/hello_world_model/models.py)：给 `GRURewardWorldModel` 增加单步 `step()`
+- [visualization.py](E:/HelloWorldModel/src/hello_world_model/visualization.py)：新增 planning 专用图
+- [examples/README.md](E:/HelloWorldModel/examples/README.md)、[src/README.md](E:/HelloWorldModel/src/README.md)、[docs/notes/README.md](E:/HelloWorldModel/docs/notes/README.md)：更新索引和链接
+
+运行方式：
+
+```powershell
+pip install -r requirements.txt
+python examples/run_planning_world_model.py
+```
+
+运行后会生成：
+
+```text
+outputs/planning_world_model/
+├── 01_planning_model_losses.png
+├── 02_first_imagined_rollouts.png
+├── 03_receding_horizon_control.png
+└── 04_imagined_vs_real_feedback.png
+```
+
+我做了 Python 编译检查，已通过。完整运行暂时没跑起来，因为当前环境缺少 `numpy`，安装依赖后即可运行。
+
+提交时建议不要加入 `.specstory`。本次相关内容可以这样提交：
+
+```powershell
+git add docs\notes\world-models-5-planning.md docs\notes\README.md examples\README.md src\README.md examples\run_planning_world_model.py src\hello_world_model
+git commit -m "feat: add world model planning example"
+git push
+```
+
+---
+
+_**User (2026-07-30 06:20:12Z)**_
+
+现在更新了笔记：docs\notes\world-models-6-latent_dynamics.md请你作为世界模型专家，审视这个文件的内容，并按照开源项目风格，进行格式和内容的优化，你可以多生成一些图示辅助理解；我笔记离提到的代码，先在该笔记里优化格式，然后补齐其他演示运行所需要的内容，然后可以考虑把他们整理成一个完整项目放到/src 目录下，作为完整的代码配套,注意和已有代码的演示逻辑，因为这个项目每一篇笔记都会对应一个演示，演示逻辑和结构要清晰；

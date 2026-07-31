@@ -23,3 +23,4 @@ YYYY-MM-DD-topic.md
 - [为什么世界模型需要 memory 与 latent state](world-models-3-latent-memory.md)
 - [为什么世界模型需要预测 reward](world-models-4-reward.md)
 - [用世界模型做 planning](world-models-5-planning.md)
+- [为什么要转向 latent dynamics](world-models-6-latent-dynamics.md)

@@ -1,6 +1,13 @@
 """Minimal world model examples for learning."""
 
 from .envs import PartialPointMass1DEnv, PointMass1DEnv
+from .latent import (
+    collect_real_rollout,
+    make_probe_action_sequence,
+    rollout_latent_dynamics_model,
+    rollout_observation_model,
+    train_latent_dynamics_model,
+)
 from .memory import (
     collect_partial_episodes,
     predict_episode,
@@ -9,7 +16,12 @@ from .memory import (
     train_gru_reward_world_model,
     train_gru_world_model,
 )
-from .models import GRURewardWorldModel, GRUWorldModel, WorldModel
+from .models import (
+    GRURewardWorldModel,
+    GRUWorldModel,
+    LatentDynamicsWorldModel,
+    WorldModel,
+)
 from .planning import plan_action_random_shooting
 from .planning import (
     imagine_action_sequence,
@@ -25,6 +37,8 @@ from .training import (
 )
 from .visualization import (
     plot_dataset_phase_space,
+    plot_latent_model_losses,
+    plot_latent_space_rollout,
     plot_gru_sequence_prediction,
     plot_hidden_state_velocity_probe,
     plot_first_planning_rollouts,
@@ -37,19 +51,26 @@ from .visualization import (
     plot_reward_model_losses,
     plot_reward_predictions,
     plot_receding_horizon_control,
+    plot_rollout_error_growth,
+    plot_rollout_prediction_comparison,
     plot_training_loss,
 )
 
 __all__ = [
     "GRURewardWorldModel",
     "GRUWorldModel",
+    "LatentDynamicsWorldModel",
     "PartialPointMass1DEnv",
     "PointMass1DEnv",
     "WorldModel",
+    "collect_real_rollout",
     "collect_partial_episodes",
     "collect_random_data",
     "evaluate_planner",
+    "make_probe_action_sequence",
     "plot_dataset_phase_space",
+    "plot_latent_model_losses",
+    "plot_latent_space_rollout",
     "plot_gru_sequence_prediction",
     "plot_hidden_state_velocity_probe",
     "plot_first_planning_rollouts",
@@ -62,6 +83,8 @@ __all__ = [
     "plot_reward_model_losses",
     "plot_reward_predictions",
     "plot_receding_horizon_control",
+    "plot_rollout_error_growth",
+    "plot_rollout_prediction_comparison",
     "plot_training_loss",
     "imagine_action_sequence",
     "infer_hidden_from_history",
@@ -70,7 +93,10 @@ __all__ = [
     "predict_episode",
     "predict_episode_with_reward",
     "rollout_planner_episode",
+    "rollout_latent_dynamics_model",
+    "rollout_observation_model",
     "run_receding_horizon_episode",
+    "train_latent_dynamics_model",
     "score_candidate_actions",
     "train_gru_reward_world_model",
     "train_gru_world_model",

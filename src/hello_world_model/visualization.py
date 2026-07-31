@@ -76,6 +76,28 @@ def plot_reward_model_losses(
     plt.close(fig)
 
 
+def plot_latent_model_losses(
+    losses: dict[str, Sequence[float]],
+    output_path: Path,
+) -> None:
+    """Show latent dynamics model training losses."""
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    epochs = np.arange(1, len(losses["total"]) + 1)
+    ax.plot(epochs, losses["total"], label="total", linewidth=2)
+    ax.plot(epochs, losses["obs"], label="decoded observation", linewidth=1.8)
+    ax.plot(epochs, losses["reward"], label="reward", linewidth=1.8)
+    ax.set_title("Latent Dynamics Model Training Losses")
+    ax.set_xlabel("epoch")
+    ax.set_ylabel("MSE loss")
+    ax.legend(loc="best")
+    ax.grid(True, alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
 @torch.no_grad()
 def plot_one_step_predictions(
     model: WorldModel,
@@ -444,6 +466,126 @@ def plot_imagined_vs_real_feedback(
     axes[1].set_ylabel("real reward")
     axes[1].grid(True, alpha=0.25)
 
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_rollout_prediction_comparison(
+    real_obs: np.ndarray,
+    obs_rollout: np.ndarray,
+    latent_rollout: np.ndarray,
+    output_path: Path,
+) -> None:
+    """Compare real, observation-space, and latent-space open-loop rollouts."""
+
+    steps = np.arange(len(real_obs))
+
+    _prepare_output(output_path)
+    fig, axes = plt.subplots(2, 1, figsize=(8, 7), sharex=True)
+
+    axes[0].plot(steps, real_obs[:, 0], label="real position", linewidth=2)
+    axes[0].plot(
+        steps,
+        obs_rollout[:, 0],
+        label="observation rollout",
+        linewidth=1.8,
+        linestyle="--",
+    )
+    axes[0].plot(
+        steps,
+        latent_rollout[:, 0],
+        label="latent rollout",
+        linewidth=1.8,
+        linestyle=":",
+    )
+    axes[0].axhline(0.0, color="black", linewidth=1, linestyle="--", label="goal")
+    axes[0].set_title("Open-Loop Rollout Position")
+    axes[0].set_ylabel("position")
+    axes[0].legend(loc="best")
+    axes[0].grid(True, alpha=0.25)
+
+    axes[1].plot(steps, real_obs[:, 1], label="real velocity", linewidth=2)
+    axes[1].plot(
+        steps,
+        obs_rollout[:, 1],
+        label="observation rollout",
+        linewidth=1.8,
+        linestyle="--",
+    )
+    axes[1].plot(
+        steps,
+        latent_rollout[:, 1],
+        label="latent rollout",
+        linewidth=1.8,
+        linestyle=":",
+    )
+    axes[1].set_title("Open-Loop Rollout Velocity")
+    axes[1].set_xlabel("rollout step")
+    axes[1].set_ylabel("velocity")
+    axes[1].legend(loc="best")
+    axes[1].grid(True, alpha=0.25)
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_rollout_error_growth(
+    real_obs: np.ndarray,
+    obs_rollout: np.ndarray,
+    latent_rollout: np.ndarray,
+    output_path: Path,
+) -> None:
+    """Show how open-loop prediction error grows over rollout horizon."""
+
+    steps = np.arange(len(real_obs))
+    obs_error = np.linalg.norm(obs_rollout - real_obs, axis=1)
+    latent_error = np.linalg.norm(latent_rollout - real_obs, axis=1)
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    ax.plot(steps, obs_error, label="observation rollout error", linewidth=2)
+    ax.plot(steps, latent_error, label="latent rollout error", linewidth=2)
+    ax.set_title("Compounding Error During Open-Loop Rollout")
+    ax.set_xlabel("rollout step")
+    ax.set_ylabel("state prediction error")
+    ax.legend(loc="best")
+    ax.grid(True, alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_latent_space_rollout(
+    latents: np.ndarray,
+    output_path: Path,
+) -> None:
+    """Visualize the imagined trajectory inside the learned latent space."""
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(6, 5))
+
+    if latents.shape[1] == 1:
+        ax.plot(np.arange(len(latents)), latents[:, 0], linewidth=2)
+        ax.set_xlabel("rollout step")
+        ax.set_ylabel("latent dim 0")
+    else:
+        steps = np.arange(len(latents))
+        scatter = ax.scatter(
+            latents[:, 0],
+            latents[:, 1],
+            c=steps,
+            s=28,
+            cmap="viridis",
+        )
+        ax.plot(latents[:, 0], latents[:, 1], linewidth=1, alpha=0.5)
+        ax.set_xlabel("latent dim 0")
+        ax.set_ylabel("latent dim 1")
+        fig.colorbar(scatter, ax=ax, label="rollout step")
+
+    ax.set_title("Latent-Space Rollout Trajectory")
+    ax.grid(True, alpha=0.25)
     fig.tight_layout()
     fig.savefig(output_path, dpi=160)
     plt.close(fig)
