@@ -26,3 +26,4 @@ YYYY-MM-DD-topic.md
 - [为什么要转向 latent dynamics](world-models-6-latent-dynamics.md)
 - [为什么世界模型需要 stochastic latent state](world-models-7-stochastic-latent-state.md)
 - [Prior 与 Posterior Latent：世界模型如何“先猜，再校正”](world-models-8-prior-and-posterior-latent.md)
+- [PlaNet 与 Dreamer：同一个世界模型，两种使用方式](world-models-9-planet-dreamer.md)
