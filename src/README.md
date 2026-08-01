@@ -28,6 +28,7 @@
 - `memory.py`：partial observation 序列数据、GRU 训练和 reward head 训练。
 - `planning.py`：random shooting、imagined rollout 和 receding-horizon planning。
 - `latent.py`：latent dynamics 训练和 open-loop rollout 对比。
+- `stochastic.py`：stochastic latent state 训练、采样、rollout，以及 prior/posterior latent 对齐分析。
 - `visualization.py`：训练过程和规划结果的可视化。
 
 对应笔记：
@@ -37,3 +38,5 @@
 - [为什么世界模型需要预测 reward](../docs/notes/world-models-4-reward.md)
 - [用世界模型做 planning](../docs/notes/world-models-5-planning.md)
 - [为什么要转向 latent dynamics](../docs/notes/world-models-6-latent-dynamics.md)
+- [为什么世界模型需要 stochastic latent state](../docs/notes/world-models-7-stochastic-latent-state.md)
+- [Prior 与 Posterior Latent：世界模型如何“先猜，再校正”](../docs/notes/world-models-8-prior-and-posterior-latent.md)

@@ -24,3 +24,5 @@ YYYY-MM-DD-topic.md
 - [为什么世界模型需要预测 reward](world-models-4-reward.md)
 - [用世界模型做 planning](world-models-5-planning.md)
 - [为什么要转向 latent dynamics](world-models-6-latent-dynamics.md)
+- [为什么世界模型需要 stochastic latent state](world-models-7-stochastic-latent-state.md)
+- [Prior 与 Posterior Latent：世界模型如何“先猜，再校正”](world-models-8-prior-and-posterior-latent.md)

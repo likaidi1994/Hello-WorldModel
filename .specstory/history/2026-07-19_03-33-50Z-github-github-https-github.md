@@ -9871,3 +9871,4471 @@ git push
 _**User (2026-07-30 06:20:12Z)**_
 
 现在更新了笔记：docs\notes\world-models-6-latent_dynamics.md请你作为世界模型专家，审视这个文件的内容，并按照开源项目风格，进行格式和内容的优化，你可以多生成一些图示辅助理解；我笔记离提到的代码，先在该笔记里优化格式，然后补齐其他演示运行所需要的内容，然后可以考虑把他们整理成一个完整项目放到/src 目录下，作为完整的代码配套,注意和已有代码的演示逻辑，因为这个项目每一篇笔记都会对应一个演示，演示逻辑和结构要清晰；
+
+
+---
+
+_**Agent (gpt-5.5 2026-07-30 06:22:00Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Announcing and reading visualize skill**
+</details></think>
+
+_**Agent (gpt-5.5 2026-07-30 06:22:02Z)**_
+
+我会继续沿用现在这条“第 N 篇笔记对应第 N 个演示入口”的项目风格来处理。因为这篇涉及 latent dynamics，可视化会很有价值，我先按 `visualize:visualize` 的规范判断哪些图适合放进 Markdown、哪些适合由运行脚本生成。
+
+_**Agent (gpt-5.5 2026-07-30 06:22:03Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Raw 'C:\Users\Lenovo\.codex\plugins\cache\openai-bundled\visualize\1.0.15\skills\visualize\SKILL.md'`</summary>
+```
+Chunk ID: 18b070
+Wall time: 0.3109 seconds
+Process exited with code 0
+Original token count: 5164
+Output:
+---
+name: visualize
+description: "Create visualizations and interactive tools directly in conversation. Use when asked to show how something works, make simulators or labs, maps, plots, charts or graphs, comparisons, scenarios, adjustable inputs, and exploration beyond regular text."
+---
+
+# Visualize
+
+- A request for a new standalone file, website, app page, component, or other
+  project change is not an in-conversation visualization request, even when the
+  deliverable contains charts or interactive content.
+- Create a visual only when the user needs to see or explore it in the
+  conversation and it materially improves the explanation. Do not create an
+  inline visual merely because the request involves data, charts, or an
+  interactive page.
+- Use Mermaid when labeled nodes and edges fully explain a static structure;
+  return a normal fenced Mermaid block and no visualization file. Use HTML for
+  dynamics, spatial motion, adjustable inputs, and other visuals.
+- Work silently unless blocked or the user explicitly asks for progress. Never
+  send commentary or progress updates while reading this skill or writing or
+  updating the file; the final response must be your first user-facing message.
+- In user-facing prose, describe only what the visual helps the user see or
+  decide. Keep it concise and do not repeat information already clear from the
+  visual. Never announce this skill, a visualization surface, widgets, HTML,
+  SVG, scripts, local files, inline data, or implementation details.
+
+## Context compaction
+
+Copy into every compaction summary:
+`Reload the full visualize skill before creating or updating a visualization.`
+
+## Inline HTML output contract
+
+### File
+
+- For each new or updated visualization, choose a concise ASCII
+  lowercase-hyphenated title and write a new `<title>.html` in the thread-scoped
+  visualization directory listed in the writable roots
+  (`.codex/visualizations/YYYY/MM/DD/<thread-id>`).
+- Build the visual in the conversation. Use the open project when the user asks
+  for a site, app page, component, or change to existing project files.
+
+### Fragment
+
+- Write only an HTML fragment: no `<!doctype>`, `<html>`, `<head>`, or `<body>`.
+- Write literal markup: use `<div class="card">Hi</div>` plus a real newline,
+  never `<div class=\"card\">Hi</div>\n`. Never embed the fragment in an inline
+  Python, JavaScript, or shell string. Read it back; rewrite literal `\"` or
+  `\n`.
+- Keep CSS and JavaScript in the fragment only when base classes are
+  insufficient. Load static resources only from the CDN allowlist. Never use
+  `fetch`, XHR, WebSocket, or other API calls.
+- Give the fragment root a unique ID and select it with
+  `document.getElementById(...)`. Never derive the root from
+  `document.currentScript`; scripts may sit outside the root.
+- Keep visualizations under 2 MB. Aggregate, bin, downsample, reduce precision,
+  or drop unused fields from large inline datasets.
+- Check that JavaScript has no undefined identifiers, every queried element
+  exists, and the primary interaction updates the visual. The bundled
+  `python3 scripts/render.py <absolute-fragment-path> [<destination>.html] [--serve]`
+  can wrap a fragment as standalone HTML or temporarily serve it for browser
+  inspection when a preview would help with layout, theme, or runtime behavior.
+
+### Content and response
+
+- Keep the fragment focused on the visualization. Do not include explanatory
+  paragraphs, formulas, instructions, or narrative callouts. Include only
+  necessary labels, legends, values, and accessible text alternatives.
+- Use the normal response flow. Put any necessary concise explanation outside
+  the fragment, and add this exact directive on its own line where the visual
+  should appear:
+
+```text
+::codex-inline-vis{file="<title>.html"}
+```
+
+- Emit only the directive for the fragment. Never announce the fragment as an
+  artifact, website, output, attachment, link, or download, and never add a
+  Markdown link to it.
+
+### External resources
+
+- The CSP allows only `cdnjs.cloudflare.com`, `esm.sh`, `cdn.jsdelivr.net`,
+  `unpkg.com`, `fonts.googleapis.com`, `fonts.gstatic.com`, and
+  `fonts.bunny.net`. Other origins are blocked and fail silently.
+
+## Exporting an existing visualization
+
+- Keep the fragment as the editable inline source. When the user explicitly asks
+  to save, export, or publish a visualization that is already shown in the
+  conversation, render it with
+  `python3 scripts/render.py <absolute-fragment-path> <destination>.html`.
+- Apply this export flow only when the user explicitly asks to turn the existing
+  inline source or visualization into a website. For a general website request,
+  build a new responsive site in the output directory or open project, using
+  Sites when appropriate, without applying th
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-30 06:22:15Z)**_
+
+我先读取第 6 篇笔记、当前代码结构和 Git 状态。重点会看它和第 5 篇 planning 的衔接：第 6 篇应该解释为什么要从 observation rollout 走向 latent dynamics。
+
+_**Agent (gpt-5.5 2026-07-30 06:22:15Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 -Raw 'docs\notes\world-models-6-latent_dynamics.md'`</summary>
+```
+Chunk ID: 8efcde
+Wall time: 0.4151 seconds
+Process exited with code 0
+Original token count: 1282
+Output:
+为什么在 observation 空间里 rollout 容易崩，所以要转向 latent dynamics
+从我们的toy例子里可以看到：模型在想象未来时，是把自己预测出来的 next_obs 再喂给自己。
+
+也就是：
+
+o
+t
+	​
+
+a
+t
+	​
+
+	​
+
+o
+^
+t+1
+	​
+
+
+然后再用
+
+o
+^
+t+1
+	​
+
+a
+t+1
+	​
+
+	​
+
+o
+^
+t+2
+	​
+
+
+再继续：
+
+o
+^
+t+2
+	​
+
+a
+t+2
+	​
+
+	​
+
+o
+^
+t+3
+	​
+
+
+这会导致一个根本问题：
+
+每一步的小误差，都会变成下一步的输入误差。
+
+也就是 compounding error。
+
+为什么 observation space 特别容易出问题
+
+因为 observation 往往是：
+
+高维的
+噪声大的
+包含很多任务无关细节的
+很难一步不差地重建
+
+如果是图像，这个问题更明显：
+
+背景纹理
+光照细节
+噪声
+遮挡
+细小视觉误差
+
+这些误差对“画面”来说不大，但一旦你把它们当成下一步输入继续滚，就会逐步把系统带离真实分布。
+
+所以 observation rollout 的根本问题不是“它不能预测”，而是：它很容易出现误差，误差也容易随着rollout 一起传播，导致越来越大；
+那更好的思路是什么？
+那就是不要用observation来rollout，用latent state 来rollout，latent state 维度更小，可以只保留和plan相关的信息，相对更容易；
+也就是：
+
+观测 o
+t
+	​
+
+ 先编码成 latent z
+t
+	​
+
+动态模型在 latent 空间推进
+reward 也从 latent 预测
+observation 只在需要时再解码出来
+
+于是 rollout 从：
+
+o
+t
+	​
+
+→
+o
+^
+t+1
+	​
+
+→
+o
+^
+t+2
+	​
+
+→
+o
+^
+t+3
+	​
+
+
+变成：
+
+z
+t
+	​
+
+→z
+t+1
+	​
+
+→z
+t+2
+	​
+
+→z
+t+3
+	​
+
+
+这就是 latent dynamics 的核心直觉。
+4. 为什么 latent rollout 更合理
+
+因为 latent state 理想上应该只保留：
+
+对未来动态有用的信息
+对 reward 有用的信息
+对决策有用的信息
+
+而不是把所有观测细节都预测出来。
+
+
+
+observation rollout
+
+像是每一步都重新画一张图，再拿这张图继续推演
+
+latent rollout
+
+像是每一步只更新“世界的内部摘要”
+
+显然后者更稳，也更高效。
+一个最小的 latent dynamics 架构长什么样
+
+最小骨架：
+
+观测编码器
+z
+t
+	​
+
+=Enc(o
+t
+	​
+
+)
+递归状态更新
+h
+t
+	​
+
+=f(h
+t−1
+	​
+
+,z
+t
+	​
+
+,a
+t
+	​
+
+)
+预测头
+o
+^
+t+1
+	​
+
+=Dec(h
+t
+	​
+
+)
+r
+^
+t
+	​
+
+=g(h
+t
+	​
+
+)
+
+这里：
+
+z_t：当前观测提炼出来的紧凑表示
+h_t：递归记忆状态，真正拿来滚动的 latent dynamics state
+
+这时候你就可以把 h_t 看成“更核心的内部世界状态”。
+
+最小 latent world model
+
+我们把上一讲的模型稍微升级一下：
+
+先用一个 encoder 把 obs 编成 z
+再把 z 和 action 一起送进 GRU
+用 GRU 的 hidden state 去预测 next_obs 和 reward
+import torch
+import torch.nn as nn
+
+class LatentGRUWorldModel(nn.Module):
+    def __init__(self, obs_dim=1, act_dim=1, latent_dim=16, hidden_dim=32):
+        super().__init__()
+
+        # 1) encoder: obs -> latent z
+        self.encoder = nn.Sequential(
+            nn.Linear(obs_dim, latent_dim),
+            nn.ReLU(),
+            nn.Linear(latent_dim, latent_dim)
+        )
+
+        # 2) recurrent dynamics: [z_t, a_t] + h_{t-1} -> h_t
+        self.gru = nn.GRU(
+            input_size=latent_dim + act_dim,
+            hidden_size=hidden_dim,
+            batch_first=True
+        )
+
+        # 3) heads from hidden state
+        self.next_obs_head = nn.Linear(hidden_dim, obs_dim)
+        self.reward_head = nn.Linear(hidden_dim, 1)
+
+    def forward(self, obs_seq, act_seq, h0=None):
+        """
+        obs_seq: [B, T, obs_dim]
+        act_seq: [B, T, act_dim]
+        """
+        z_seq = self.encoder(obs_seq)                     # [B, T, latent_dim]
+        x = torch.cat([z_seq, act_seq], dim=-1)          # [B, T, latent_dim + act_dim]
+
+        out, hn = self.gru(x, h0)                        # [B, T, hidden_dim]
+        pred_next_obs = self.next_obs_head(out)          # [B, T, obs_dim]
+        pred_reward = self.reward_head(out)              # [B, T, 1]
+
+        return pred_next_obs, pred_reward, hn
+7. 这一版和上一版本质差在哪里
+
+上一版是：
+
+[o
+t
+	​
+
+,a
+t
+	​
+
+]→GRU→h
+t
+	​
+
+
+这一版是：
+
+o
+t
+	​
+
+→z
+t
+	​
+
+,[z
+t
+	​
+
+,a
+t
+	​
+
+]→GRU→h
+t
+	​
+
+
+也就是多了一层“先压成 latent，再做动态更新”。
+把原始观测先转换成更适合建模的表示。
+
+在 toy 环境里差别未必巨大，因为观测本来就只有 1 维位置。
+但到了图像世界，这一步就会变得非常关键。
+
+旧思路
+
+“我得把每一步看到的东西都预测�
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-30 06:22:15Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git status --short --branch`</summary>
+```
+Chunk ID: fa9189
+Wall time: 0.2318 seconds
+Process exited with code 0
+Original token count: 61
+Output:
+## main...origin/main
+ M .specstory/.project.json
+ M .specstory/history/2026-07-19_03-33-50Z-github-github-https-github.md
+ M .specstory/statistics.json
+?? docs/notes/world-models-6-latent_dynamics.md
+?? examples/run_planning_world_model.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-30 06:22:15Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `rg --files -uu src examples docs requirements.txt`</summary>
+```
+Chunk ID: a9172c
+Wall time: 0.1597 seconds
+Process exited with code 0
+Original token count: 353
+Output:
+requirements.txt
+docs\roadmap.md
+docs\glossary.md
+docs\00-start-here.md
+src\README.md
+examples\run_planning_world_model.py
+examples\run_partial_observation_gru.py
+examples\README.md
+examples\run_point_mass_world_model.py
+examples\run_reward_world_model.py
+docs\notes\world-models-6-latent_dynamics.md
+docs\notes\world-models-5-planning.md
+docs\notes\world-models-4-reward.md
+docs\notes\world-models-3-latent-memory.md
+docs\notes\world-models-2-basics.md
+docs\notes\world-models-1-intuition.md
+docs\notes\README.md
+src\hello_world_model\__pycache__\__init__.cpython-314.pyc
+src\hello_world_model\__pycache__\visualization.cpython-314.pyc
+src\hello_world_model\__pycache__\training.cpython-314.pyc
+src\hello_world_model\__pycache__\planning.cpython-314.pyc
+src\hello_world_model\__pycache__\models.cpython-314.pyc
+src\hello_world_model\__pycache__\memory.cpython-314.pyc
+src\hello_world_model\__pycache__\envs.cpython-314.pyc
+src\hello_world_model\__init__.py
+src\hello_world_model\visualization.py
+src\hello_world_model\training.py
+src\hello_world_model\planning.py
+src\hello_world_model\models.py
+src\hello_world_model\memory.py
+src\hello_world_model\envs.py
+examples\__pycache__\run_reward_world_model.cpython-314.pyc
+examples\__pycache__\run_point_mass_world_model.cpython-314.pyc
+examples\__pycache__\run_planning_world_model.cpython-314.pyc
+examples\__pycache__\run_partial_observation_gru.cpython-314.pyc
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-30 06:22:15Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 -Raw 'src\hello_world_model\models.py'`</summary>
+```
+Chunk ID: 403a10
+Wall time: 0.3448 seconds
+Process exited with code 0
+Original token count: 802
+Output:
+from __future__ import annotations
+
+import torch
+from torch import nn
+
+
+class WorldModel(nn.Module):
+    """Predict next state and reward from current state-action pair."""
+
+    def __init__(self, state_dim: int = 2, action_dim: int = 1, hidden_dim: int = 128):
+        super().__init__()
+        self.backbone = nn.Sequential(
+            nn.Linear(state_dim + action_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.ReLU(),
+        )
+        self.next_state_head = nn.Linear(hidden_dim, state_dim)
+        self.reward_head = nn.Linear(hidden_dim, 1)
+
+    def forward(
+        self, state: torch.Tensor, action: torch.Tensor
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        x = torch.cat([state, action], dim=-1)
+        h = self.backbone(x)
+        return self.next_state_head(h), self.reward_head(h)
+
+
+class GRUWorldModel(nn.Module):
+    """Predict next observation from a sequence of observations and actions."""
+
+    def __init__(self, obs_dim: int = 1, action_dim: int = 1, hidden_dim: int = 32):
+        super().__init__()
+        self.hidden_dim = hidden_dim
+        self.gru = nn.GRU(
+            input_size=obs_dim + action_dim,
+            hidden_size=hidden_dim,
+            batch_first=True,
+        )
+        self.next_obs_head = nn.Linear(hidden_dim, obs_dim)
+
+    def forward(
+        self,
+        obs_seq: torch.Tensor,
+        action_seq: torch.Tensor,
+        h0: torch.Tensor | None = None,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        x = torch.cat([obs_seq, action_seq], dim=-1)
+        hidden_seq, hn = self.gru(x, h0)
+        pred_next_obs = self.next_obs_head(hidden_seq)
+        return pred_next_obs, hn
+
+
+class GRURewardWorldModel(nn.Module):
+    """Predict next observation and reward from recurrent world-model state."""
+
+    def __init__(self, obs_dim: int = 1, action_dim: int = 1, hidden_dim: int = 32):
+        super().__init__()
+        self.hidden_dim = hidden_dim
+        self.gru = nn.GRU(
+            input_size=obs_dim + action_dim,
+            hidden_size=hidden_dim,
+            batch_first=True,
+        )
+        self.next_obs_head = nn.Linear(hidden_dim, obs_dim)
+        self.reward_head = nn.Linear(hidden_dim, 1)
+
+    def forward(
+        self,
+        obs_seq: torch.Tensor,
+        action_seq: torch.Tensor,
+        h0: torch.Tensor | None = None,
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        x = torch.cat([obs_seq, action_seq], dim=-1)
+        hidden_seq, hn = self.gru(x, h0)
+        pred_next_obs = self.next_obs_head(hidden_seq)
+        pred_reward = self.reward_head(hidden_seq)
+        return pred_next_obs, pred_reward, hn
+
+    def step(
+        self,
+        obs: torch.Tensor,
+        action: torch.Tensor,
+        h: torch.Tensor | None = None,
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        """Roll the recurrent world model forward by one imagined step."""
+
+        x = torch.cat([obs, action], dim=-1).unsqueeze(1)
+        hidden_seq, hn = self.gru(x, h)
+        hidden = hidden_seq[:, 0, :]
+        pred_next_obs = self.next_obs_head(hidden)
+        pred_reward = self.reward_head(hidden)
+        return pred_next_obs, pred_reward, hn
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-30 06:23:06Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Planning latent dynamics integration**
+</details></think>
+
+_**Agent (gpt-5.5 2026-07-30 06:23:06Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Deciding file rename and model rollout approach**
+</details></think>
+
+_**Agent (gpt-5.5 2026-07-30 06:23:06Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Designing minimal latent dynamics model architecture**
+</details></think>
+
+_**Agent (gpt-5.5 2026-07-30 06:23:08Z)**_
+
+这篇的核心我会做成第 6 个演示：同一条真实动作序列下，对比“直接在 observation/state 空间 rollout”和“先编码到 latent，再在 latent 空间 rollout”。toy 环境里 latent 不一定天然更强，但结构会非常清楚。
+
+_**Agent (gpt-5.5 2026-07-30 06:23:09Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 -Raw 'src\hello_world_model\training.py'`</summary>
+```
+Chunk ID: e48b13
+Wall time: 0.4164 seconds
+Process exited with code 0
+Original token count: 996
+Output:
+from __future__ import annotations
+
+import random
+from collections.abc import Sequence
+
+import numpy as np
+import torch
+from torch import nn, optim
+
+from .envs import PointMass1DEnv
+from .models import WorldModel
+from .planning import plan_action_random_shooting
+
+Transition = tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]
+
+
+def collect_random_data(env: PointMass1DEnv, episodes: int = 200) -> list[Transition]:
+    data: list[Transition] = []
+
+    for _ in range(episodes):
+        state = env.reset()
+        done = False
+
+        while not done:
+            action_value = np.random.uniform(-1.0, 1.0)
+            next_state, reward, done, _ = env.step(action_value)
+
+            action = np.array([action_value], dtype=np.float32)
+            reward_array = np.array([reward], dtype=np.float32)
+            data.append((state.copy(), action, next_state.copy(), reward_array))
+            state = next_state
+
+    return data
+
+
+def train_world_model(
+    model: WorldModel,
+    data: Sequence[Transition],
+    epochs: int = 50,
+    batch_size: int = 128,
+    lr: float = 1e-3,
+    device: str = "cpu",
+) -> list[float]:
+    model.to(device)
+    optimizer = optim.Adam(model.parameters(), lr=lr)
+    mse = nn.MSELoss()
+    shuffled_data = list(data)
+
+    losses: list[float] = []
+
+    for epoch in range(epochs):
+        random.shuffle(shuffled_data)
+        total_loss = 0.0
+
+        for i in range(0, len(shuffled_data), batch_size):
+            batch = shuffled_data[i : i + batch_size]
+            state = torch.tensor(
+                np.stack([x[0] for x in batch]), dtype=torch.float32, device=device
+            )
+            action = torch.tensor(
+                np.stack([x[1] for x in batch]), dtype=torch.float32, device=device
+            )
+            next_state = torch.tensor(
+                np.stack([x[2] for x in batch]), dtype=torch.float32, device=device
+            )
+            reward = torch.tensor(
+                np.stack([x[3] for x in batch]), dtype=torch.float32, device=device
+            )
+
+            pred_next_state, pred_reward = model(state, action)
+            loss = mse(pred_next_state, next_state) + mse(pred_reward, reward)
+
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+
+            total_loss += loss.item() * len(batch)
+
+        avg_loss = total_loss / len(shuffled_data)
+        losses.append(avg_loss)
+        print(f"Epoch {epoch + 1:03d} | loss = {avg_loss:.6f}")
+
+    return losses
+
+
+def evaluate_planner(
+    env: PointMass1DEnv,
+    model: WorldModel,
+    episodes: int = 10,
+    device: str = "cpu",
+) -> list[float]:
+    returns: list[float] = []
+
+    for episode in range(episodes):
+        state = env.reset()
+        done = False
+        episode_return = 0.0
+
+        while not done:
+            action = plan_action_random_shooting(
+                model, state, horizon=15, num_samples=300, device=device
+            )
+            state, reward, done, _ = env.step(action)
+            episode_return += reward
+
+        returns.append(episode_return)
+        print(f"Episode {episode + 1:02d} return = {episode_return:.2f}")
+
+    print(f"Average return: {np.mean(returns):.2f}")
+    return returns
+
+
+def rollout_planner_episode(
+    env: PointMass1DEnv,
+    model: WorldModel,
+    device: str = "cpu",
+) -> tuple[np.ndarray, np.ndarray, list[float]]:
+    """Run one planned episode and keep states/actions for visualization."""
+
+    states: list[np.ndarray] = []
+    actions: list[float] = []
+    rewards: list[float] = []
+
+    state = env.reset()
+    done = False
+
+    while not done:
+        states.append(state.copy())
+        action = plan_action_random_shooting(
+            model, state, horizon=15, num_samples=300, device=device
+        )
+        state, reward, done, _ = env.step(action)
+        actions.append(action)
+        rewards.append(reward)
+
+    states.append(state.copy())
+    return np.stack(states), np.array(actions, dtype=np.float32), rewards
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-30 06:23:22Z)**_
+
+我先新增 latent dynamics 模型和训练/rollout 工具。这样第 6 篇不会把示例代码塞在笔记里，而是像前几篇一样有完整模块和入口脚本。
+
+_**Agent (gpt-5.5 2026-07-30 06:23:53Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Update: `src/hello_world_model/models.py`**
+
+```diff
+@@
+ class GRURewardWorldModel(nn.Module):
+@@
+         pred_reward = self.reward_head(hidden)
+         return pred_next_obs, pred_reward, hn
++
++
++class LatentDynamicsWorldModel(nn.Module):
++    """Roll future states in a learned latent space instead of observation space."""
++
++    def __init__(
++        self,
++        obs_dim: int = 2,
++        action_dim: int = 1,
++        latent_dim: int = 8,
++        hidden_dim: int = 64,
++    ):
++        super().__init__()
++        self.encoder = nn.Sequential(
++            nn.Linear(obs_dim, hidden_dim),
++            nn.ReLU(),
++            nn.Linear(hidden_dim, latent_dim),
++        )
++        self.transition = nn.Sequential(
++            nn.Linear(latent_dim + action_dim, hidden_dim),
++            nn.ReLU(),
++            nn.Linear(hidden_dim, latent_dim),
++        )
++        self.decoder = nn.Sequential(
++            nn.Linear(latent_dim, hidden_dim),
++            nn.ReLU(),
++            nn.Linear(hidden_dim, obs_dim),
++        )
++        self.reward_head = nn.Sequential(
++            nn.Linear(latent_dim + action_dim, hidden_dim),
++            nn.ReLU(),
++            nn.Linear(hidden_dim, 1),
++        )
++
++    def forward(
++        self, obs: torch.Tensor, action: torch.Tensor
++    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
++        latent = self.encoder(obs)
++        next_latent, pred_reward = self.step_latent(latent, action)
++        pred_next_obs = self.decoder(next_latent)
++        return pred_next_obs, pred_reward, next_latent
++
++    def step_latent(
++        self, latent: torch.Tensor, action: torch.Tensor
++    ) -> tuple[torch.Tensor, torch.Tensor]:
++        transition_input = torch.cat([latent, action], dim=-1)
++        latent_delta = self.transition(transition_input)
++        next_latent = latent + latent_delta
++        pred_reward = self.reward_head(transition_input)
++        return next_latent, pred_reward
+```
+
+**Add: `src/hello_world_model/latent.py`**
+
+```diff
++from __future__ import annotations
++
++import random
++from collections.abc import Sequence
++
++import numpy as np
++import torch
++from torch import nn, optim
++
++from .envs import PointMass1DEnv
++from .models import LatentDynamicsWorldModel, WorldModel
++from .training import Transition
++
++
++def train_latent_dynamics_model(
++    model: LatentDynamicsWorldModel,
++    data: Sequence[Transition],
++    epochs: int = 50,
++    batch_size: int = 128,
++    lr: float = 1e-3,
++    device: str = "cpu",
++) -> dict[str, list[float]]:
++    """Train a minimal latent dynamics model on transition data."""
++
++    model.to(device)
++    optimizer = optim.Adam(model.parameters(), lr=lr)
++    mse = nn.MSELoss()
++    shuffled_data = list(data)
++    losses = {"total": [], "obs": [], "reward": []}
++
++    for epoch in range(epochs):
++        random.shuffle(shuffled_data)
++        total_loss = 0.0
++        total_obs_loss = 0.0
++        total_reward_loss = 0.0
++
++        for i in range(0, len(shuffled_data), batch_size):
++            batch = shuffled_data[i : i + batch_size]
++            obs = torch.tensor(
++                np.stack([x[0] for x in batch]), dtype=torch.float32, device=device
++            )
++            action = torch.tensor(
++                np.stack([x[1] for x in batch]), dtype=torch.float32, device=device
++            )
++            next_obs = torch.tensor(
++                np.stack([x[2] for x in batch]), dtype=torch.float32, device=device
++            )
++            reward = torch.tensor(
++                np.stack([x[3] for x in batch]), dtype=torch.float32, device=device
++            )
++
++            pred_next_obs, pred_reward, _ = model(obs, action)
++            obs_loss = mse(pred_next_obs, next_obs)
++            reward_loss = mse(pred_reward, reward)
++            loss = obs_loss + reward_loss
++
++            optimizer.zero_grad()
++            loss.backward()
++            optimizer.step()
++
++            total_loss += loss.item() * len(batch)
++            total_obs_loss += obs_loss.item() * len(batch)
++            total_reward_loss += reward_loss.item() * len(batch)
++
++        n = len(shuffled_data)
++        losses["total"].append(total_loss / n)
++        losses["obs"].append(total_obs_loss / n)
++        losses["reward"].append(total_reward_loss / n)
++        print(
++            f"Epoch {epoch + 1:03d} | "
++            f"total={losses['total'][-1]:.6f} | "
++            f"obs={losses['obs'][-1]:.6f} | "
++            f"reward={losses['reward'][-1]:.6f}"
++        )
++
++    return losses
++
++
++def collect_real_rollout(
++    env: PointMass1DEnv,
++    action_sequence: np.ndarray,
++) -> tuple[np.ndarray, np.ndarray]:
++    """Run a fixed action sequence in the real environment."""
++
++    obs = env.reset()
++    observations = [obs.copy()]
++    rewards: list[float] = []
++
++    for action in action_sequence:
++        obs, reward, done, _ = env.step(float(action[0]))
++        observations.append(obs.copy())
++        rewards.append(reward)
++        if done:
++            break
++
++    return np.stack(observations), np.array(rewards, dtype=np.float32)
++
++
++@torch.no_grad()
++def rollout_observation_model(
++    model: WorldModel,
++    initial_obs: np.ndarray,
++    action_sequence: np.ndarray,
++    device: str = "cpu",
++) -> tuple[np.ndarray, np.ndarray]:
++    """Open-loop rollout that feeds predicted observations back into the model."""
++
++    model.eval()
++    obs = torch.tensor(initial_obs, dtype=torch.float32, device=device).unsqueeze(0)
++    observations = [obs.squeeze(0).cpu().numpy()]
++    rewards: list[float] = []
++
++    for action_np in action_sequence:
++        action = torch.tensor(action_np, dtype=torch.float32, device=device).unsqueeze(0)
++        obs, reward = model(obs, action)
++        observations.append(obs.squeeze(0).cpu().numpy())
++        rewards.append(float(reward.item()))
++
++    return np.stack(observations), np.array(rewards, dtype=np.float32)
++
++
++@torch.no_grad()
++def rollout_latent_dynamics_model(
++    model: LatentDynamicsWorldModel,
++    initial_obs: np.ndarray,
++    action_sequence: np.ndarray,
++    device: str = "cpu",
++) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
++    """Open-loop rollout that advances the model in latent space."""
++
++    model.eval()
++    obs = torch.tensor(initial_obs, dtype=torch.float32, device=device).unsqueeze(0)
++    latent = model.encoder(obs)
++    latents = [latent.squeeze(0).cpu().numpy()]
++    observations = [obs.squeeze(0).cpu().numpy()]
++    rewards: list[float] = []
++
++    for action_np in action_sequence:
++        action = torch.tensor(action_np, dtype=torch.float32, device=device).unsqueeze(0)
++        latent, reward = model.step_latent(latent, action)
++        decoded_obs = model.decoder(latent)
++        latents.append(latent.squeeze(0).cpu().numpy())
++        observations.append(decoded_obs.squeeze(0).cpu().numpy())
++        rewards.append(float(reward.item()))
++
++    return (
++        np.stack(observations),
++        np.array(rewards, dtype=np.float32),
++        np.stack(latents),
++    )
++
++
++def make_probe_action_sequence(horizon: int = 40) -> np.ndarray:
++    """Create a smooth action sequence for open-loop rollout comparison."""
++
++    steps = np.linspace(0.0, 2.5 * np.pi, horizon)
++    actions = 0.8 * np.sin(steps)
++    return actions.reshape(-1, 1).astype(np.float32)
+```
+
+
+```
+Exit code: 0
+Wall time: 8.3 seconds
+Output:
+Success. Updated the following files:
+A src/hello_world_model/latent.py
+M src/hello_world_model/models.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-30 06:24:10Z)**_
+
+接下来补第 6 篇需要的图：loss、open-loop rollout 对比、误差随 horizon 累积、以及 latent 空间里的轨迹。这个演示会明确展示“误差如何沿 rollout 传播”。
+
+_**Agent (gpt-5.5 2026-07-30 06:24:35Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Update: `src/hello_world_model/visualization.py`**
+
+```diff
+@@
+ def plot_reward_model_losses(
+@@
+     fig.savefig(output_path, dpi=160)
+     plt.close(fig)
++
++
++def plot_latent_model_losses(
++    losses: dict[str, Sequence[float]],
++    output_path: Path,
++) -> None:
++    """Show latent dynamics model training losses."""
++
++    _prepare_output(output_path)
++    fig, ax = plt.subplots(figsize=(8, 4.5))
++    epochs = np.arange(1, len(losses["total"]) + 1)
++    ax.plot(epochs, losses["total"], label="total", linewidth=2)
++    ax.plot(epochs, losses["obs"], label="decoded observation", linewidth=1.8)
++    ax.plot(epochs, losses["reward"], label="reward", linewidth=1.8)
++    ax.set_title("Latent Dynamics Model Training Losses")
++    ax.set_xlabel("epoch")
++    ax.set_ylabel("MSE loss")
++    ax.legend(loc="best")
++    ax.grid(True, alpha=0.25)
++    fig.tight_layout()
++    fig.savefig(output_path, dpi=160)
++    plt.close(fig)
+@@
+ def plot_imagined_vs_real_feedback(
+@@
+     fig.savefig(output_path, dpi=160)
+     plt.close(fig)
++
++
++def plot_rollout_prediction_comparison(
++    real_obs: np.ndarray,
++    obs_rollout: np.ndarray,
++    latent_rollout: np.ndarray,
++    output_path: Path,
++) -> None:
++    """Compare real, observation-space, and latent-space open-loop rollouts."""
++
++    steps = np.arange(len(real_obs))
++
++    _prepare_output(output_path)
++    fig, axes = plt.subplots(2, 1, figsize=(8, 7), sharex=True)
++
++    axes[0].plot(steps, real_obs[:, 0], label="real position", linewidth=2)
++    axes[0].plot(
++        steps,
++        obs_rollout[:, 0],
++        label="observation rollout",
++        linewidth=1.8,
++        linestyle="--",
++    )
++    axes[0].plot(
++        steps,
++        latent_rollout[:, 0],
++        label="latent rollout",
++        linewidth=1.8,
++        linestyle=":",
++    )
++    axes[0].axhline(0.0, color="black", linewidth=1, linestyle="--", label="goal")
++    axes[0].set_title("Open-Loop Rollout Position")
++    axes[0].set_ylabel("position")
++    axes[0].legend(loc="best")
++    axes[0].grid(True, alpha=0.25)
++
++    axes[1].plot(steps, real_obs[:, 1], label="real velocity", linewidth=2)
++    axes[1].plot(
++        steps,
++        obs_rollout[:, 1],
++        label="observation rollout",
++        linewidth=1.8,
++        linestyle="--",
++    )
++    axes[1].plot(
++        steps,
++        latent_rollout[:, 1],
++        label="latent rollout",
++        linewidth=1.8,
++        linestyle=":",
++    )
++    axes[1].set_title("Open-Loop Rollout Velocity")
++    axes[1].set_xlabel("rollout step")
++    axes[1].set_ylabel("velocity")
++    axes[1].legend(loc="best")
++    axes[1].grid(True, alpha=0.25)
++
++    fig.tight_layout()
++    fig.savefig(output_path, dpi=160)
++    plt.close(fig)
++
++
++def plot_rollout_error_growth(
++    real_obs: np.ndarray,
++    obs_rollout: np.ndarray,
++    latent_rollout: np.ndarray,
++    output_path: Path,
++) -> None:
++    """Show how open-loop prediction error grows over rollout horizon."""
++
++    steps = np.arange(len(real_obs))
++    obs_error = np.linalg.norm(obs_rollout - real_obs, axis=1)
++    latent_error = np.linalg.norm(latent_rollout - real_obs, axis=1)
++
++    _prepare_output(output_path)
++    fig, ax = plt.subplots(figsize=(8, 4.5))
++    ax.plot(steps, obs_error, label="observation rollout error", linewidth=2)
++    ax.plot(steps, latent_error, label="latent rollout error", linewidth=2)
++    ax.set_title("Compounding Error During Open-Loop Rollout")
++    ax.set_xlabel("rollout step")
++    ax.set_ylabel("state prediction error")
++    ax.legend(loc="best")
++    ax.grid(True, alpha=0.25)
++    fig.tight_layout()
++    fig.savefig(output_path, dpi=160)
++    plt.close(fig)
++
++
++def plot_latent_space_rollout(
++    latents: np.ndarray,
++    output_path: Path,
++) -> None:
++    """Visualize the imagined trajectory inside the learned latent space."""
++
++    _prepare_output(output_path)
++    fig, ax = plt.subplots(figsize=(6, 5))
++
++    if latents.shape[1] == 1:
++        ax.plot(np.arange(len(latents)), latents[:, 0], linewidth=2)
++        ax.set_xlabel("rollout step")
++        ax.set_ylabel("latent dim 0")
++    else:
++        steps = np.arange(len(latents))
++        scatter = ax.scatter(
++            latents[:, 0],
++            latents[:, 1],
++            c=steps,
++            s=28,
++            cmap="viridis",
++        )
++        ax.plot(latents[:, 0], latents[:, 1], linewidth=1, alpha=0.5)
++        ax.set_xlabel("latent dim 0")
++        ax.set_ylabel("latent dim 1")
++        fig.colorbar(scatter, ax=ax, label="rollout step")
++
++    ax.set_title("Latent-Space Rollout Trajectory")
++    ax.grid(True, alpha=0.25)
++    fig.tight_layout()
++    fig.savefig(output_path, dpi=160)
++    plt.close(fig)
+```
+
+
+```
+Exit code: 0
+Wall time: 3.6 seconds
+Output:
+Success. Updated the following files:
+M src/hello_world_model/visualization.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-30 06:24:47Z)**_
+
+现在我把第 6 个演示入口接起来：它会训练一个普通 observation model 和一个 latent dynamics model，再用同一条动作序列做 open-loop 对比。
+
+_**Agent (gpt-5.5 2026-07-30 06:25:08Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Update: `src/hello_world_model/__init__.py`**
+
+```diff
+@@
+ from .envs import PartialPointMass1DEnv, PointMass1DEnv
++from .latent import (
++    collect_real_rollout,
++    make_probe_action_sequence,
++    rollout_latent_dynamics_model,
++    rollout_observation_model,
++    train_latent_dynamics_model,
++)
+ from .memory import (
+@@
+ )
+-from .models import GRURewardWorldModel, GRUWorldModel, WorldModel
++from .models import (
++    GRURewardWorldModel,
++    GRUWorldModel,
++    LatentDynamicsWorldModel,
++    WorldModel,
++)
+@@
+     plot_dataset_phase_space,
++    plot_latent_model_losses,
++    plot_latent_space_rollout,
+     plot_gru_sequence_prediction,
+@@
+     plot_reward_predictions,
+     plot_receding_horizon_control,
++    plot_rollout_error_growth,
++    plot_rollout_prediction_comparison,
+     plot_training_loss,
+ )
+ 
+ __all__ = [
+     "GRURewardWorldModel",
+     "GRUWorldModel",
++    "LatentDynamicsWorldModel",
+     "PartialPointMass1DEnv",
+     "PointMass1DEnv",
+     "WorldModel",
++    "collect_real_rollout",
+     "collect_partial_episodes",
+     "collect_random_data",
+@@
++    "make_probe_action_sequence",
+     "plot_dataset_phase_space",
++    "plot_latent_model_losses",
++    "plot_latent_space_rollout",
+     "plot_gru_sequence_prediction",
+@@
+     "plot_reward_predictions",
+     "plot_receding_horizon_control",
++    "plot_rollout_error_growth",
++    "plot_rollout_prediction_comparison",
+     "plot_training_loss",
+@@
+     "rollout_planner_episode",
++    "rollout_latent_dynamics_model",
++    "rollout_observation_model",
+     "run_receding_horizon_episode",
++    "train_latent_dynamics_model",
+```
+
+**Add: `examples/run_latent_dynamics_world_model.py`**
+
+```diff
++from __future__ import annotations
++
++from pathlib import Path
++import sys
++
++PROJECT_ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(PROJECT_ROOT / "src"))
++
++from hello_world_model import (  # noqa: E402
++    LatentDynamicsWorldModel,
++    PointMass1DEnv,
++    WorldModel,
++    collect_random_data,
++    collect_real_rollout,
++    make_probe_action_sequence,
++    plot_latent_model_losses,
++    plot_latent_space_rollout,
++    plot_rollout_error_growth,
++    plot_rollout_prediction_comparison,
++    plot_training_loss,
++    rollout_latent_dynamics_model,
++    rollout_observation_model,
++    train_latent_dynamics_model,
++    train_world_model,
++)
++
++
++def main() -> None:
++    output_dir = PROJECT_ROOT / "outputs" / "latent_dynamics_world_model"
++
++    print("1. Collecting full-state point-mass data...")
++    data_env = PointMass1DEnv(horizon=60)
++    data = collect_random_data(data_env, episodes=260)
++
++    print("2. Training observation-space dynamics baseline...")
++    observation_model = WorldModel(state_dim=2, action_dim=1, hidden_dim=128)
++    observation_losses = train_world_model(
++        observation_model, data, epochs=45, batch_size=128, lr=1e-3
++    )
++    plot_training_loss(
++        observation_losses, output_dir / "01_observation_model_loss.png"
++    )
++
++    print("3. Training latent dynamics model...")
++    latent_model = LatentDynamicsWorldModel(
++        obs_dim=2, action_dim=1, latent_dim=8, hidden_dim=64
++    )
++    latent_losses = train_latent_dynamics_model(
++        latent_model, data, epochs=45, batch_size=128, lr=1e-3
++    )
++    plot_latent_model_losses(latent_losses, output_dir / "02_latent_model_losses.png")
++
++    print("4. Comparing open-loop rollout behavior...")
++    action_sequence = make_probe_action_sequence(horizon=40)
++    rollout_env = PointMass1DEnv(horizon=60)
++    real_obs, _ = collect_real_rollout(rollout_env, action_sequence)
++    initial_obs = real_obs[0]
++    obs_rollout, _ = rollout_observation_model(
++        observation_model, initial_obs, action_sequence
++    )
++    latent_rollout, _, latents = rollout_latent_dynamics_model(
++        latent_model, initial_obs, action_sequence
++    )
++
++    plot_rollout_prediction_comparison(
++        real_obs,
++        obs_rollout,
++        latent_rollout,
++        output_dir / "03_open_loop_rollout_comparison.png",
++    )
++    plot_rollout_error_growth(
++        real_obs,
++        obs_rollout,
++        latent_rollout,
++        output_dir / "04_rollout_error_growth.png",
++    )
++    plot_latent_space_rollout(latents, output_dir / "05_latent_space_rollout.png")
++
++    print(f"Saved visualizations to: {output_dir}")
++
++
++if __name__ == "__main__":
++    main()
+```
+
+
+```
+Exit code: 0
+Wall time: 7.8 seconds
+Output:
+Success. Updated the following files:
+A examples/run_latent_dynamics_world_model.py
+M src/hello_world_model/__init__.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-30 06:25:27Z)**_
+
+代码入口已经加好。接下来整理第 6 篇笔记本体，我会把文件名规范成 `world-models-6-latent-dynamics.md`，和前面编号笔记的 hyphen 风格保持一致。
+
+_**Agent (gpt-5.5 2026-07-30 06:26:15Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Delete: `docs/notes/world-models-6-latent_dynamics.md`**
+
+**Add: `docs/notes/world-models-6-latent-dynamics.md`**
+
+```diff
++# 6. 为什么要转向 latent dynamics
++
++日期：2026-07-30
++
++状态：学习笔记草稿
++
++## 这篇笔记解决什么问题
++
++上一篇笔记已经把 world model 用到了 planning：模型先在内部 rollout 多条未来轨迹，再根据 imagined reward 选择动作。
++
++但那里有一个很脆的地方：
++
++> 我们把模型预测出来的 next observation 继续当成下一步输入。
++
++也就是：
++
++$$
++o_t \rightarrow \hat{o}_{t+1} \rightarrow \hat{o}_{t+2} \rightarrow \hat{o}_{t+3}
++$$
++
++这篇笔记要解释：为什么 observation space 里的 rollout 容易崩，以及为什么现代 world model 通常转向 latent dynamics。
++
++## 1. Observation rollout 为什么容易积累误差
++
++在 observation rollout 中，每一步预测都会成为下一步输入：
++
++```mermaid
++flowchart LR
++    O0["real observation o_t"] --> M0["model step"]
++    A0["action a_t"] --> M0
++    M0 --> O1["predicted observation o_hat_{t+1}"]
++    O1 --> M1["model step"]
++    A1["action a_{t+1}"] --> M1
++    M1 --> O2["predicted observation o_hat_{t+2}"]
++    O2 --> M2["model step"]
++    A2["action a_{t+2}"] --> M2
++    M2 --> O3["predicted observation o_hat_{t+3}"]
++```
++
++关键问题是：每一步的小误差，都会变成下一步的输入误差。
++
++这就是 compounding error。
++
++```mermaid
++flowchart LR
++    E1["small one-step error"] --> E2["input distribution shifts"]
++    E2 --> E3["larger next-step error"]
++    E3 --> E4["rollout drifts away"]
++    E4 --> E5["planner chooses bad actions"]
++```
++
++模型训练时通常看到的是真实 observation 分布；但 rollout 时，它越来越多地看到自己生成的 observation。一旦这些预测偏离真实分布，后续预测就会越来越不可靠。
++
++## 2. 为什么 observation space 特别麻烦
++
++Observation 往往具备几个特点：
++
++- 高维，例如图像像素。
++- 噪声大，例如传感器抖动或视觉噪声。
++- 含有大量任务无关细节，例如背景纹理、光照、阴影。
++- 很难一步不差地重建。
++
++如果 observation 是图像，问题会更明显。模型可能在背景、纹理或遮挡细节上出现一点误差；这些误差对单帧图片来说不大，但如果把预测帧继续喂回模型，误差就会沿时间传播。
++
++所以 observation rollout 的根本问题不是“完全不能预测”，而是：
++
++> 它把很多不稳定、未必和决策相关的细节也放进了 rollout 状态里。
++
++## 3. 更好的方向：在 latent space 中 rollout
++
++Latent dynamics 的核心直觉是：不要直接在 observation space 里滚动未来，而是先把 observation 编码成更紧凑的 latent state，再在 latent space 中推进动态。
++
++从：
++
++$$
++o_t \rightarrow \hat{o}_{t+1} \rightarrow \hat{o}_{t+2} \rightarrow \hat{o}_{t+3}
++$$
++
++变成：
++
++$$
++z_t \rightarrow z_{t+1} \rightarrow z_{t+2} \rightarrow z_{t+3}
++$$
++
++其中 \(z_t\) 是模型学出来的内部表示。
++
++```mermaid
++flowchart LR
++    O["observation o_t"] --> E["encoder"]
++    E --> Z["latent state z_t"]
++    Z --> D["latent dynamics"]
++    A["action a_t"] --> D
++    D --> Z2["next latent z_{t+1}"]
++    Z2 --> R["reward head"]
++    Z2 --> Dec["decoder, only when needed"]
++    Dec --> O2["predicted observation"]
++```
++
++这时 rollout 主要发生在 latent space 里，observation 只在需要可视化、重建或训练监督时才解码出来。
++
++## 4. Latent rollout 为什么更合理
++
++理想情况下，latent state 应该保留：
++
++- 对未来动态有用的信息。
++- 对 reward 有用的信息。
++- 对 planning 有用的信息。
++
++它不需要完整保留所有观测细节。
++
++可以这样对比：
++
++| 方式 | 直觉 | 风险 |
++| --- | --- | --- |
++| Observation rollout | 每一步都重新画一张图，再拿这张图继续推演 | 高维细节误差会滚大 |
++| Latent rollout | 每一步只更新世界的内部摘要 | 依赖 encoder 是否学到任务相关信息 |
++
++注意：latent rollout 不是魔法。它更稳的前提是 latent representation 学得好。如果 encoder 把关键因素丢掉，latent dynamics 同样会失败。
++
++## 5. 最小 latent dynamics 架构
++
++一个最小 latent dynamics world model 可以拆成三块：
++
++1. Encoder：把 observation 压成 latent。
++2. Latent transition：在 latent space 中根据 action 推进未来。
++3. Prediction heads：从 latent 预测 observation 和 reward。
++
++形式上：
++
++$$
++z_t = Enc(o_t)
++$$
++
++$$
++z_{t+1} = f(z_t, a_t)
++$$
++
++$$
++\hat{o}_{t+1} = Dec(z_{t+1}), \quad \hat{r}_t = g(z_t, a_t)
++$$
++
++```mermaid
++flowchart TD
++    O["o_t"] --> Enc["Encoder"]
++    Enc --> Z["z_t"]
++    Z --> Trans["Latent transition f(z_t, a_t)"]
++    A["a_t"] --> Trans
++    Trans --> NZ["z_{t+1}"]
++    NZ --> Dec["Decoder"]
++    Dec --> NO["o_hat_{t+1}"]
++    Z --> Rew["Reward head"]
++    A --> Rew
++    Rew --> R["r_hat_t"]
++```
++
++这比前一篇的 recurrent reward model 多了一层明确的 representation learning：先把观测转换成更适合建模的 latent，再在 latent 中做动态更新。
++
++## 6. 这和前一版模型差在哪里
++
++上一版模型的输入是：
++
++$$
++[o_t, a_t] \rightarrow GRU \rightarrow h_t
++$$
++
++这一版变成：
++
++$$
++o_t \rightarrow z_t,\quad [z_t, a_t] \rightarrow z_{t+1}
++$$
++
++换句话说，模型不再把原始 observation 当作 rollout 状态，而是把 encoded latent 当作内部动力学状态。
++
++在这个仓库的 toy 环境里，观测只有位置和速度，维度很低，所以 latent dynamics 的优势未必会非常夸张。但一旦换成图像、机器人传感器或复杂场景，这一步会变得非常关键。
++
++## 7. 配套代码演示
++
++这一篇对应的完整演示是：
++
++- [examples/run_latent_dynamics_world_model.py](../../examples/run_latent_dynamics_world_model.py)
++- [src/hello_world_model/latent.py](../../src/hello_world_model/latent.py)
++- [src/hello_world_model/models.py](../../src/hello_world_model/models.py)
++
++运行方式：
++
++```bash
++pip install -r requirements.txt
++python examples/run_latent_dynamics_world_model.py
++```
++
++运行后会生成：
++
++- `01_observation_model_loss.png`：observation-space baseline 的训练误差。
++- `02_latent_model_losses.png`：latent dynamics model 的训练误差。
++- `03_open_loop_rollout_comparison.png`：真实轨迹、observation rollout、latent rollout 的对比。
++- `04_rollout_error_growth.png`：open-loop 误差如何随 rollout horizon 增长。
++- `05_latent_space_rollout.png`：模型在 latent space 中想象出的轨迹。
++
++## 8. 这个 toy demo 应该怎么看
++
++这次演示不是为了证明“latent 一定比 observation 更准”。在低维 point mass 环境中，原始 observation 已经很干净，latent model 不一定有明显优势。
++
++它真正想展示的是结构差异：
++
++- observation model：把预测状态继续当下一步输入。
++- latent dynamics model：先编码成 latent，再在 latent 中推进未来。
++- 两者都会有 open-loop 误差，误差会影响 planning。
++
++这正是进入 PlaNet、Dreamer、RSSM 前必须理解的一步。
++
++## 9. 和 PlaNet / Dreamer 的关系
++
++PlaNet 和 Dreamer 的核心之一，就是在 latent space 中进行动态建模和 imagination。
++
++更完整的系统通常会进一步加入：
++
++- deterministic state：稳定记忆历史。
++- stochastic state：表达不确定性和多种可能未来。
++- reward / continuation / value heads：让 latent state 服务决策。
++- actor-critic：减少纯 random shooting 的采样成本。
++
++我们这里的 `LatentDynamicsWorldModel` 只是最小版本。它还没有 stochastic latent，也没有完整 RSSM，但已经把方向从“预测下一帧”推进到“维护一个内部动态状态”。
++
++## 10. 这一篇只要抓住三句话
++
++第一句：
++
++> Observation rollout 容易把小误差变成下一步输入误差，导致 compounding error。
++
++第二句：
++
++> Latent dynamics 的核心，是在更紧凑、更任务相关的内部状态中推进未来。
++
++第三句：
++
++> 好的 world model 不一定要预测所有观测细节，但必须保留对 dynamics、reward 和 planning 有用的信息。
++
++## 下一步
++
++下一篇可以继续拆：
++
++> Dreamer / RSSM 为什么还要加入 stochastic latent state，而不是只用一个确定性的 latent dynamics？
+```
+
+
+```
+Exit code: 0
+Wall time: 10.7 seconds
+Output:
+Success. Updated the following files:
+A docs/notes/world-models-6-latent-dynamics.md
+D docs/notes/world-models-6-latent_dynamics.md
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-30 06:26:41Z)**_
+
+笔记已经规范化并补了 Mermaid 图。现在我更新 `examples/README.md`、`src/README.md` 和笔记索引，让第 6 篇和新演示入口在项目里能被自然发现。
+
+_**Agent (gpt-5.5 2026-07-30 06:26:41Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 -Raw 'examples\README.md'`</summary>
+```
+Chunk ID: c916f8
+Wall time: 0.3121 seconds
+Process exited with code 0
+Original token count: 744
+Output:
+# Examples
+
+这里存放可以直接运行的小实验。
+
+计划中的第一个实验：
+
+- 用一个简单环境收集 `(state, action, next_state)` 数据。
+- 训练一个小模型预测 `next_state`。
+- 对比真实下一状态和模型预测结果。
+
+每个例子建议包含：
+
+- 运行命令
+- 依赖说明
+- 预期输出
+- 对应笔记
+
+## 当前示例
+
+### 1D point mass world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_point_mass_world_model.py
+```
+
+运行后会在 `outputs/point_mass_world_model` 下生成教学图示：
+
+- `01_random_data_phase_space.png`：随机交互数据覆盖了哪些位置和速度。
+- `02_training_loss.png`：world model 的训练误差是否下降。
+- `03_one_step_predictions.png`：模型预测的下一状态是否接近真实下一状态。
+- `04_planned_trajectory.png`：planner 是否把点质量系统推向目标位置。
+
+对应笔记：
+
+- [MDP、POMDP 与最小世界模型](../docs/notes/world-models-2-basics.md)
+
+### Partial observation GRU world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_partial_observation_gru.py
+```
+
+运行后会在 `outputs/partial_observation_gru` 下生成教学图示：
+
+- `01_partial_observation_ambiguity.png`：同一个位置观测可能对应不同隐藏速度。
+- `02_gru_training_loss.png`：GRU world model 的训练误差。
+- `03_gru_sequence_prediction.png`：真实位置序列与预测位置序列对比。
+- `04_hidden_state_probe.png`：GRU hidden state 是否编码了隐藏速度信息。
+
+对应笔记：
+
+- [为什么世界模型需要 memory 与 latent state](../docs/notes/world-models-3-latent-memory.md)
+
+### Reward world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_reward_world_model.py
+```
+
+运行后会在 `outputs/reward_world_model` 下生成教学图示：
+
+- `01_reward_landscape.png`：toy 环境里 reward 如何由目标距离和动作代价决定。
+- `02_reward_model_losses.png`：total / observation / reward 三种训练误差。
+- `03_reward_prediction.png`：真实 reward 与预测 reward 的对比。
+- `04_reward_guided_action_scores.png`：reward head 如何给候选动作排序。
+
+对应笔记：
+
+- [为什么世界模型需要预测 reward](../docs/notes/world-models-4-reward.md)
+
+### Planning with a world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_planning_world_model.py
+```
+
+运行后会在 `outputs/planning_world_model` 下生成教学图示：
+
+- `01_planning_model_losses.png`：用于 planning 的 recurrent reward world model 训练误差。
+- `02_first_imagined_rollouts.png`：第一次规划时，模型想象出的多条未来轨迹。
+- `03_receding_horizon_control.png`：滚动规划在真实环境中的控制轨迹。
+- `04_imagined_vs_real_feedback.png`：模型预测的最佳 imagined return 与真实 reward 的对照。
+
+对应笔记：
+
+- [用世界模型做 planning](../docs/notes/world-models-5-planning.md)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-30 06:26:41Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 -Raw 'src\README.md'`</summary>
+```
+Chunk ID: 6bd63b
+Wall time: 0.3330 seconds
+Process exited with code 0
+Original token count: 314
+Output:
+# Source Code
+
+这里存放世界模型相关的可复用代码。
+
+初期可以先从最小模块开始：
+
+- 环境交互代码
+- 数据收集代码
+- 状态预测模型
+- 训练脚本
+- 评估脚本
+
+建议原则：
+
+- 每个实验都能从 README 或注释中看懂入口。
+- 优先写小而清楚的代码，再逐步抽象。
+- 每次实验都记录对应的笔记链接。
+
+## 当前代码
+
+- [hello_world_model](hello_world_model)：最小 world model 教学代码。
+
+它包含：
+
+- `envs.py`：一维点质量环境。
+- `models.py`：MLP world model 和 GRU world model。
+- `training.py`：完整状态下的数据收集、训练和评估。
+- `memory.py`：partial observation 序列数据、GRU 训练和 reward head 训练。
+- `planning.py`：random shooting、imagined rollout 和 receding-horizon planning。
+- `visualization.py`：训练过程和规划结果的可视化。
+
+对应笔记：
+
+- [MDP、POMDP 与最小世界模型](../docs/notes/world-models-2-basics.md)
+- [为什么世界模型需要 memory 与 latent state](../docs/notes/world-models-3-latent-memory.md)
+- [为什么世界模型需要预测 reward](../docs/notes/world-models-4-reward.md)
+- [用世界模型做 planning](../docs/notes/world-models-5-planning.md)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-30 06:26:41Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 -Raw 'docs\notes\README.md'`</summary>
+```
+Chunk ID: ec9cee
+Wall time: 0.3645 seconds
+Process exited with code 0
+Original token count: 180
+Output:
+# 学习笔记
+
+这里存放世界模型学习过程中的笔记、思考和论文阅读记录。
+
+建议命名方式：
+
+```text
+YYYY-MM-DD-topic.md
+```
+
+建议每篇笔记包含：
+
+- 今天解决了什么问题。
+- 我现在怎么理解这个概念。
+- 有哪些例子或代码帮助理解。
+- 还不理解什么。
+- 下一步准备做什么。
+
+## 当前笔记
+
+- [世界模型的第一层直觉](world-models-1-intuition.md)
+- [MDP、POMDP 与最小世界模型](world-models-2-basics.md)
+- [为什么世界模型需要 memory 与 latent state](world-models-3-latent-memory.md)
+- [为什么世界模型需要预测 reward](world-models-4-reward.md)
+- [用世界模型做 planning](world-models-5-planning.md)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-30 06:26:59Z)**_
+
+索引文件读完了，我现在把 latent dynamics 作为第 6 个演示补进去，并把 `latent.py` 纳入源代码说明。
+
+_**Agent (gpt-5.5 2026-07-30 06:27:08Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Update: `examples/README.md`**
+
+```diff
+@@
+ 对应笔记：
+ 
+ - [用世界模型做 planning](../docs/notes/world-models-5-planning.md)
++
++### Latent dynamics world model
++
++```bash
++pip install -r requirements.txt
++python examples/run_latent_dynamics_world_model.py
++```
++
++运行后会在 `outputs/latent_dynamics_world_model` 下生成教学图示：
++
++- `01_observation_model_loss.png`：observation-space baseline 的训练误差。
++- `02_latent_model_losses.png`：latent dynamics model 的训练误差。
++- `03_open_loop_rollout_comparison.png`：真实轨迹、observation rollout、latent rollout 的对比。
++- `04_rollout_error_growth.png`：open-loop 误差如何随 rollout horizon 增长。
++- `05_latent_space_rollout.png`：模型在 latent space 中想象出的轨迹。
++
++对应笔记：
++
++- [为什么要转向 latent dynamics](../docs/notes/world-models-6-latent-dynamics.md)
+```
+
+**Update: `src/README.md`**
+
+```diff
+@@
+ - `training.py`：完整状态下的数据收集、训练和评估。
+ - `memory.py`：partial observation 序列数据、GRU 训练和 reward head 训练。
+ - `planning.py`：random shooting、imagined rollout 和 receding-horizon planning。
++- `latent.py`：latent dynamics 训练和 open-loop rollout 对比。
+ - `visualization.py`：训练过程和规划结果的可视化。
+@@
+ - [为什么世界模型需要预测 reward](../docs/notes/world-models-4-reward.md)
+ - [用世界模型做 planning](../docs/notes/world-models-5-planning.md)
++- [为什么要转向 latent dynamics](../docs/notes/world-models-6-latent-dynamics.md)
+```
+
+**Update: `docs/notes/README.md`**
+
+```diff
+@@
+ - [为什么世界模型需要 memory 与 latent state](world-models-3-latent-memory.md)
+ - [为什么世界模型需要预测 reward](world-models-4-reward.md)
+ - [用世界模型做 planning](world-models-5-planning.md)
++- [为什么要转向 latent dynamics](world-models-6-latent-dynamics.md)
+```
+
+
+```
+Exit code: 0
+Wall time: 12.5 seconds
+Output:
+Success. Updated the following files:
+M examples/README.md
+M src/README.md
+M docs/notes/README.md
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-30 06:27:35Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Checking import dependencies and compile behavior**
+</details></think>
+
+_**Agent (gpt-5.5 2026-07-30 06:27:42Z)**_
+
+我做最后一轮静态验证：编译全部示例和包文件，检查 Git 状态，并确认是否仍然因为依赖缺失无法真实运行。
+
+_**Agent (gpt-5.5 2026-07-30 06:27:42Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `python -m py_compile src\hello_world_model\__init__.py src\hello_world_model\envs.py src\hello_world_model\models.py src\hello_world_model\memory.py src\hello_world_model\planning.py src\hello_world_model\latent.py src\hello_world_model\visualization.py examples\run_latent_dynamics_world_model.py examples\run_planning_world_model.py examples\run_reward_world_model.py examples\run_partial_observation_gru.py examples\run_point_mass_world_model.py`</summary>
+```
+Chunk ID: ebda03
+Wall time: 0.5570 seconds
+Process exited with code 0
+Original token count: 0
+Output:
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-30 06:27:42Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `python -c "import numpy, torch, matplotlib; print('deps ok')"`</summary>
+```
+Chunk ID: 8948ec
+Wall time: 0.2493 seconds
+Process exited with code 1
+Original token count: 54
+Output:
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import numpy, torch, matplotlib; print('deps ok')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'numpy'
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-30 06:27:42Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git status --short --branch`</summary>
+```
+Chunk ID: 8fbc16
+Wall time: 0.1672 seconds
+Process exited with code 0
+Original token count: 125
+Output:
+## main...origin/main
+ M .specstory/.project.json
+ M .specstory/history/2026-07-19_03-33-50Z-github-github-https-github.md
+ M .specstory/statistics.json
+ M docs/notes/README.md
+ M examples/README.md
+ M src/README.md
+ M src/hello_world_model/__init__.py
+ M src/hello_world_model/models.py
+ M src/hello_world_model/visualization.py
+?? docs/notes/world-models-6-latent-dynamics.md
+?? examples/run_latent_dynamics_world_model.py
+?? examples/run_planning_world_model.py
+?? src/hello_world_model/latent.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-30 06:27:42Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git diff --stat`</summary>
+```
+Chunk ID: 06fa53
+Wall time: 0.1795 seconds
+Process exited with code 0
+Original token count: 211
+Output:
+warning: in the working copy of '.specstory/.project.json', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of '.specstory/history/2026-07-19_03-33-50Z-github-github-https-github.md', CRLF will be replaced by LF the next time Git touches it
+ ...6-07-19_03-33-50Z-github-github-https-github.md | 2170 ++++++++++++++++++++
+ .specstory/statistics.json                         |   10 +-
+ docs/notes/README.md                               |    1 +
+ examples/README.md                                 |   19 +
+ src/README.md                                      |    2 +
+ src/hello_world_model/__init__.py                  |   28 +-
+ src/hello_world_model/models.py                    |   50 +
+ src/hello_world_model/visualization.py             |  142 ++
+ 8 files changed, 2416 insertions(+), 6 deletions(-)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-30 06:28:05Z)**_
+
+编译检查通过；完整运行仍然被当前 Python 环境缺少 `numpy` 卡住。最后我再看一眼未追踪文件全量列表，避免有旧文件名残留。
+
+_**Agent (gpt-5.5 2026-07-30 06:28:06Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git status --short --untracked-files=all`</summary>
+```
+Chunk ID: 2e1c1e
+Wall time: 0.1348 seconds
+Process exited with code 0
+Original token count: 120
+Output:
+ M .specstory/.project.json
+ M .specstory/history/2026-07-19_03-33-50Z-github-github-https-github.md
+ M .specstory/statistics.json
+ M docs/notes/README.md
+ M examples/README.md
+ M src/README.md
+ M src/hello_world_model/__init__.py
+ M src/hello_world_model/models.py
+ M src/hello_world_model/visualization.py
+?? docs/notes/world-models-6-latent-dynamics.md
+?? examples/run_latent_dynamics_world_model.py
+?? examples/run_planning_world_model.py
+?? src/hello_world_model/latent.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-30 06:28:29Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Summarizing final commit recommendations**
+</details></think>
+
+_**Agent (gpt-5.5 2026-07-30 06:28:36Z)**_
+
+已完成。我没有执行 `git add` 或 `commit`。
+
+这次我把第 6 篇整理成了规范文件名：[world-models-6-latent-dynamics.md](E:/HelloWorldModel/docs/notes/world-models-6-latent-dynamics.md)，把原来的 `world-models-6-latent_dynamics.md` 规范成了 hyphen 风格，和前 1-5 篇一致。
+
+主要内容优化：
+
+- 把主线整理为：observation rollout 容易产生 compounding error，所以要转向 latent dynamics。
+- 增加了多处 Mermaid 图，解释 observation rollout、误差传播、latent rollout、encoder-transition-decoder 架构。
+- 明确提醒：latent rollout 不是魔法，toy 环境里不一定显著更强，它的价值是展示结构差异。
+- 和 PlaNet / Dreamer / RSSM 做了自然衔接。
+
+代码配套新增了第 6 个演示：
+
+- [run_latent_dynamics_world_model.py](E:/HelloWorldModel/examples/run_latent_dynamics_world_model.py)
+- [latent.py](E:/HelloWorldModel/src/hello_world_model/latent.py)
+- [models.py](E:/HelloWorldModel/src/hello_world_model/models.py)：新增 `LatentDynamicsWorldModel`
+- [visualization.py](E:/HelloWorldModel/src/hello_world_model/visualization.py)：新增 latent rollout 相关图
+- 更新了 [examples/README.md](E:/HelloWorldModel/examples/README.md)、[src/README.md](E:/HelloWorldModel/src/README.md)、[docs/notes/README.md](E:/HelloWorldModel/docs/notes/README.md)
+
+运行方式：
+
+```powershell
+pip install -r requirements.txt
+python examples/run_latent_dynamics_world_model.py
+```
+
+会生成：
+
+```text
+outputs/latent_dynamics_world_model/
+├── 01_observation_model_loss.png
+├── 02_latent_model_losses.png
+├── 03_open_loop_rollout_comparison.png
+├── 04_rollout_error_growth.png
+└── 05_latent_space_rollout.png
+```
+
+验证情况：Python 编译检查通过。完整运行仍然受阻于当前环境缺少 `numpy`，安装依赖后即可跑。
+
+提交建议：
+
+```powershell
+git add docs\notes\world-models-6-latent-dynamics.md docs\notes\README.md examples\README.md src\README.md examples\run_latent_dynamics_world_model.py src\hello_world_model
+git commit -m "feat: add latent dynamics world model example"
+git push
+```
+
+注意：`examples/run_planning_world_model.py` 仍然是未追踪文件，看起来是上一篇 planning 演示还没提交；`.specstory` 也有环境记录变动，建议不要加入本次提交。
+
+---
+
+_**User (2026-07-31 11:38:22Z)**_
+
+现在更新了笔记：docs\notes\world-models-7-stochastic-laten-state.md请你作为世界模型专家，审视这个文件的内容，并按照开源项目风格，进行格式和内容的优化，你可以多生成一些图示辅助理解；我笔记离提到的代码，先在该笔记里优化格式，然后补齐其他演示运行所需要的内容，然后可以考虑把他们整理成一个完整项目放到/src 目录下，作为完整的代码配套,注意和已有代码的演示逻辑，因为这个项目每一篇笔记都会对应一个演示，演示逻辑和结构要清晰；
+
+
+---
+
+_**Agent (gpt-5.5 2026-07-31 11:38:35Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Clarifying visualize and read skills usage**
+</details></think>
+
+_**Agent (gpt-5.5 2026-07-31 11:38:37Z)**_
+
+我会把第 7 篇接在第 6 篇 latent dynamics 后面来处理：第 6 篇是“为什么要 latent”，第 7 篇应当讲“为什么 latent 还要是 stochastic”。因为你希望多用图示，我会按 `visualize:visualize` 规范来选择 Markdown 图和运行脚本生成的图。
+
+_**Agent (gpt-5.5 2026-07-31 11:38:39Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Raw 'C:\Users\Lenovo\.codex\plugins\cache\openai-bundled\visualize\1.0.15\skills\visualize\SKILL.md'`</summary>
+```
+Chunk ID: 1c14f6
+Wall time: 0.4774 seconds
+Process exited with code 0
+Original token count: 5164
+Output:
+---
+name: visualize
+description: "Create visualizations and interactive tools directly in conversation. Use when asked to show how something works, make simulators or labs, maps, plots, charts or graphs, comparisons, scenarios, adjustable inputs, and exploration beyond regular text."
+---
+
+# Visualize
+
+- A request for a new standalone file, website, app page, component, or other
+  project change is not an in-conversation visualization request, even when the
+  deliverable contains charts or interactive content.
+- Create a visual only when the user needs to see or explore it in the
+  conversation and it materially improves the explanation. Do not create an
+  inline visual merely because the request involves data, charts, or an
+  interactive page.
+- Use Mermaid when labeled nodes and edges fully explain a static structure;
+  return a normal fenced Mermaid block and no visualization file. Use HTML for
+  dynamics, spatial motion, adjustable inputs, and other visuals.
+- Work silently unless blocked or the user explicitly asks for progress. Never
+  send commentary or progress updates while reading this skill or writing or
+  updating the file; the final response must be your first user-facing message.
+- In user-facing prose, describe only what the visual helps the user see or
+  decide. Keep it concise and do not repeat information already clear from the
+  visual. Never announce this skill, a visualization surface, widgets, HTML,
+  SVG, scripts, local files, inline data, or implementation details.
+
+## Context compaction
+
+Copy into every compaction summary:
+`Reload the full visualize skill before creating or updating a visualization.`
+
+## Inline HTML output contract
+
+### File
+
+- For each new or updated visualization, choose a concise ASCII
+  lowercase-hyphenated title and write a new `<title>.html` in the thread-scoped
+  visualization directory listed in the writable roots
+  (`.codex/visualizations/YYYY/MM/DD/<thread-id>`).
+- Build the visual in the conversation. Use the open project when the user asks
+  for a site, app page, component, or change to existing project files.
+
+### Fragment
+
+- Write only an HTML fragment: no `<!doctype>`, `<html>`, `<head>`, or `<body>`.
+- Write literal markup: use `<div class="card">Hi</div>` plus a real newline,
+  never `<div class=\"card\">Hi</div>\n`. Never embed the fragment in an inline
+  Python, JavaScript, or shell string. Read it back; rewrite literal `\"` or
+  `\n`.
+- Keep CSS and JavaScript in the fragment only when base classes are
+  insufficient. Load static resources only from the CDN allowlist. Never use
+  `fetch`, XHR, WebSocket, or other API calls.
+- Give the fragment root a unique ID and select it with
+  `document.getElementById(...)`. Never derive the root from
+  `document.currentScript`; scripts may sit outside the root.
+- Keep visualizations under 2 MB. Aggregate, bin, downsample, reduce precision,
+  or drop unused fields from large inline datasets.
+- Check that JavaScript has no undefined identifiers, every queried element
+  exists, and the primary interaction updates the visual. The bundled
+  `python3 scripts/render.py <absolute-fragment-path> [<destination>.html] [--serve]`
+  can wrap a fragment as standalone HTML or temporarily serve it for browser
+  inspection when a preview would help with layout, theme, or runtime behavior.
+
+### Content and response
+
+- Keep the fragment focused on the visualization. Do not include explanatory
+  paragraphs, formulas, instructions, or narrative callouts. Include only
+  necessary labels, legends, values, and accessible text alternatives.
+- Use the normal response flow. Put any necessary concise explanation outside
+  the fragment, and add this exact directive on its own line where the visual
+  should appear:
+
+```text
+::codex-inline-vis{file="<title>.html"}
+```
+
+- Emit only the directive for the fragment. Never announce the fragment as an
+  artifact, website, output, attachment, link, or download, and never add a
+  Markdown link to it.
+
+### External resources
+
+- The CSP allows only `cdnjs.cloudflare.com`, `esm.sh`, `cdn.jsdelivr.net`,
+  `unpkg.com`, `fonts.googleapis.com`, `fonts.gstatic.com`, and
+  `fonts.bunny.net`. Other origins are blocked and fail silently.
+
+## Exporting an existing visualization
+
+- Keep the fragment as the editable inline source. When the user explicitly asks
+  to save, export, or publish a visualization that is already shown in the
+  conversation, render it with
+  `python3 scripts/render.py <absolute-fragment-path> <destination>.html`.
+- Apply this export flow only when the user explicitly asks to turn the existing
+  inline source or visualization into a website. For a general website request,
+  build a new responsive site in the output directory or open project, using
+  Sites when appropriate, without applying th
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-31 11:38:50Z)**_
+
+我先检查第 7 篇原文、当前代码和工作区状态。这里我会特别留意文件名里的 `laten` 拼写，后面会规范成 `latent`，避免项目长期留下错别字路径。
+
+_**Agent (gpt-5.5 2026-07-31 11:38:51Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 -Raw 'docs\notes\world-models-7-stochastic-laten-state.md'`</summary>
+```
+Chunk ID: 470eb4
+Wall time: 0.4210 seconds
+Process exited with code 0
+Original token count: 0
+Output:
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-31 11:38:51Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git status --short --branch`</summary>
+```
+Chunk ID: 4976e7
+Wall time: 0.2762 seconds
+Process exited with code 0
+Original token count: 45
+Output:
+## main...origin/main
+ M .specstory/history/2026-07-19_03-33-50Z-github-github-https-github.md
+ M .specstory/statistics.json
+?? docs/notes/world-models-7-stochastic-laten-state.md
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-31 11:38:51Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `rg --files -uu src examples docs requirements.txt`</summary>
+```
+Chunk ID: 1337c5
+Wall time: 1.6531 seconds
+Process exited with code 0
+Original token count: 416
+Output:
+requirements.txt
+docs\roadmap.md
+docs\00-start-here.md
+docs\glossary.md
+src\README.md
+docs\notes\world-models-7-stochastic-laten-state.md
+docs\notes\world-models-6-latent-dynamics.md
+docs\notes\world-models-5-planning.md
+docs\notes\world-models-4-reward.md
+docs\notes\world-models-3-latent-memory.md
+docs\notes\world-models-2-basics.md
+docs\notes\world-models-1-intuition.md
+docs\notes\README.md
+src\hello_world_model\models.py
+src\hello_world_model\memory.py
+src\hello_world_model\latent.py
+src\hello_world_model\envs.py
+src\hello_world_model\training.py
+src\hello_world_model\planning.py
+src\hello_world_model\visualization.py
+src\hello_world_model\__init__.py
+src\hello_world_model\__pycache__\__init__.cpython-314.pyc
+src\hello_world_model\__pycache__\visualization.cpython-314.pyc
+src\hello_world_model\__pycache__\training.cpython-314.pyc
+src\hello_world_model\__pycache__\planning.cpython-314.pyc
+src\hello_world_model\__pycache__\models.cpython-314.pyc
+src\hello_world_model\__pycache__\memory.cpython-314.pyc
+src\hello_world_model\__pycache__\latent.cpython-314.pyc
+src\hello_world_model\__pycache__\envs.cpython-314.pyc
+examples\__pycache__\run_reward_world_model.cpython-314.pyc
+examples\__pycache__\run_point_mass_world_model.cpython-314.pyc
+examples\__pycache__\run_planning_world_model.cpython-314.pyc
+examples\__pycache__\run_partial_observation_gru.cpython-314.pyc
+examples\__pycache__\run_latent_dynamics_world_model.cpython-314.pyc
+examples\run_reward_world_model.py
+examples\run_point_mass_world_model.py
+examples\run_planning_world_model.py
+examples\run_partial_observation_gru.py
+examples\run_latent_dynamics_world_model.py
+examples\README.md
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-31 11:38:51Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 -Raw 'src\hello_world_model\models.py'`</summary>
+```
+Chunk ID: d510c5
+Wall time: 0.4338 seconds
+Process exited with code 0
+Original token count: 1230
+Output:
+from __future__ import annotations
+
+import torch
+from torch import nn
+
+
+class WorldModel(nn.Module):
+    """Predict next state and reward from current state-action pair."""
+
+    def __init__(self, state_dim: int = 2, action_dim: int = 1, hidden_dim: int = 128):
+        super().__init__()
+        self.backbone = nn.Sequential(
+            nn.Linear(state_dim + action_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.ReLU(),
+        )
+        self.next_state_head = nn.Linear(hidden_dim, state_dim)
+        self.reward_head = nn.Linear(hidden_dim, 1)
+
+    def forward(
+        self, state: torch.Tensor, action: torch.Tensor
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        x = torch.cat([state, action], dim=-1)
+        h = self.backbone(x)
+        return self.next_state_head(h), self.reward_head(h)
+
+
+class GRUWorldModel(nn.Module):
+    """Predict next observation from a sequence of observations and actions."""
+
+    def __init__(self, obs_dim: int = 1, action_dim: int = 1, hidden_dim: int = 32):
+        super().__init__()
+        self.hidden_dim = hidden_dim
+        self.gru = nn.GRU(
+            input_size=obs_dim + action_dim,
+            hidden_size=hidden_dim,
+            batch_first=True,
+        )
+        self.next_obs_head = nn.Linear(hidden_dim, obs_dim)
+
+    def forward(
+        self,
+        obs_seq: torch.Tensor,
+        action_seq: torch.Tensor,
+        h0: torch.Tensor | None = None,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        x = torch.cat([obs_seq, action_seq], dim=-1)
+        hidden_seq, hn = self.gru(x, h0)
+        pred_next_obs = self.next_obs_head(hidden_seq)
+        return pred_next_obs, hn
+
+
+class GRURewardWorldModel(nn.Module):
+    """Predict next observation and reward from recurrent world-model state."""
+
+    def __init__(self, obs_dim: int = 1, action_dim: int = 1, hidden_dim: int = 32):
+        super().__init__()
+        self.hidden_dim = hidden_dim
+        self.gru = nn.GRU(
+            input_size=obs_dim + action_dim,
+            hidden_size=hidden_dim,
+            batch_first=True,
+        )
+        self.next_obs_head = nn.Linear(hidden_dim, obs_dim)
+        self.reward_head = nn.Linear(hidden_dim, 1)
+
+    def forward(
+        self,
+        obs_seq: torch.Tensor,
+        action_seq: torch.Tensor,
+        h0: torch.Tensor | None = None,
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        x = torch.cat([obs_seq, action_seq], dim=-1)
+        hidden_seq, hn = self.gru(x, h0)
+        pred_next_obs = self.next_obs_head(hidden_seq)
+        pred_reward = self.reward_head(hidden_seq)
+        return pred_next_obs, pred_reward, hn
+
+    def step(
+        self,
+        obs: torch.Tensor,
+        action: torch.Tensor,
+        h: torch.Tensor | None = None,
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        """Roll the recurrent world model forward by one imagined step."""
+
+        x = torch.cat([obs, action], dim=-1).unsqueeze(1)
+        hidden_seq, hn = self.gru(x, h)
+        hidden = hidden_seq[:, 0, :]
+        pred_next_obs = self.next_obs_head(hidden)
+        pred_reward = self.reward_head(hidden)
+        return pred_next_obs, pred_reward, hn
+
+
+class LatentDynamicsWorldModel(nn.Module):
+    """Roll future states in a learned latent space instead of observation space."""
+
+    def __init__(
+        self,
+        obs_dim: int = 2,
+        action_dim: int = 1,
+        latent_dim: int = 8,
+        hidden_dim: int = 64,
+    ):
+        super().__init__()
+        self.encoder = nn.Sequential(
+            nn.Linear(obs_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, latent_dim),
+        )
+        self.transition = nn.Sequential(
+            nn.Linear(latent_dim + action_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, latent_dim),
+        )
+        self.decoder = nn.Sequential(
+            nn.Linear(latent_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, obs_dim),
+        )
+        self.reward_head = nn.Sequential(
+            nn.Linear(latent_dim + action_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, 1),
+        )
+
+    def forward(
+        self, obs: torch.Tensor, action: torch.Tensor
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        latent = self.encoder(obs)
+        next_latent, pred_reward = self.step_latent(latent, action)
+        pred_next_obs = self.decoder(next_latent)
+        return pred_next_obs, pred_reward, next_latent
+
+    def step_latent(
+        self, latent: torch.Tensor, action: torch.Tensor
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        transition_input = torch.cat([latent, action], dim=-1)
+        latent_delta = self.transition(transition_input)
+        next_latent = latent + latent_delta
+        pred_reward = self.reward_head(transition_input)
+        return next_
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-31 11:39:08Z)**_
+
+这个文件目前读出来是空内容，可能是刚创建了文件但还没写入正文，或者保存/编码没有落盘。我先确认文件大小；如果确实为空，我会基于第 6 篇的上下文直接帮你起草一版完整第 7 篇和配套演示。
+
+_**Agent (gpt-5.5 2026-07-31 11:39:08Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Item 'docs\notes\world-models-7-stochastic-laten-state.md' | Format-List FullName,Length,LastWriteTime`</summary>
+```
+Chunk ID: 522c5b
+Wall time: 0.5039 seconds
+Process exited with code 0
+Original token count: 39
+Output:
+
+
+FullName      : E:\HelloWorldModel\docs\notes\world-models-7-stochastic-laten-state.md
+Length        : 0
+LastWriteTime : 2026/7/31 19:23:27
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-31 11:39:08Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 -Raw 'src\hello_world_model\latent.py'`</summary>
+```
+Chunk ID: 039c81
+Wall time: 0.4486 seconds
+Process exited with code 0
+Original token count: 1289
+Output:
+from __future__ import annotations
+
+import random
+from collections.abc import Sequence
+
+import numpy as np
+import torch
+from torch import nn, optim
+
+from .envs import PointMass1DEnv
+from .models import LatentDynamicsWorldModel, WorldModel
+from .training import Transition
+
+
+def train_latent_dynamics_model(
+    model: LatentDynamicsWorldModel,
+    data: Sequence[Transition],
+    epochs: int = 50,
+    batch_size: int = 128,
+    lr: float = 1e-3,
+    device: str = "cpu",
+) -> dict[str, list[float]]:
+    """Train a minimal latent dynamics model on transition data."""
+
+    model.to(device)
+    optimizer = optim.Adam(model.parameters(), lr=lr)
+    mse = nn.MSELoss()
+    shuffled_data = list(data)
+    losses = {"total": [], "obs": [], "reward": []}
+
+    for epoch in range(epochs):
+        random.shuffle(shuffled_data)
+        total_loss = 0.0
+        total_obs_loss = 0.0
+        total_reward_loss = 0.0
+
+        for i in range(0, len(shuffled_data), batch_size):
+            batch = shuffled_data[i : i + batch_size]
+            obs = torch.tensor(
+                np.stack([x[0] for x in batch]), dtype=torch.float32, device=device
+            )
+            action = torch.tensor(
+                np.stack([x[1] for x in batch]), dtype=torch.float32, device=device
+            )
+            next_obs = torch.tensor(
+                np.stack([x[2] for x in batch]), dtype=torch.float32, device=device
+            )
+            reward = torch.tensor(
+                np.stack([x[3] for x in batch]), dtype=torch.float32, device=device
+            )
+
+            pred_next_obs, pred_reward, _ = model(obs, action)
+            obs_loss = mse(pred_next_obs, next_obs)
+            reward_loss = mse(pred_reward, reward)
+            loss = obs_loss + reward_loss
+
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+
+            total_loss += loss.item() * len(batch)
+            total_obs_loss += obs_loss.item() * len(batch)
+            total_reward_loss += reward_loss.item() * len(batch)
+
+        n = len(shuffled_data)
+        losses["total"].append(total_loss / n)
+        losses["obs"].append(total_obs_loss / n)
+        losses["reward"].append(total_reward_loss / n)
+        print(
+            f"Epoch {epoch + 1:03d} | "
+            f"total={losses['total'][-1]:.6f} | "
+            f"obs={losses['obs'][-1]:.6f} | "
+            f"reward={losses['reward'][-1]:.6f}"
+        )
+
+    return losses
+
+
+def collect_real_rollout(
+    env: PointMass1DEnv,
+    action_sequence: np.ndarray,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Run a fixed action sequence in the real environment."""
+
+    obs = env.reset()
+    observations = [obs.copy()]
+    rewards: list[float] = []
+
+    for action in action_sequence:
+        obs, reward, done, _ = env.step(float(action[0]))
+        observations.append(obs.copy())
+        rewards.append(reward)
+        if done:
+            break
+
+    return np.stack(observations), np.array(rewards, dtype=np.float32)
+
+
+@torch.no_grad()
+def rollout_observation_model(
+    model: WorldModel,
+    initial_obs: np.ndarray,
+    action_sequence: np.ndarray,
+    device: str = "cpu",
+) -> tuple[np.ndarray, np.ndarray]:
+    """Open-loop rollout that feeds predicted observations back into the model."""
+
+    model.eval()
+    obs = torch.tensor(initial_obs, dtype=torch.float32, device=device).unsqueeze(0)
+    observations = [obs.squeeze(0).cpu().numpy()]
+    rewards: list[float] = []
+
+    for action_np in action_sequence:
+        action = torch.tensor(action_np, dtype=torch.float32, device=device).unsqueeze(0)
+        obs, reward = model(obs, action)
+        observations.append(obs.squeeze(0).cpu().numpy())
+        rewards.append(float(reward.item()))
+
+    return np.stack(observations), np.array(rewards, dtype=np.float32)
+
+
+@torch.no_grad()
+def rollout_latent_dynamics_model(
+    model: LatentDynamicsWorldModel,
+    initial_obs: np.ndarray,
+    action_sequence: np.ndarray,
+    device: str = "cpu",
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Open-loop rollout that advances the model in latent space."""
+
+    model.eval()
+    obs = torch.tensor(initial_obs, dtype=torch.float32, device=device).unsqueeze(0)
+    latent = model.encoder(obs)
+    latents = [latent.squeeze(0).cpu().numpy()]
+    observations = [obs.squeeze(0).cpu().numpy()]
+    rewards: list[float] = []
+
+    for action_np in action_sequence:
+        action = torch.tensor(action_np, dtype=torch.float32, device=device).unsqueeze(0)
+        latent, reward = model.step_latent(latent, action)
+        decoded_obs = model.decoder(latent)
+        latents.append(latent.squeeze(0).cpu().numpy())
+        observations.append(decoded_obs.squeeze(0).cpu().numpy())
+        rewards.append(float(reward.item()))
+
+    return (
+        np.stack(observations),
+        np.array(rewards, dtype=np.float32),
+        np.stack(latents),
+    )
+
+
+def make_probe_action
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-31 11:39:08Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 -Raw 'src\hello_world_model\visualization.py'`</summary>
+```
+Chunk ID: 580bee
+Wall time: 0.4174 seconds
+Process exited with code 0
+Original token count: 4762
+Output:
+from __future__ import annotations
+
+from pathlib import Path
+from collections.abc import Sequence
+
+import matplotlib.pyplot as plt
+import numpy as np
+import torch
+
+from .models import WorldModel
+from .memory import Episode
+from .training import Transition
+
+
+def plot_dataset_phase_space(data: Sequence[Transition], output_path: Path) -> None:
+    """Show what states the random data collection covered."""
+
+    states = np.stack([transition[0] for transition in data])
+    actions = np.stack([transition[1] for transition in data]).reshape(-1)
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(7, 5))
+    scatter = ax.scatter(
+        states[:, 0],
+        states[:, 1],
+        c=actions,
+        s=8,
+        alpha=0.55,
+        cmap="coolwarm",
+    )
+    ax.axvline(0.0, color="black", linewidth=1, linestyle="--", label="goal")
+    ax.set_title("Random Data Coverage")
+    ax.set_xlabel("position")
+    ax.set_ylabel("velocity")
+    ax.legend(loc="best")
+    fig.colorbar(scatter, ax=ax, label="action")
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_training_loss(losses: Sequence[float], output_path: Path) -> None:
+    """Show whether the learned dynamics/reward model is fitting the data."""
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(7, 4))
+    ax.plot(np.arange(1, len(losses) + 1), losses, linewidth=2)
+    ax.set_title("World Model Training Loss")
+    ax.set_xlabel("epoch")
+    ax.set_ylabel("MSE loss")
+    ax.grid(True, alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_reward_model_losses(
+    losses: dict[str, Sequence[float]],
+    output_path: Path,
+) -> None:
+    """Show total, observation, and reward losses for a reward world model."""
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    epochs = np.arange(1, len(losses["total"]) + 1)
+    ax.plot(epochs, losses["total"], label="total", linewidth=2)
+    ax.plot(epochs, losses["obs"], label="observation", linewidth=1.8)
+    ax.plot(epochs, losses["reward"], label="reward", linewidth=1.8)
+    ax.set_title("Reward World Model Training Losses")
+    ax.set_xlabel("epoch")
+    ax.set_ylabel("MSE loss")
+    ax.legend(loc="best")
+    ax.grid(True, alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_latent_model_losses(
+    losses: dict[str, Sequence[float]],
+    output_path: Path,
+) -> None:
+    """Show latent dynamics model training losses."""
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    epochs = np.arange(1, len(losses["total"]) + 1)
+    ax.plot(epochs, losses["total"], label="total", linewidth=2)
+    ax.plot(epochs, losses["obs"], label="decoded observation", linewidth=1.8)
+    ax.plot(epochs, losses["reward"], label="reward", linewidth=1.8)
+    ax.set_title("Latent Dynamics Model Training Losses")
+    ax.set_xlabel("epoch")
+    ax.set_ylabel("MSE loss")
+    ax.legend(loc="best")
+    ax.grid(True, alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+@torch.no_grad()
+def plot_one_step_predictions(
+    model: WorldModel,
+    data: Sequence[Transition],
+    output_path: Path,
+    max_points: int = 800,
+    device: str = "cpu",
+) -> None:
+    """Compare real next states with one-step predictions."""
+
+    model.eval()
+    sample = list(data[:max_points])
+
+    states = torch.tensor(
+        np.stack([transition[0] for transition in sample]),
+        dtype=torch.float32,
+        device=device,
+    )
+    actions = torch.tensor(
+        np.stack([transition[1] for transition in sample]),
+        dtype=torch.float32,
+        device=device,
+    )
+    true_next = np.stack([transition[2] for transition in sample])
+    pred_next, _ = model(states, actions)
+    pred_next_np = pred_next.cpu().numpy()
+
+    _prepare_output(output_path)
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4))
+
+    _plot_prediction_panel(
+        axes[0],
+        true_next[:, 0],
+        pred_next_np[:, 0],
+        "next position",
+    )
+    _plot_prediction_panel(
+        axes[1],
+        true_next[:, 1],
+        pred_next_np[:, 1],
+        "next velocity",
+    )
+
+    fig.suptitle("One-Step Prediction: Real Environment vs Learned Model")
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_planned_trajectory(
+    states: np.ndarray,
+    actions: np.ndarray,
+    rewards: Sequence[float],
+    output_path: Path,
+) -> None:
+    """Show how planning moves the point mass toward the goal."""
+
+    steps = np.arange(len(states))
+    action_steps = np.arange(len(actions))
+    cumulative_reward = np.cumsum(rewards)
+
+    _prepare_output(output_path)
+    fig, axes = plt.subplots(3, 1, figsize=(8, 8), sharex=False)
+
+    axes[0].plot(steps, states[:, 0], linewidth=2, label="position")
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-31 11:39:08Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 -Raw 'src\hello_world_model\__init__.py'`</summary>
+```
+Chunk ID: 103b63
+Wall time: 0.4155 seconds
+Process exited with code 0
+Original token count: 738
+Output:
+"""Minimal world model examples for learning."""
+
+from .envs import PartialPointMass1DEnv, PointMass1DEnv
+from .latent import (
+    collect_real_rollout,
+    make_probe_action_sequence,
+    rollout_latent_dynamics_model,
+    rollout_observation_model,
+    train_latent_dynamics_model,
+)
+from .memory import (
+    collect_partial_episodes,
+    predict_episode,
+    predict_episode_with_reward,
+    score_candidate_actions,
+    train_gru_reward_world_model,
+    train_gru_world_model,
+)
+from .models import (
+    GRURewardWorldModel,
+    GRUWorldModel,
+    LatentDynamicsWorldModel,
+    WorldModel,
+)
+from .planning import plan_action_random_shooting
+from .planning import (
+    imagine_action_sequence,
+    infer_hidden_from_history,
+    plan_action_with_world_model,
+    run_receding_horizon_episode,
+)
+from .training import (
+    collect_random_data,
+    evaluate_planner,
+    rollout_planner_episode,
+    train_world_model,
+)
+from .visualization import (
+    plot_dataset_phase_space,
+    plot_latent_model_losses,
+    plot_latent_space_rollout,
+    plot_gru_sequence_prediction,
+    plot_hidden_state_velocity_probe,
+    plot_first_planning_rollouts,
+    plot_imagined_vs_real_feedback,
+    plot_action_reward_scores,
+    plot_one_step_predictions,
+    plot_partial_observation_ambiguity,
+    plot_planned_trajectory,
+    plot_reward_landscape,
+    plot_reward_model_losses,
+    plot_reward_predictions,
+    plot_receding_horizon_control,
+    plot_rollout_error_growth,
+    plot_rollout_prediction_comparison,
+    plot_training_loss,
+)
+
+__all__ = [
+    "GRURewardWorldModel",
+    "GRUWorldModel",
+    "LatentDynamicsWorldModel",
+    "PartialPointMass1DEnv",
+    "PointMass1DEnv",
+    "WorldModel",
+    "collect_real_rollout",
+    "collect_partial_episodes",
+    "collect_random_data",
+    "evaluate_planner",
+    "make_probe_action_sequence",
+    "plot_dataset_phase_space",
+    "plot_latent_model_losses",
+    "plot_latent_space_rollout",
+    "plot_gru_sequence_prediction",
+    "plot_hidden_state_velocity_probe",
+    "plot_first_planning_rollouts",
+    "plot_imagined_vs_real_feedback",
+    "plot_action_reward_scores",
+    "plot_one_step_predictions",
+    "plot_partial_observation_ambiguity",
+    "plot_planned_trajectory",
+    "plot_reward_landscape",
+    "plot_reward_model_losses",
+    "plot_reward_predictions",
+    "plot_receding_horizon_control",
+    "plot_rollout_error_growth",
+    "plot_rollout_prediction_comparison",
+    "plot_training_loss",
+    "imagine_action_sequence",
+    "infer_hidden_from_history",
+    "plan_action_random_shooting",
+    "plan_action_with_world_model",
+    "predict_episode",
+    "predict_episode_with_reward",
+    "rollout_planner_episode",
+    "rollout_latent_dynamics_model",
+    "rollout_observation_model",
+    "run_receding_horizon_episode",
+    "train_latent_dynamics_model",
+    "score_candidate_actions",
+    "train_gru_reward_world_model",
+    "train_gru_world_model",
+    "train_world_model",
+]
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-31 11:39:38Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Designing stochastic latent world model**
+</details></think>
+
+_**Agent (gpt-5.5 2026-07-31 11:39:38Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Implementing noisy point mass environment**
+</details></think>
+
+_**Agent (gpt-5.5 2026-07-31 11:39:38Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Planning stochastic latent model implementation and demo**
+</details></think>
+
+_**Agent (gpt-5.5 2026-07-31 11:39:40Z)**_
+
+第 7 篇文件确认是 0 字节，我会直接起草完整版本，并把文件名修正为 `world-models-7-stochastic-latent-state.md`。代码演示会做成“随机 latent 产生一簇可能未来”的第 7 个入口，和第 6 篇 deterministic latent dynamics 形成对照。
+
+_**Agent (gpt-5.5 2026-07-31 11:39:41Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 -Raw 'src\hello_world_model\envs.py'`</summary>
+```
+Chunk ID: dcbf29
+Wall time: 0.3251 seconds
+Process exited with code 0
+Original token count: 378
+Output:
+from __future__ import annotations
+
+import numpy as np
+
+
+class PointMass1DEnv:
+    """A tiny 1D point-mass control environment.
+
+    State: [position, velocity]
+    Action: acceleration clipped to [-1, 1]
+    Reward: negative distance-to-goal penalty and action penalty
+    """
+
+    def __init__(self, dt: float = 0.1, horizon: int = 100, goal: float = 0.0):
+        self.dt = dt
+        self.horizon = horizon
+        self.goal = goal
+        self.t = 0
+        self.pos = 0.0
+        self.vel = 0.0
+
+    def reset(self) -> np.ndarray:
+        self.t = 0
+        self.pos = float(np.random.uniform(-2.0, 2.0))
+        self.vel = float(np.random.uniform(-0.5, 0.5))
+        return self._get_obs()
+
+    def step(self, action: float) -> tuple[np.ndarray, float, bool, dict]:
+        action = float(np.clip(action, -1.0, 1.0))
+
+        self.vel += action * self.dt
+        self.pos += self.vel * self.dt
+        self.t += 1
+
+        reward = -((self.pos - self.goal) ** 2 + 0.1 * action**2)
+        done = self.t >= self.horizon
+        return self._get_obs(), float(reward), done, {}
+
+    def _get_obs(self) -> np.ndarray:
+        return np.array([self.pos, self.vel], dtype=np.float32)
+
+
+class PartialPointMass1DEnv(PointMass1DEnv):
+    """Point-mass environment where the agent only observes position."""
+
+    def _get_obs(self) -> np.ndarray:
+        return np.array([self.pos], dtype=np.float32)
+
+    def get_true_state(self) -> np.ndarray:
+        return np.array([self.pos, self.vel], dtype=np.float32)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-31 11:39:48Z)**_
+
+我先加一个带过程噪声的 toy 环境和 stochastic latent 模型。这个演示的重点不是复杂控制，而是让读者看见：同一个当前状态和动作，不再只对应一条未来，而是一簇可能未来。
+
+_**Agent (gpt-5.5 2026-07-31 11:40:42Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Update: `src/hello_world_model/envs.py`**
+
+```diff
+@@
+ class PartialPointMass1DEnv(PointMass1DEnv):
+@@
+     def get_true_state(self) -> np.ndarray:
+         return np.array([self.pos, self.vel], dtype=np.float32)
++
++
++class NoisyPointMass1DEnv(PointMass1DEnv):
++    """Point-mass environment with random process noise in the dynamics."""
++
++    def __init__(
++        self,
++        dt: float = 0.1,
++        horizon: int = 100,
++        goal: float = 0.0,
++        process_noise_std: float = 0.15,
++    ):
++        super().__init__(dt=dt, horizon=horizon, goal=goal)
++        self.process_noise_std = process_noise_std
++
++    def step(self, action: float) -> tuple[np.ndarray, float, bool, dict]:
++        action = float(np.clip(action, -1.0, 1.0))
++        noise = float(np.random.normal(0.0, self.process_noise_std))
++
++        self.vel += (action + noise) * self.dt
++        self.pos += self.vel * self.dt
++        self.t += 1
++
++        reward = -((self.pos - self.goal) ** 2 + 0.1 * action**2)
++        done = self.t >= self.horizon
++        return self._get_obs(), float(reward), done, {"process_noise": noise}
+```
+
+**Update: `src/hello_world_model/models.py`**
+
+```diff
+@@
+ class LatentDynamicsWorldModel(nn.Module):
+@@
+         pred_reward = self.reward_head(transition_input)
+         return next_latent, pred_reward
++
++
++class StochasticLatentWorldModel(nn.Module):
++    """A minimal stochastic latent dynamics model with Gaussian latent states."""
++
++    def __init__(
++        self,
++        obs_dim: int = 2,
++        action_dim: int = 1,
++        latent_dim: int = 8,
++        hidden_dim: int = 64,
++        min_log_std: float = -5.0,
++        max_log_std: float = 2.0,
++    ):
++        super().__init__()
++        self.latent_dim = latent_dim
++        self.min_log_std = min_log_std
++        self.max_log_std = max_log_std
++
++        self.encoder = nn.Sequential(
++            nn.Linear(obs_dim, hidden_dim),
++            nn.ReLU(),
++            nn.Linear(hidden_dim, hidden_dim),
++            nn.ReLU(),
++        )
++        self.posterior_mean = nn.Linear(hidden_dim, latent_dim)
++        self.posterior_log_std = nn.Linear(hidden_dim, latent_dim)
++
++        self.prior = nn.Sequential(
++            nn.Linear(latent_dim + action_dim, hidden_dim),
++            nn.ReLU(),
++            nn.Linear(hidden_dim, hidden_dim),
++            nn.ReLU(),
++        )
++        self.prior_mean = nn.Linear(hidden_dim, latent_dim)
++        self.prior_log_std = nn.Linear(hidden_dim, latent_dim)
++
++        self.decoder = nn.Sequential(
++            nn.Linear(latent_dim, hidden_dim),
++            nn.ReLU(),
++            nn.Linear(hidden_dim, obs_dim),
++        )
++        self.reward_head = nn.Sequential(
++            nn.Linear(latent_dim + action_dim, hidden_dim),
++            nn.ReLU(),
++            nn.Linear(hidden_dim, 1),
++        )
++
++    def encode(self, obs: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
++        hidden = self.encoder(obs)
++        mean = self.posterior_mean(hidden)
++        log_std = self.posterior_log_std(hidden).clamp(
++            self.min_log_std, self.max_log_std
++        )
++        return mean, log_std
++
++    def transition_distribution(
++        self, latent: torch.Tensor, action: torch.Tensor
++    ) -> tuple[torch.Tensor, torch.Tensor]:
++        hidden = self.prior(torch.cat([latent, action], dim=-1))
++        mean = self.prior_mean(hidden)
++        log_std = self.prior_log_std(hidden).clamp(self.min_log_std, self.max_log_std)
++        return mean, log_std
++
++    def sample_latent(
++        self,
++        mean: torch.Tensor,
++        log_std: torch.Tensor,
++        sample: bool = True,
++    ) -> torch.Tensor:
++        if not sample:
++            return mean
++        eps = torch.randn_like(mean)
++        return mean + eps * torch.exp(log_std)
++
++    def forward(
++        self,
++        obs: torch.Tensor,
++        action: torch.Tensor,
++        next_obs: torch.Tensor | None = None,
++        sample: bool = True,
++    ) -> dict[str, torch.Tensor]:
++        latent_mean, latent_log_std = self.encode(obs)
++        latent = self.sample_latent(latent_mean, latent_log_std, sample=sample)
++        prior_mean, prior_log_std = self.transition_distribution(latent, action)
++        next_latent = self.sample_latent(prior_mean, prior_log_std, sample=sample)
++        pred_next_obs = self.decoder(next_latent)
++        pred_reward = self.reward_head(torch.cat([latent, action], dim=-1))
++
++        output = {
++            "latent_mean": latent_mean,
++            "latent_log_std": latent_log_std,
++            "prior_mean": prior_mean,
++            "prior_log_std": prior_log_std,
++            "next_latent": next_latent,
++            "pred_next_obs": pred_next_obs,
++            "pred_reward": pred_reward,
++        }
++
++        if next_obs is not None:
++            posterior_next_mean, posterior_next_log_std = self.encode(next_obs)
++            output["posterior_next_mean"] = posterior_next_mean
++            output["posterior_next_log_std"] = posterior_next_log_std
++
++        return output
+```
+
+**Add: `src/hello_world_model/stochastic.py`**
+
+```diff
++from __future__ import annotations
++
++import random
++from collections.abc import Sequence
++
++import numpy as np
++import torch
++from torch import nn, optim
++
++from .models import StochasticLatentWorldModel
++from .training import Transition
++
++
++def train_stochastic_latent_model(
++    model: StochasticLatentWorldModel,
++    data: Sequence[Transition],
++    epochs: int = 50,
++    batch_size: int = 128,
++    lr: float = 1e-3,
++    kl_weight: float = 0.02,
++    device: str = "cpu",
++) -> dict[str, list[float]]:
++    """Train a minimal Gaussian stochastic latent dynamics model."""
++
++    model.to(device)
++    optimizer = optim.Adam(model.parameters(), lr=lr)
++    mse = nn.MSELoss()
++    shuffled_data = list(data)
++    losses = {"total": [], "obs": [], "reward": [], "kl": []}
++
++    for epoch in range(epochs):
++        random.shuffle(shuffled_data)
++        totals = {"total": 0.0, "obs": 0.0, "reward": 0.0, "kl": 0.0}
++
++        for i in range(0, len(shuffled_data), batch_size):
++            batch = shuffled_data[i : i + batch_size]
++            obs = torch.tensor(
++                np.stack([x[0] for x in batch]), dtype=torch.float32, device=device
++            )
++            action = torch.tensor(
++                np.stack([x[1] for x in batch]), dtype=torch.float32, device=device
++            )
++            next_obs = torch.tensor(
++                np.stack([x[2] for x in batch]), dtype=torch.float32, device=device
++            )
++            reward = torch.tensor(
++                np.stack([x[3] for x in batch]), dtype=torch.float32, device=device
++            )
++
++            output = model(obs, action, next_obs=next_obs, sample=True)
++            obs_loss = mse(output["pred_next_obs"], next_obs)
++            reward_loss = mse(output["pred_reward"], reward)
++            kl_loss = gaussian_kl(
++                output["posterior_next_mean"],
++                output["posterior_next_log_std"],
++                output["prior_mean"],
++                output["prior_log_std"],
++            ).mean()
++            loss = obs_loss + reward_loss + kl_weight * kl_loss
++
++            optimizer.zero_grad()
++            loss.backward()
++            optimizer.step()
++
++            batch_size_actual = len(batch)
++            totals["total"] += loss.item() * batch_size_actual
++            totals["obs"] += obs_loss.item() * batch_size_actual
++            totals["reward"] += reward_loss.item() * batch_size_actual
++            totals["kl"] += kl_loss.item() * batch_size_actual
++
++        n = len(shuffled_data)
++        for key in losses:
++            losses[key].append(totals[key] / n)
++
++        print(
++            f"Epoch {epoch + 1:03d} | "
++            f"total={losses['total'][-1]:.6f} | "
++            f"obs={losses['obs'][-1]:.6f} | "
++            f"reward={losses['reward'][-1]:.6f} | "
++            f"kl={losses['kl'][-1]:.6f}"
++        )
++
++    return losses
++
++
++def gaussian_kl(
++    q_mean: torch.Tensor,
++    q_log_std: torch.Tensor,
++    p_mean: torch.Tensor,
++    p_log_std: torch.Tensor,
++) -> torch.Tensor:
++    """KL(q || p) for diagonal Gaussian distributions."""
++
++    q_var = torch.exp(2.0 * q_log_std)
++    p_var = torch.exp(2.0 * p_log_std)
++    return 0.5 * (
++        2.0 * (p_log_std - q_log_std)
++        + (q_var + (q_mean - p_mean) ** 2) / p_var
++        - 1.0
++    ).sum(dim=-1)
++
++
++@torch.no_grad()
++def sample_one_step_futures(
++    model: StochasticLatentWorldModel,
++    obs: np.ndarray,
++    action: np.ndarray,
++    num_samples: int = 80,
++    device: str = "cpu",
++) -> np.ndarray:
++    """Sample many possible next observations for one state-action pair."""
++
++    model.eval()
++    obs_tensor = torch.tensor(obs, dtype=torch.float32, device=device).unsqueeze(0)
++    action_tensor = torch.tensor(action, dtype=torch.float32, device=device).unsqueeze(0)
++    samples: list[np.ndarray] = []
++
++    for _ in range(num_samples):
++        output = model(obs_tensor, action_tensor, sample=True)
++        samples.append(output["pred_next_obs"].squeeze(0).cpu().numpy())
++
++    return np.stack(samples)
++
++
++@torch.no_grad()
++def rollout_stochastic_latent_model(
++    model: StochasticLatentWorldModel,
++    initial_obs: np.ndarray,
++    action_sequence: np.ndarray,
++    num_rollouts: int = 40,
++    device: str = "cpu",
++) -> np.ndarray:
++    """Sample multiple open-loop futures from stochastic latent dynamics."""
++
++    model.eval()
++    all_rollouts: list[np.ndarray] = []
++
++    for _ in range(num_rollouts):
++        obs = torch.tensor(initial_obs, dtype=torch.float32, device=device).unsqueeze(0)
++        latent_mean, latent_log_std = model.encode(obs)
++        latent = model.sample_latent(latent_mean, latent_log_std, sample=True)
++        observations = [obs.squeeze(0).cpu().numpy()]
++
++        for action_np in action_sequence:
++            action = torch.tensor(action_np, dtype=torch.float32, device=device).unsqueeze(
++                0
++            )
++            prior_mean, prior_log_std = model.transition_distribution(latent, action)
++            latent = model.sample_latent(prior_mean, prior_log_std, sample=True)
++            decoded_obs = model.decoder(latent)
++            observations.append(decoded_obs.squeeze(0).cpu().numpy())
++
++        all_rollouts.append(np.stack(observations))
++
++    return np.stack(all_rollouts)
++
++
++@torch.no_grad()
++def sample_prior_latents(
++    model: StochasticLatentWorldModel,
++    obs: np.ndarray,
++    action: np.ndarray,
++    num_samples: int = 250,
++    device: str = "cpu",
++) -> np.ndarray:
++    """Sample latent next states from p(z_{t+1} | z_t, a_t)."""
++
++    model.eval()
++    obs_tensor = torch.tensor(obs, dtype=torch.float32, device=device).unsqueeze(0)
++    action_tensor = torch.tensor(action, dtype=torch.float32, device=device).unsqueeze(0)
++    latent_mean, latent_log_std = model.encode(obs_tensor)
++    latent = model.sample_latent(latent_mean, latent_log_std, sample=False)
++    prior_mean, prior_log_std = model.transition_distribution(latent, action_tensor)
++    samples = [
++        model.sample_latent(prior_mean, prior_log_std, sample=True)
++        .squeeze(0)
++        .cpu()
++        .numpy()
++        for _ in range(num_samples)
++    ]
++    return np.stack(samples)
+```
+
+
+```
+Exit code: 0
+Wall time: 18.9 seconds
+Output:
+Success. Updated the following files:
+A src/hello_world_model/stochastic.py
+M src/hello_world_model/envs.py
+M src/hello_world_model/models.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-31 11:41:10Z)**_
+
+随机 latent 的模型和训练工具已经加上。现在补几张图：训练损失、单步未来分布、随机 rollout 扇形图、latent 先验采样分布。
+
+_**Agent (gpt-5.5 2026-07-31 11:41:37Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Update: `src/hello_world_model/visualization.py`**
+
+```diff
+@@
+ def plot_latent_model_losses(
+@@
+     fig.savefig(output_path, dpi=160)
+     plt.close(fig)
++
++
++def plot_stochastic_model_losses(
++    losses: dict[str, Sequence[float]],
++    output_path: Path,
++) -> None:
++    """Show stochastic latent model observation, reward, and KL losses."""
++
++    _prepare_output(output_path)
++    fig, ax = plt.subplots(figsize=(8, 4.5))
++    epochs = np.arange(1, len(losses["total"]) + 1)
++    ax.plot(epochs, losses["total"], label="total", linewidth=2)
++    ax.plot(epochs, losses["obs"], label="observation", linewidth=1.8)
++    ax.plot(epochs, losses["reward"], label="reward", linewidth=1.8)
++    ax.plot(epochs, losses["kl"], label="KL", linewidth=1.8)
++    ax.set_title("Stochastic Latent Model Training Losses")
++    ax.set_xlabel("epoch")
++    ax.set_ylabel("loss")
++    ax.legend(loc="best")
++    ax.grid(True, alpha=0.25)
++    fig.tight_layout()
++    fig.savefig(output_path, dpi=160)
++    plt.close(fig)
+@@
+ def plot_latent_space_rollout(
+@@
+     fig.savefig(output_path, dpi=160)
+     plt.close(fig)
++
++
++def plot_one_step_future_distribution(
++    obs: np.ndarray,
++    action: np.ndarray,
++    true_next_obs: np.ndarray,
++    sampled_next_obs: np.ndarray,
++    output_path: Path,
++) -> None:
++    """Show many plausible one-step futures from a stochastic latent model."""
++
++    _prepare_output(output_path)
++    fig, ax = plt.subplots(figsize=(7, 5))
++    ax.scatter(
++        sampled_next_obs[:, 0],
++        sampled_next_obs[:, 1],
++        s=18,
++        alpha=0.45,
++        label="sampled next states",
++    )
++    ax.scatter(
++        [obs[0]],
++        [obs[1]],
++        s=80,
++        marker="x",
++        label=f"current state, action={float(action[0]):.2f}",
++    )
++    ax.scatter(
++        [true_next_obs[0]],
++        [true_next_obs[1]],
++        s=70,
++        marker="*",
++        label="one real next state",
++    )
++    ax.set_title("One-Step Stochastic Future Distribution")
++    ax.set_xlabel("position")
++    ax.set_ylabel("velocity")
++    ax.legend(loc="best")
++    ax.grid(True, alpha=0.25)
++    fig.tight_layout()
++    fig.savefig(output_path, dpi=160)
++    plt.close(fig)
++
++
++def plot_stochastic_rollout_fan(
++    real_obs: np.ndarray,
++    sampled_rollouts: np.ndarray,
++    output_path: Path,
++) -> None:
++    """Show a fan of sampled stochastic futures against one real rollout."""
++
++    steps = np.arange(sampled_rollouts.shape[1])
++    position_samples = sampled_rollouts[:, :, 0]
++    lower = np.percentile(position_samples, 10, axis=0)
++    upper = np.percentile(position_samples, 90, axis=0)
++    mean = position_samples.mean(axis=0)
++
++    _prepare_output(output_path)
++    fig, ax = plt.subplots(figsize=(8, 4.8))
++    for rollout in sampled_rollouts[:20]:
++        ax.plot(steps, rollout[:, 0], linewidth=0.8, alpha=0.18)
++    ax.fill_between(steps, lower, upper, alpha=0.25, label="10-90% sample band")
++    ax.plot(steps, mean, linewidth=2.2, label="sample mean")
++    ax.plot(steps, real_obs[:, 0], linewidth=2, linestyle="--", label="one real rollout")
++    ax.axhline(0.0, color="black", linewidth=1, linestyle=":", label="goal")
++    ax.set_title("Stochastic Latent Open-Loop Rollout Fan")
++    ax.set_xlabel("rollout step")
++    ax.set_ylabel("position")
++    ax.legend(loc="best")
++    ax.grid(True, alpha=0.25)
++    fig.tight_layout()
++    fig.savefig(output_path, dpi=160)
++    plt.close(fig)
++
++
++def plot_stochastic_uncertainty_growth(
++    sampled_rollouts: np.ndarray,
++    output_path: Path,
++) -> None:
++    """Show how sampled future uncertainty changes over rollout horizon."""
++
++    steps = np.arange(sampled_rollouts.shape[1])
++    position_std = sampled_rollouts[:, :, 0].std(axis=0)
++    velocity_std = sampled_rollouts[:, :, 1].std(axis=0)
++
++    _prepare_output(output_path)
++    fig, ax = plt.subplots(figsize=(8, 4.5))
++    ax.plot(steps, position_std, label="position std", linewidth=2)
++    ax.plot(steps, velocity_std, label="velocity std", linewidth=2)
++    ax.set_title("Uncertainty Across Sampled Futures")
++    ax.set_xlabel("rollout step")
++    ax.set_ylabel("sample standard deviation")
++    ax.legend(loc="best")
++    ax.grid(True, alpha=0.25)
++    fig.tight_layout()
++    fig.savefig(output_path, dpi=160)
++    plt.close(fig)
++
++
++def plot_prior_latent_samples(
++    latent_samples: np.ndarray,
++    output_path: Path,
++) -> None:
++    """Visualize stochastic next latent samples from the learned prior."""
++
++    _prepare_output(output_path)
++    fig, ax = plt.subplots(figsize=(6, 5))
++
++    if latent_samples.shape[1] == 1:
++        ax.hist(latent_samples[:, 0], bins=30, alpha=0.75)
++        ax.set_xlabel("latent dim 0")
++        ax.set_ylabel("count")
++    else:
++        ax.scatter(latent_samples[:, 0], latent_samples[:, 1], s=16, alpha=0.5)
++        ax.set_xlabel("latent dim 0")
++        ax.set_ylabel("latent dim 1")
++
++    ax.set_title("Samples from p(z_next | z, action)")
++    ax.grid(True, alpha=0.25)
++    fig.tight_layout()
++    fig.savefig(output_path, dpi=160)
++    plt.close(fig)
+```
+
+
+```
+Exit code: 0
+Wall time: 2 seconds
+Output:
+Success. Updated the following files:
+M src/hello_world_model/visualization.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-31 11:41:45Z)**_
+
+接下来新增第 7 个演示入口，并把新环境、模型、训练和图示函数导出。这样用户运行脚本就能看到 stochastic latent state 带来的“一簇未来”。
+
+_**Agent (gpt-5.5 2026-07-31 11:42:08Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Update: `src/hello_world_model/__init__.py`**
+
+```diff
+@@
+-from .envs import PartialPointMass1DEnv, PointMass1DEnv
++from .envs import NoisyPointMass1DEnv, PartialPointMass1DEnv, PointMass1DEnv
+@@
+ from .models import (
+     GRURewardWorldModel,
+     GRUWorldModel,
+     LatentDynamicsWorldModel,
++    StochasticLatentWorldModel,
+     WorldModel,
+ )
+@@
+ from .training import (
+     collect_random_data,
+@@
+     train_world_model,
+ )
++from .stochastic import (
++    rollout_stochastic_latent_model,
++    sample_one_step_futures,
++    sample_prior_latents,
++    train_stochastic_latent_model,
++)
+ from .visualization import (
+@@
+     plot_latent_model_losses,
+     plot_latent_space_rollout,
++    plot_one_step_future_distribution,
+     plot_gru_sequence_prediction,
+@@
+     plot_receding_horizon_control,
+     plot_rollout_error_growth,
+     plot_rollout_prediction_comparison,
++    plot_prior_latent_samples,
++    plot_stochastic_model_losses,
++    plot_stochastic_rollout_fan,
++    plot_stochastic_uncertainty_growth,
+     plot_training_loss,
+ )
+@@
+     "GRUWorldModel",
+     "LatentDynamicsWorldModel",
++    "NoisyPointMass1DEnv",
+     "PartialPointMass1DEnv",
+     "PointMass1DEnv",
++    "StochasticLatentWorldModel",
+@@
+     "plot_latent_model_losses",
+     "plot_latent_space_rollout",
++    "plot_one_step_future_distribution",
+@@
+     "plot_receding_horizon_control",
+     "plot_rollout_error_growth",
+     "plot_rollout_prediction_comparison",
++    "plot_prior_latent_samples",
++    "plot_stochastic_model_losses",
++    "plot_stochastic_rollout_fan",
++    "plot_stochastic_uncertainty_growth",
+@@
+     "rollout_latent_dynamics_model",
+     "rollout_observation_model",
++    "rollout_stochastic_latent_model",
+     "run_receding_horizon_episode",
++    "sample_one_step_futures",
++    "sample_prior_latents",
+     "train_latent_dynamics_model",
++    "train_stochastic_latent_model",
+```
+
+**Add: `examples/run_stochastic_latent_state_world_model.py`**
+
+```diff
++from __future__ import annotations
++
++from pathlib import Path
++import sys
++
++PROJECT_ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(PROJECT_ROOT / "src"))
++
++from hello_world_model import (  # noqa: E402
++    NoisyPointMass1DEnv,
++    StochasticLatentWorldModel,
++    collect_random_data,
++    collect_real_rollout,
++    make_probe_action_sequence,
++    plot_one_step_future_distribution,
++    plot_prior_latent_samples,
++    plot_stochastic_model_losses,
++    plot_stochastic_rollout_fan,
++    plot_stochastic_uncertainty_growth,
++    rollout_stochastic_latent_model,
++    sample_one_step_futures,
++    sample_prior_latents,
++    train_stochastic_latent_model,
++)
++
++
++def main() -> None:
++    output_dir = PROJECT_ROOT / "outputs" / "stochastic_latent_state_world_model"
++
++    print("1. Collecting noisy point-mass data...")
++    data_env = NoisyPointMass1DEnv(horizon=60, process_noise_std=0.18)
++    data = collect_random_data(data_env, episodes=320)
++
++    print("2. Training stochastic latent world model...")
++    model = StochasticLatentWorldModel(
++        obs_dim=2, action_dim=1, latent_dim=8, hidden_dim=64
++    )
++    losses = train_stochastic_latent_model(
++        model, data, epochs=50, batch_size=128, lr=1e-3, kl_weight=0.02
++    )
++    plot_stochastic_model_losses(losses, output_dir / "01_stochastic_model_losses.png")
++
++    print("3. Sampling one-step futures from the learned latent distribution...")
++    obs, action, true_next_obs, _ = data[0]
++    next_samples = sample_one_step_futures(model, obs, action, num_samples=120)
++    plot_one_step_future_distribution(
++        obs,
++        action,
++        true_next_obs,
++        next_samples,
++        output_dir / "02_one_step_future_distribution.png",
++    )
++
++    print("4. Sampling open-loop stochastic futures...")
++    action_sequence = make_probe_action_sequence(horizon=40)
++    rollout_env = NoisyPointMass1DEnv(horizon=60, process_noise_std=0.18)
++    real_obs, _ = collect_real_rollout(rollout_env, action_sequence)
++    sampled_rollouts = rollout_stochastic_latent_model(
++        model, real_obs[0], action_sequence, num_rollouts=60
++    )
++    plot_stochastic_rollout_fan(
++        real_obs, sampled_rollouts, output_dir / "03_stochastic_rollout_fan.png"
++    )
++    plot_stochastic_uncertainty_growth(
++        sampled_rollouts, output_dir / "04_uncertainty_growth.png"
++    )
++
++    print("5. Visualizing samples from the next-latent prior...")
++    latent_samples = sample_prior_latents(model, obs, action, num_samples=300)
++    plot_prior_latent_samples(
++        latent_samples, output_dir / "05_prior_latent_samples.png"
++    )
++
++    print(f"Saved visualizations to: {output_dir}")
++
++
++if __name__ == "__main__":
++    main()
+```
+
+
+```
+Exit code: 0
+Wall time: 8.7 seconds
+Output:
+Success. Updated the following files:
+A examples/run_stochastic_latent_state_world_model.py
+M src/hello_world_model/__init__.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-31 11:42:25Z)**_
+
+现在我重写第 7 篇笔记正文：文件会从空的 `world-models-7-stochastic-laten-state.md` 迁移为拼写正确的 `world-models-7-stochastic-latent-state.md`，并把“确定性 latent vs 随机 latent”的核心区别讲清楚。
+
+_**Agent (gpt-5.5 2026-07-31 11:43:08Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Delete: `docs/notes/world-models-7-stochastic-laten-state.md`**
+
+**Add: `docs/notes/world-models-7-stochastic-latent-state.md`**
+
+```diff
++# 7. 为什么世界模型需要 stochastic latent state
++
++日期：2026-07-31
++
++状态：学习笔记草稿
++
++## 这篇笔记解决什么问题
++
++上一篇笔记讲了 latent dynamics：不要直接在 observation space 里 rollout，而是在更紧凑的 latent state 中推进未来。
++
++但如果 latent state 只有一个确定性结果，仍然会遇到一个重要问题：
++
++> 真实世界的未来经常不是唯一的。
++
++同一个当前状态和动作，可能产生多个合理未来。例如：
++
++- 机器人推一个物体，物体可能滑动，也可能卡住。
++- 自动驾驶看到路口，行人可能停下，也可能继续走。
++- 视频里一个球被遮挡后，可能从左边出来，也可能从右边出来。
++- noisy control 中，同样的动作会受到随机扰动影响。
++
++这篇笔记要回答：为什么 world model 需要 stochastic latent state，而不只是 deterministic latent state？
++
++## 1. 确定性 latent dynamics 的限制
++
++第 6 篇里的最小 latent dynamics 可以写成：
++
++$$
++z_{t+1} = f(z_t, a_t)
++$$
++
++这意味着：给定 \(z_t\) 和 \(a_t\)，模型只能给出一个下一 latent state。
++
++```mermaid
++flowchart LR
++    Z["z_t"] --> F["deterministic dynamics f"]
++    A["a_t"] --> F
++    F --> NZ["one z_{t+1}"]
++```
++
++这种模型适合近似确定性的环境。但如果未来本来就有多种可能，它容易把多种未来“平均掉”。
++
++比如一个物体可能向左，也可能向右。确定性模型可能预测它停在中间。这个平均结果看起来数值误差不大，但物理上可能是不存在的未来。
++
++## 2. Stochastic latent 的核心想法
++
++Stochastic latent dynamics 不再预测一个点，而是预测一个分布：
++
++$$
++p(z_{t+1} \mid z_t, a_t)
++$$
++
++也就是说，模型承认：
++
++> 我知道当前状态和动作，但未来仍然可能有不确定性。
++
++```mermaid
++flowchart LR
++    Z["z_t"] --> P["stochastic dynamics p(z_{t+1}|z_t,a_t)"]
++    A["a_t"] --> P
++    P --> Z1["sample future 1"]
++    P --> Z2["sample future 2"]
++    P --> Z3["sample future 3"]
++```
++
++这不是模型“变得不确定”这么简单，而是让模型能显式表达多模态未来和环境噪声。
++
++## 3. 为什么不能只预测平均值
++
++假设同一个状态和动作后，未来有两种可能：
++
++| 未来 | 概率 | 结果 |
++| --- | ---: | --- |
++| A | 50% | 向左滑 |
++| B | 50% | 向右滑 |
++
++确定性 MSE 模型很可能学出平均结果：
++
++$$
++\hat{x}_{t+1} \approx 0
++$$
++
++但真实未来从来不是“停在中间”，而是左或右。
++
++```mermaid
++flowchart TD
++    S["same z_t and a_t"] --> L["future A: left"]
++    S --> R["future B: right"]
++    L --> Avg["deterministic average"]
++    R --> Avg
++    Avg --> Bad["average future may be unrealistic"]
++```
++
++Stochastic latent state 的意义就是：保留多种可能，而不是过早平均。
++
++## 4. 最小随机 latent 架构
++
++一个最小 stochastic latent world model 可以这样写：
++
++$$
++z_t \sim q(z_t \mid o_t)
++$$
++
++$$
++z_{t+1} \sim p(z_{t+1} \mid z_t, a_t)
++$$
++
++$$
++\hat{o}_{t+1} = Dec(z_{t+1}), \quad \hat{r}_t = g(z_t, a_t)
++$$
++
++其中：
++
++- \(q(z_t \mid o_t)\)：encoder / posterior，用观测推断当前 latent。
++- \(p(z_{t+1} \mid z_t, a_t)\)：transition prior，预测下一 latent 的分布。
++- \(Dec(z_{t+1})\)：把 latent 解码回 observation，用于训练和可视化。
++- \(g(z_t, a_t)\)：reward head，让 latent 对任务有用。
++
++```mermaid
++flowchart TD
++    O["o_t"] --> Enc["encoder q(z_t|o_t)"]
++    Enc --> Z["sample z_t"]
++    Z --> Prior["prior p(z_{t+1}|z_t,a_t)"]
++    A["a_t"] --> Prior
++    Prior --> NZ1["sample z_{t+1}^{(1)}"]
++    Prior --> NZ2["sample z_{t+1}^{(2)}"]
++    Prior --> NZ3["sample z_{t+1}^{(3)}"]
++    NZ1 --> Dec["decoder"]
++    NZ2 --> Dec
++    NZ3 --> Dec
++    Dec --> Futures["many possible observations"]
++```
++
++## 5. 训练时为什么会有 KL loss
++
++训练 stochastic latent model 时，常见做法是同时学习：
++
++- posterior：看到了真实下一观测后，应该把下一 latent 放在哪里。
++- prior：只根据当前 latent 和 action，提前预测下一 latent 分布。
++
++我们希望 prior 不要和 posterior 差太远，所以会加入 KL 项：
++
++$$
++KL(q(z_{t+1}\mid o_{t+1}) \parallel p(z_{t+1}\mid z_t, a_t))
++$$
++
++最小训练目标可以写成：
++
++$$
++L = L_{obs} + L_{reward} + \beta L_{KL}
++$$
++
++其中：
++
++- \(L_{obs}\)：解码出的下一观测是否接近真实下一观测。
++- \(L_{reward}\)：预测 reward 是否接近真实 reward。
++- \(L_{KL}\)：prior 分布是否接近 posterior 分布。
++- \(\beta\)：控制 KL 项权重。
++
++这已经非常接近 Dreamer / RSSM 里的关键味道：让模型同时学习“从观测推断 latent”和“在 latent 中预测未来”。
++
++## 6. 配套代码演示
++
++这一篇对应的完整演示是：
++
++- [examples/run_stochastic_latent_state_world_model.py](../../examples/run_stochastic_latent_state_world_model.py)
++- [src/hello_world_model/stochastic.py](../../src/hello_world_model/stochastic.py)
++- [src/hello_world_model/models.py](../../src/hello_world_model/models.py)
++
++运行方式：
++
++```bash
++pip install -r requirements.txt
++python examples/run_stochastic_latent_state_world_model.py
++```
++
++运行后会生成：
++
++- `01_stochastic_model_losses.png`：observation / reward / KL loss。
++- `02_one_step_future_distribution.png`：同一个 state-action 下采样出的多个下一状态。
++- `03_stochastic_rollout_fan.png`：同一条动作序列下的一簇可能未来。
++- `04_uncertainty_growth.png`：rollout 过程中样本不确定性如何变化。
++- `05_prior_latent_samples.png`：从 \(p(z_{t+1}\mid z_t,a_t)\) 采样出的 latent 分布。
++
++## 7. 这个 toy demo 应该怎么看
++
++这次演示会使用 `NoisyPointMass1DEnv`，也就是在点质量系统里加入过程噪声。这样，同样的状态和动作不再严格对应唯一下一状态。
++
++你应该重点看三件事：
++
++- 单步预测不再只有一个点，而是一团 samples。
++- 多步 rollout 不再是一条线，而是一簇未来轨迹。
++- 不确定性会随着 open-loop rollout 传播。
++
++这正是 stochastic latent state 的价值：它让模型承认并表达未来的不确定性。
++
++## 8. 和 RSSM / Dreamer 的关系
++
++Dreamer 的 RSSM 通常同时包含：
++
++- deterministic state \(h_t\)：负责稳定记忆历史。
++- stochastic state \(z_t\)：负责表达不确定性。
++
++简化地看：
++
++$$
++h_t = f(h_{t-1}, z_{t-1}, a_{t-1})
++$$
++
++$$
++z_t \sim p(z_t \mid h_t)
++$$
++
++其中 \(h_t\) 像是长期上下文，\(z_t\) 像是在当前上下文下对具体世界状态的一次随机解释。
++
++我们的最小 demo 还没有完整实现 RSSM，但已经抓住了关键一步：
++
++> world model 不只维护一个内部状态，还可以维护一个内部状态分布。
++
++## 9. 容易误解的一点
++
++Stochastic latent 不代表模型“更随便”。它的目标不是产生随机噪声，而是把真实环境中无法确定的部分建模为概率分布。
++
++好的 stochastic model 应该做到：
++
++- 在确定性很强的地方，分布收窄。
++- 在多种未来都合理的地方，分布变宽。
++- 在 planning 时，让智能体看到风险，而不是只看到平均未来。
++
++## 10. 这一篇只要抓住三句话
++
++第一句：
++
++> Deterministic latent dynamics 给出一个未来，stochastic latent dynamics 给出一组可能未来。
++
++第二句：
++
++> 如果真实未来是多模态的，只预测平均值可能会产生不真实的未来。
++
++第三句：
++
++> Stochastic latent state 是 Dreamer / RSSM 能表达不确定性的重要基础。
++
++## 下一步
++
++下一篇可以继续拆：
++
++> 有了 stochastic latent state 之后，如何在 imagined futures 中训练 actor 和 value？
+```
+
+
+```
+Exit code: 0
+Wall time: 9.2 seconds
+Output:
+Success. Updated the following files:
+A docs/notes/world-models-7-stochastic-latent-state.md
+D docs/notes/world-models-7-stochastic-laten-state.md
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-31 11:43:27Z)**_
+
+笔记正文已经完成，并且保留了和 Dreamer/RSSM 的衔接。现在我更新项目索引和 README，把第 7 篇演示纳入“一篇笔记一个入口”的目录结构。
+
+_**Agent (gpt-5.5 2026-07-31 11:43:27Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 -Raw 'examples\README.md'`</summary>
+```
+Chunk ID: 5f9f5c
+Wall time: 0.3440 seconds
+Process exited with code 0
+Original token count: 931
+Output:
+# Examples
+
+这里存放可以直接运行的小实验。
+
+计划中的第一个实验：
+
+- 用一个简单环境收集 `(state, action, next_state)` 数据。
+- 训练一个小模型预测 `next_state`。
+- 对比真实下一状态和模型预测结果。
+
+每个例子建议包含：
+
+- 运行命令
+- 依赖说明
+- 预期输出
+- 对应笔记
+
+## 当前示例
+
+### 1D point mass world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_point_mass_world_model.py
+```
+
+运行后会在 `outputs/point_mass_world_model` 下生成教学图示：
+
+- `01_random_data_phase_space.png`：随机交互数据覆盖了哪些位置和速度。
+- `02_training_loss.png`：world model 的训练误差是否下降。
+- `03_one_step_predictions.png`：模型预测的下一状态是否接近真实下一状态。
+- `04_planned_trajectory.png`：planner 是否把点质量系统推向目标位置。
+
+对应笔记：
+
+- [MDP、POMDP 与最小世界模型](../docs/notes/world-models-2-basics.md)
+
+### Partial observation GRU world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_partial_observation_gru.py
+```
+
+运行后会在 `outputs/partial_observation_gru` 下生成教学图示：
+
+- `01_partial_observation_ambiguity.png`：同一个位置观测可能对应不同隐藏速度。
+- `02_gru_training_loss.png`：GRU world model 的训练误差。
+- `03_gru_sequence_prediction.png`：真实位置序列与预测位置序列对比。
+- `04_hidden_state_probe.png`：GRU hidden state 是否编码了隐藏速度信息。
+
+对应笔记：
+
+- [为什么世界模型需要 memory 与 latent state](../docs/notes/world-models-3-latent-memory.md)
+
+### Reward world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_reward_world_model.py
+```
+
+运行后会在 `outputs/reward_world_model` 下生成教学图示：
+
+- `01_reward_landscape.png`：toy 环境里 reward 如何由目标距离和动作代价决定。
+- `02_reward_model_losses.png`：total / observation / reward 三种训练误差。
+- `03_reward_prediction.png`：真实 reward 与预测 reward 的对比。
+- `04_reward_guided_action_scores.png`：reward head 如何给候选动作排序。
+
+对应笔记：
+
+- [为什么世界模型需要预测 reward](../docs/notes/world-models-4-reward.md)
+
+### Planning with a world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_planning_world_model.py
+```
+
+运行后会在 `outputs/planning_world_model` 下生成教学图示：
+
+- `01_planning_model_losses.png`：用于 planning 的 recurrent reward world model 训练误差。
+- `02_first_imagined_rollouts.png`：第一次规划时，模型想象出的多条未来轨迹。
+- `03_receding_horizon_control.png`：滚动规划在真实环境中的控制轨迹。
+- `04_imagined_vs_real_feedback.png`：模型预测的最佳 imagined return 与真实 reward 的对照。
+
+对应笔记：
+
+- [用世界模型做 planning](../docs/notes/world-models-5-planning.md)
+
+### Latent dynamics world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_latent_dynamics_world_model.py
+```
+
+运行后会在 `outputs/latent_dynamics_world_model` 下生成教学图示：
+
+- `01_observation_model_loss.png`：observation-space baseline 的训练误差。
+- `02_latent_model_losses.png`：latent dynamics model 的训练误差。
+- `03_open_loop_rollout_comparison.png`：真实轨迹、observation rollout、latent rollout 的对比。
+- `04_rollout_error_growth.png`：open-loop 误差如何随 rollout horizon 增长。
+- `05_latent_space_rollout.png`：模型在 latent space 中想象出的轨迹。
+
+对应笔记：
+
+- [为什么要转向 latent dynamics](../docs/notes/world-models-6-latent-dynamics.md)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-31 11:43:27Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 -Raw 'src\README.md'`</summary>
+```
+Chunk ID: f4344d
+Wall time: 0.3294 seconds
+Process exited with code 0
+Original token count: 354
+Output:
+# Source Code
+
+这里存放世界模型相关的可复用代码。
+
+初期可以先从最小模块开始：
+
+- 环境交互代码
+- 数据收集代码
+- 状态预测模型
+- 训练脚本
+- 评估脚本
+
+建议原则：
+
+- 每个实验都能从 README 或注释中看懂入口。
+- 优先写小而清楚的代码，再逐步抽象。
+- 每次实验都记录对应的笔记链接。
+
+## 当前代码
+
+- [hello_world_model](hello_world_model)：最小 world model 教学代码。
+
+它包含：
+
+- `envs.py`：一维点质量环境。
+- `models.py`：MLP world model 和 GRU world model。
+- `training.py`：完整状态下的数据收集、训练和评估。
+- `memory.py`：partial observation 序列数据、GRU 训练和 reward head 训练。
+- `planning.py`：random shooting、imagined rollout 和 receding-horizon planning。
+- `latent.py`：latent dynamics 训练和 open-loop rollout 对比。
+- `visualization.py`：训练过程和规划结果的可视化。
+
+对应笔记：
+
+- [MDP、POMDP 与最小世界模型](../docs/notes/world-models-2-basics.md)
+- [为什么世界模型需要 memory 与 latent state](../docs/notes/world-models-3-latent-memory.md)
+- [为什么世界模型需要预测 reward](../docs/notes/world-models-4-reward.md)
+- [用世界模型做 planning](../docs/notes/world-models-5-planning.md)
+- [为什么要转向 latent dynamics](../docs/notes/world-models-6-latent-dynamics.md)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-31 11:43:27Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 -Raw 'docs\notes\README.md'`</summary>
+```
+Chunk ID: e8cdc5
+Wall time: 0.3125 seconds
+Process exited with code 0
+Original token count: 199
+Output:
+# 学习笔记
+
+这里存放世界模型学习过程中的笔记、思考和论文阅读记录。
+
+建议命名方式：
+
+```text
+YYYY-MM-DD-topic.md
+```
+
+建议每篇笔记包含：
+
+- 今天解决了什么问题。
+- 我现在怎么理解这个概念。
+- 有哪些例子或代码帮助理解。
+- 还不理解什么。
+- 下一步准备做什么。
+
+## 当前笔记
+
+- [世界模型的第一层直觉](world-models-1-intuition.md)
+- [MDP、POMDP 与最小世界模型](world-models-2-basics.md)
+- [为什么世界模型需要 memory 与 latent state](world-models-3-latent-memory.md)
+- [为什么世界模型需要预测 reward](world-models-4-reward.md)
+- [用世界模型做 planning](world-models-5-planning.md)
+- [为什么要转向 latent dynamics](world-models-6-latent-dynamics.md)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-31 11:43:37Z)**_
+
+我会把第 7 篇加入三个索引，并在 `src/README.md` 里补上 `stochastic.py` 的职责说明。
+
+_**Agent (gpt-5.5 2026-07-31 11:43:46Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Update: `examples/README.md`**
+
+```diff
+@@
+ 对应笔记：
+ 
+ - [为什么要转向 latent dynamics](../docs/notes/world-models-6-latent-dynamics.md)
++
++### Stochastic latent state world model
++
++```bash
++pip install -r requirements.txt
++python examples/run_stochastic_latent_state_world_model.py
++```
++
++运行后会在 `outputs/stochastic_latent_state_world_model` 下生成教学图示：
++
++- `01_stochastic_model_losses.png`：observation / reward / KL loss。
++- `02_one_step_future_distribution.png`：同一个 state-action 下采样出的多个下一状态。
++- `03_stochastic_rollout_fan.png`：同一条动作序列下的一簇可能未来。
++- `04_uncertainty_growth.png`：rollout 过程中样本不确定性如何变化。
++- `05_prior_latent_samples.png`：从 `p(z_next | z, action)` 采样出的 latent 分布。
++
++对应笔记：
++
++- [为什么世界模型需要 stochastic latent state](../docs/notes/world-models-7-stochastic-latent-state.md)
+```
+
+**Update: `src/README.md`**
+
+```diff
+@@
+ - `planning.py`：random shooting、imagined rollout 和 receding-horizon planning。
+ - `latent.py`：latent dynamics 训练和 open-loop rollout 对比。
++- `stochastic.py`：stochastic latent state 训练、采样和 rollout。
+ - `visualization.py`：训练过程和规划结果的可视化。
+@@
+ - [用世界模型做 planning](../docs/notes/world-models-5-planning.md)
+ - [为什么要转向 latent dynamics](../docs/notes/world-models-6-latent-dynamics.md)
++- [为什么世界模型需要 stochastic latent state](../docs/notes/world-models-7-stochastic-latent-state.md)
+```
+
+**Update: `docs/notes/README.md`**
+
+```diff
+@@
+ - [用世界模型做 planning](world-models-5-planning.md)
+ - [为什么要转向 latent dynamics](world-models-6-latent-dynamics.md)
++- [为什么世界模型需要 stochastic latent state](world-models-7-stochastic-latent-state.md)
+```
+
+
+```
+Exit code: 0
+Wall time: 12.7 seconds
+Output:
+Success. Updated the following files:
+M examples/README.md
+M src/README.md
+M docs/notes/README.md
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-31 11:44:15Z)**_
+
+现在做最后的静态验证：编译新增模块和全部示例，检查是否有依赖缺失，以及确认 Git 状态里本次相关文件范围。
+
+_**Agent (gpt-5.5 2026-07-31 11:44:15Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `python -m py_compile src\hello_world_model\__init__.py src\hello_world_model\envs.py src\hello_world_model\models.py src\hello_world_model\memory.py src\hello_world_model\planning.py src\hello_world_model\latent.py src\hello_world_model\stochastic.py src\hello_world_model\visualization.py examples\run_stochastic_latent_state_world_model.py examples\run_latent_dynamics_world_model.py examples\run_planning_world_model.py examples\run_reward_world_model.py examples\run_partial_observation_gru.py examples\run_point_mass_world_model.py`</summary>
+```
+Chunk ID: 1a4c0f
+Wall time: 0.4265 seconds
+Process exited with code 0
+Original token count: 0
+Output:
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-31 11:44:15Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `python -c "import numpy, torch, matplotlib; print('deps ok')"`</summary>
+```
+Chunk ID: eca112
+Wall time: 0.2507 seconds
+Process exited with code 1
+Original token count: 54
+Output:
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import numpy, torch, matplotlib; print('deps ok')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'numpy'
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-31 11:44:15Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git status --short --branch`</summary>
+```
+Chunk ID: 2a3334
+Wall time: 0.2181 seconds
+Process exited with code 0
+Original token count: 122
+Output:
+## main...origin/main
+ M .specstory/history/2026-07-19_03-33-50Z-github-github-https-github.md
+ M .specstory/statistics.json
+ M docs/notes/README.md
+ M examples/README.md
+ M src/README.md
+ M src/hello_world_model/__init__.py
+ M src/hello_world_model/envs.py
+ M src/hello_world_model/models.py
+ M src/hello_world_model/visualization.py
+?? docs/notes/world-models-7-stochastic-latent-state.md
+?? examples/run_stochastic_latent_state_world_model.py
+?? src/hello_world_model/stochastic.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-31 11:44:15Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git diff --stat`</summary>
+```
+Chunk ID: 53a4cb
+Wall time: 0.1971 seconds
+Process exited with code 0
+Original token count: 197
+Output:
+warning: in the working copy of '.specstory/history/2026-07-19_03-33-50Z-github-github-https-github.md', CRLF will be replaced by LF the next time Git touches it
+ ...6-07-19_03-33-50Z-github-github-https-github.md | 2117 ++++++++++++++++++++
+ .specstory/statistics.json                         |    8 +-
+ docs/notes/README.md                               |    1 +
+ examples/README.md                                 |   19 +
+ src/README.md                                      |    2 +
+ src/hello_world_model/__init__.py                  |   25 +-
+ src/hello_world_model/envs.py                      |   26 +
+ src/hello_world_model/models.py                    |  105 +
+ src/hello_world_model/visualization.py             |  145 ++
+ 9 files changed, 2443 insertions(+), 5 deletions(-)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-07-31 11:44:27Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Verifying git status and model training notes**
+</details></think>
+
+_**Agent (gpt-5.5 2026-07-31 11:44:39Z)**_
+
+已完成。我没有执行 `git add` 或 `commit`。
+
+这次我发现你给的原文件 [world-models-7-stochastic-laten-state.md](E:/HelloWorldModel/docs/notes/world-models-7-stochastic-laten-state.md) 是空文件，而且文件名里 `laten` 少了一个 `t`。我已规范成新的文件：[world-models-7-stochastic-latent-state.md](E:/HelloWorldModel/docs/notes/world-models-7-stochastic-latent-state.md)。
+
+这篇笔记我整理成了第 7 章：为什么世界模型需要 `stochastic latent state`。核心主线是：
+
+- deterministic latent dynamics 只能给出一个未来；
+- 真实世界常常有多种可能未来；
+- 只预测平均值可能产生“不真实的平均未来”；
+- stochastic latent state 用分布 \(p(z_{t+1} \mid z_t, a_t)\) 表达不确定性；
+- 这一步自然连接到 Dreamer / RSSM 里的 stochastic state。
+
+代码配套也补齐了第 7 个演示：
+
+- [run_stochastic_latent_state_world_model.py](E:/HelloWorldModel/examples/run_stochastic_latent_state_world_model.py)
+- [stochastic.py](E:/HelloWorldModel/src/hello_world_model/stochastic.py)
+- [envs.py](E:/HelloWorldModel/src/hello_world_model/envs.py)：新增 `NoisyPointMass1DEnv`
+- [models.py](E:/HelloWorldModel/src/hello_world_model/models.py)：新增 `StochasticLatentWorldModel`
+- [visualization.py](E:/HelloWorldModel/src/hello_world_model/visualization.py)：新增 stochastic latent 相关图
+- 更新了 [examples/README.md](E:/HelloWorldModel/examples/README.md)、[src/README.md](E:/HelloWorldModel/src/README.md)、[docs/notes/README.md](E:/HelloWorldModel/docs/notes/README.md)
+
+运行方式：
+
+```powershell
+pip install -r requirements.txt
+python examples/run_stochastic_latent_state_world_model.py
+```
+
+会生成：
+
+```text
+outputs/stochastic_latent_state_world_model/
+├── 01_stochastic_model_losses.png
+├── 02_one_step_future_distribution.png
+├── 03_stochastic_rollout_fan.png
+├── 04_uncertainty_growth.png
+└── 05_prior_latent_samples.png
+```
+
+验证情况：Python 编译检查通过。完整运行仍然因为当前环境缺少 `numpy` 而没有执行，安装依赖后即可跑。
+
+提交建议：
+
+```powershell
+git add docs\notes\world-models-7-stochastic-latent-state.md docs\notes\README.md examples\README.md src\README.md examples\run_stochastic_latent_state_world_model.py src\hello_world_model
+git commit -m "feat: add stochastic latent state world model example"
+git push
+```
+
+`.specstory` 仍然是环境记录变动，建议不要加入提交。

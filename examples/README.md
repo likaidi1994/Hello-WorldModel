@@ -107,3 +107,41 @@ python examples/run_latent_dynamics_world_model.py
 对应笔记：
 
 - [为什么要转向 latent dynamics](../docs/notes/world-models-6-latent-dynamics.md)
+
+### Stochastic latent state world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_stochastic_latent_state_world_model.py
+```
+
+运行后会在 `outputs/stochastic_latent_state_world_model` 下生成教学图示：
+
+- `01_stochastic_model_losses.png`：observation / reward / KL loss。
+- `02_one_step_future_distribution.png`：同一个 state-action 下采样出的多个下一状态。
+- `03_stochastic_rollout_fan.png`：同一条动作序列下的一簇可能未来。
+- `04_uncertainty_growth.png`：rollout 过程中样本不确定性如何变化。
+- `05_prior_latent_samples.png`：从 `p(z_next | z, action)` 采样出的 latent 分布。
+
+对应笔记：
+
+- [为什么世界模型需要 stochastic latent state](../docs/notes/world-models-7-stochastic-latent-state.md)
+
+### Prior and posterior latent world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_prior_posterior_latent_world_model.py
+```
+
+运行后会在 `outputs/prior_posterior_latent_world_model` 下生成教学图示：
+
+- `01_prior_posterior_training_losses.png`：observation / reward / KL loss。
+- `02_prior_vs_posterior_latent_means.png`：prior mean 与 posterior mean 在 latent space 中的对照。
+- `03_prior_posterior_latent_samples.png`：同一个 transition 下 prior/posterior 的采样分布。
+- `04_prior_posterior_alignment.png`：KL 与 latent mean distance 的分布。
+- `05_prior_decoded_next_state.png`：只用 prior mean 解码下一状态时的预测效果。
+
+对应笔记：
+
+- [Prior 与 Posterior Latent：世界模型如何“先猜，再校正”](../docs/notes/world-models-8-prior-and-posterior-latent.md)

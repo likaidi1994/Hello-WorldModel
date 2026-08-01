@@ -98,6 +98,29 @@ def plot_latent_model_losses(
     plt.close(fig)
 
 
+def plot_stochastic_model_losses(
+    losses: dict[str, Sequence[float]],
+    output_path: Path,
+) -> None:
+    """Show stochastic latent model observation, reward, and KL losses."""
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    epochs = np.arange(1, len(losses["total"]) + 1)
+    ax.plot(epochs, losses["total"], label="total", linewidth=2)
+    ax.plot(epochs, losses["obs"], label="observation", linewidth=1.8)
+    ax.plot(epochs, losses["reward"], label="reward", linewidth=1.8)
+    ax.plot(epochs, losses["kl"], label="KL", linewidth=1.8)
+    ax.set_title("Stochastic Latent Model Training Losses")
+    ax.set_xlabel("epoch")
+    ax.set_ylabel("loss")
+    ax.legend(loc="best")
+    ax.grid(True, alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
 @torch.no_grad()
 def plot_one_step_predictions(
     model: WorldModel,
@@ -586,6 +609,305 @@ def plot_latent_space_rollout(
 
     ax.set_title("Latent-Space Rollout Trajectory")
     ax.grid(True, alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_one_step_future_distribution(
+    obs: np.ndarray,
+    action: np.ndarray,
+    true_next_obs: np.ndarray,
+    sampled_next_obs: np.ndarray,
+    output_path: Path,
+) -> None:
+    """Show many plausible one-step futures from a stochastic latent model."""
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(7, 5))
+    ax.scatter(
+        sampled_next_obs[:, 0],
+        sampled_next_obs[:, 1],
+        s=18,
+        alpha=0.45,
+        label="sampled next states",
+    )
+    ax.scatter(
+        [obs[0]],
+        [obs[1]],
+        s=80,
+        marker="x",
+        label=f"current state, action={float(action[0]):.2f}",
+    )
+    ax.scatter(
+        [true_next_obs[0]],
+        [true_next_obs[1]],
+        s=70,
+        marker="*",
+        label="one real next state",
+    )
+    ax.set_title("One-Step Stochastic Future Distribution")
+    ax.set_xlabel("position")
+    ax.set_ylabel("velocity")
+    ax.legend(loc="best")
+    ax.grid(True, alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_stochastic_rollout_fan(
+    real_obs: np.ndarray,
+    sampled_rollouts: np.ndarray,
+    output_path: Path,
+) -> None:
+    """Show a fan of sampled stochastic futures against one real rollout."""
+
+    steps = np.arange(sampled_rollouts.shape[1])
+    position_samples = sampled_rollouts[:, :, 0]
+    lower = np.percentile(position_samples, 10, axis=0)
+    upper = np.percentile(position_samples, 90, axis=0)
+    mean = position_samples.mean(axis=0)
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(8, 4.8))
+    for rollout in sampled_rollouts[:20]:
+        ax.plot(steps, rollout[:, 0], linewidth=0.8, alpha=0.18)
+    ax.fill_between(steps, lower, upper, alpha=0.25, label="10-90% sample band")
+    ax.plot(steps, mean, linewidth=2.2, label="sample mean")
+    ax.plot(steps, real_obs[:, 0], linewidth=2, linestyle="--", label="one real rollout")
+    ax.axhline(0.0, color="black", linewidth=1, linestyle=":", label="goal")
+    ax.set_title("Stochastic Latent Open-Loop Rollout Fan")
+    ax.set_xlabel("rollout step")
+    ax.set_ylabel("position")
+    ax.legend(loc="best")
+    ax.grid(True, alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_stochastic_uncertainty_growth(
+    sampled_rollouts: np.ndarray,
+    output_path: Path,
+) -> None:
+    """Show how sampled future uncertainty changes over rollout horizon."""
+
+    steps = np.arange(sampled_rollouts.shape[1])
+    position_std = sampled_rollouts[:, :, 0].std(axis=0)
+    velocity_std = sampled_rollouts[:, :, 1].std(axis=0)
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    ax.plot(steps, position_std, label="position std", linewidth=2)
+    ax.plot(steps, velocity_std, label="velocity std", linewidth=2)
+    ax.set_title("Uncertainty Across Sampled Futures")
+    ax.set_xlabel("rollout step")
+    ax.set_ylabel("sample standard deviation")
+    ax.legend(loc="best")
+    ax.grid(True, alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_prior_latent_samples(
+    latent_samples: np.ndarray,
+    output_path: Path,
+) -> None:
+    """Visualize stochastic next latent samples from the learned prior."""
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(6, 5))
+
+    if latent_samples.shape[1] == 1:
+        ax.hist(latent_samples[:, 0], bins=30, alpha=0.75)
+        ax.set_xlabel("latent dim 0")
+        ax.set_ylabel("count")
+    else:
+        ax.scatter(latent_samples[:, 0], latent_samples[:, 1], s=16, alpha=0.5)
+        ax.set_xlabel("latent dim 0")
+        ax.set_ylabel("latent dim 1")
+
+    ax.set_title("Samples from p(z_next | z, action)")
+    ax.grid(True, alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_prior_vs_posterior_latent_means(
+    analysis: dict[str, np.ndarray],
+    output_path: Path,
+    max_lines: int = 120,
+) -> None:
+    """Show where prior and posterior latent means land for real transitions."""
+
+    prior = analysis["prior_mean"]
+    posterior = analysis["posterior_mean"]
+    count = min(len(prior), max_lines)
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(7, 5.5))
+
+    if prior.shape[1] == 1:
+        steps = np.arange(len(prior))
+        ax.plot(steps, prior[:, 0], label="prior mean", linewidth=1.8)
+        ax.plot(steps, posterior[:, 0], label="posterior mean", linewidth=1.8)
+        ax.set_xlabel("transition index")
+        ax.set_ylabel("latent dim 0")
+    else:
+        ax.scatter(
+            prior[:, 0],
+            prior[:, 1],
+            s=18,
+            alpha=0.45,
+            label="prior mean",
+        )
+        ax.scatter(
+            posterior[:, 0],
+            posterior[:, 1],
+            s=18,
+            alpha=0.45,
+            label="posterior mean",
+        )
+        for i in range(count):
+            ax.plot(
+                [prior[i, 0], posterior[i, 0]],
+                [prior[i, 1], posterior[i, 1]],
+                color="gray",
+                linewidth=0.6,
+                alpha=0.25,
+            )
+        ax.set_xlabel("latent dim 0")
+        ax.set_ylabel("latent dim 1")
+
+    ax.set_title("Prior vs Posterior Latent Means")
+    ax.legend(loc="best")
+    ax.grid(True, alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_prior_posterior_latent_samples(
+    samples: dict[str, np.ndarray],
+    output_path: Path,
+) -> None:
+    """Show prior and posterior latent sample clouds for one transition."""
+
+    prior = samples["prior_samples"]
+    posterior = samples["posterior_samples"]
+    prior_mean = samples["prior_mean"]
+    posterior_mean = samples["posterior_mean"]
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(7, 5.5))
+
+    if prior.shape[1] == 1:
+        ax.hist(prior[:, 0], bins=30, alpha=0.55, label="prior samples")
+        ax.hist(posterior[:, 0], bins=30, alpha=0.55, label="posterior samples")
+        ax.axvline(prior_mean[0], color="tab:blue", linestyle="--", label="prior mean")
+        ax.axvline(
+            posterior_mean[0],
+            color="tab:orange",
+            linestyle="--",
+            label="posterior mean",
+        )
+        ax.set_xlabel("latent dim 0")
+        ax.set_ylabel("count")
+    else:
+        ax.scatter(
+            prior[:, 0],
+            prior[:, 1],
+            s=18,
+            alpha=0.42,
+            label="prior samples",
+        )
+        ax.scatter(
+            posterior[:, 0],
+            posterior[:, 1],
+            s=18,
+            alpha=0.42,
+            label="posterior samples",
+        )
+        ax.scatter(
+            [prior_mean[0]],
+            [prior_mean[1]],
+            s=90,
+            marker="x",
+            linewidths=2.5,
+            label="prior mean",
+        )
+        ax.scatter(
+            [posterior_mean[0]],
+            [posterior_mean[1]],
+            s=95,
+            marker="*",
+            label="posterior mean",
+        )
+        ax.set_xlabel("latent dim 0")
+        ax.set_ylabel("latent dim 1")
+
+    ax.set_title("Prior and Posterior Samples for One Transition")
+    ax.legend(loc="best")
+    ax.grid(True, alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_prior_posterior_alignment(
+    analysis: dict[str, np.ndarray],
+    output_path: Path,
+) -> None:
+    """Summarize KL and mean-distance alignment between prior and posterior."""
+
+    kl = analysis["kl"]
+    mean_distance = analysis["mean_distance"]
+
+    _prepare_output(output_path)
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4.5))
+
+    axes[0].hist(kl, bins=35, alpha=0.75)
+    axes[0].axvline(float(np.mean(kl)), color="black", linestyle="--", linewidth=1.2)
+    axes[0].set_title("KL(q posterior || p prior)")
+    axes[0].set_xlabel("KL value")
+    axes[0].set_ylabel("transition count")
+    axes[0].grid(True, alpha=0.25)
+
+    axes[1].hist(mean_distance, bins=35, alpha=0.75, color="tab:orange")
+    axes[1].axvline(
+        float(np.mean(mean_distance)),
+        color="black",
+        linestyle="--",
+        linewidth=1.2,
+    )
+    axes[1].set_title("Latent Mean Distance")
+    axes[1].set_xlabel("||posterior mean - prior mean||")
+    axes[1].set_ylabel("transition count")
+    axes[1].grid(True, alpha=0.25)
+
+    fig.suptitle("Prior / Posterior Alignment on Real Transitions")
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_prior_decoded_next_state(
+    analysis: dict[str, np.ndarray],
+    output_path: Path,
+) -> None:
+    """Compare true next observations with next observations decoded from prior."""
+
+    true_next = analysis["true_next_obs"]
+    prior_decoded = analysis["prior_decoded_next_obs"]
+
+    _prepare_output(output_path)
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4.5))
+    _plot_prediction_panel(axes[0], true_next[:, 0], prior_decoded[:, 0], "next position")
+    _plot_prediction_panel(axes[1], true_next[:, 1], prior_decoded[:, 1], "next velocity")
+    fig.suptitle("Decode Next State from Prior Mean")
     fig.tight_layout()
     fig.savefig(output_path, dpi=160)
     plt.close(fig)
