@@ -4,8 +4,6 @@
 
 > 第 7 篇已经让 latent state 从一个确定向量变成了一个分布；这一篇回答一个更关键的问题：
 
-
-
 > **为什么随机 latent world model 里经常同时出现 prior latent 和 posterior latent？它们到底各自负责什么？**
 
 ## 1. 一句话直觉
@@ -32,7 +30,7 @@
 2. latent dynamics 把观测压缩到潜空间，再在潜空间里预测未来。
 3. stochastic latent state 进一步承认：同一个当前状态和动作，未来不一定只有一个答案。
 
-但是一旦 latent state 变成分布，就会出现一个训练与使用之间的张力：
+但是一旦 latent state 变成分布，就会出现一个训练与使用之间的差异：
 
 - 训练时，我们有真实的下一帧观测 `o_{t+1}`，可以用它帮助推断“真实发生后”的 latent。
 - 想象未来时，我们没有未来观测，只能靠模型自己从当前 latent 和 action 推出下一步 latent。
@@ -103,7 +101,7 @@ flowchart LR
 
 因此，**prior 的质量决定了模型想象未来的质量**。
 
-如果 prior 学得差，planning 就会变成“在错误世界里做正确推理”。
+如果 prior 学得差，planning 就会变成“在错误世界里做推理”。
 
 ## 4. Posterior：模型睁眼校正自己
 
@@ -188,18 +186,6 @@ flowchart TB
 
 ## 6. 训练时和想象时，信息流不一样
 
-这可能是 prior/posterior 最容易混淆的地方。
-
-| 阶段 | 能不能看到真实未来观测？ | 使用哪一个 latent 分布？ | 目标 |
-
-| --- | --- | --- | --- |
-
-| 训练 / 表征学习 | 能，数据里有 `o_{t+1}` | posterior + prior | 学会解释真实数据，并让 prior 靠近 posterior |
-
-| 真实环境交互 | 能看到当前真实观测 | posterior / encoder | 校正当前内部状态 |
-
-| imagined rollout / planning | 不能，未来还没发生 | prior | 在模型内部滚动预测未来 |
-
 用流程图看会更清楚：
 
 ```mermaid
@@ -261,7 +247,7 @@ posterior: q(z_t | h_t, o_t)
 
 其中 `h_t` 是从过去动作和 latent 更新来的 deterministic memory。
 
-我们的教学代码为了保持最小化，没有完整实现 Dreamer 的 RSSM，而是用了更直观的一步版本：
+我们的代码为了保持最小化，没有完整实现 Dreamer 的 RSSM，而是用了更直观的一步版本：
 
 ```text
 
