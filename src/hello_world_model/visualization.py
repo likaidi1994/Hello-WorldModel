@@ -913,6 +913,339 @@ def plot_prior_decoded_next_state(
     plt.close(fig)
 
 
+def plot_dreamer_actor_critic_losses(
+    losses: dict[str, Sequence[float]],
+    output_path: Path,
+) -> None:
+    """Show how imagined actor-critic training changes over optimization."""
+
+    epochs = np.arange(1, len(losses["actor"]) + 1)
+
+    _prepare_output(output_path)
+    fig, axes = plt.subplots(3, 1, figsize=(8, 8), sharex=True)
+
+    axes[0].plot(epochs, losses["imagined_return"], linewidth=2)
+    axes[0].set_title("Imagined Return")
+    axes[0].set_ylabel("return")
+    axes[0].grid(True, alpha=0.25)
+
+    axes[1].plot(epochs, losses["actor"], label="actor loss", linewidth=2)
+    axes[1].plot(epochs, losses["value"], label="value loss", linewidth=2)
+    axes[1].set_title("Actor / Value Loss")
+    axes[1].set_ylabel("loss")
+    axes[1].legend(loc="best")
+    axes[1].grid(True, alpha=0.25)
+
+    axes[2].plot(epochs, losses["mean_abs_action"], color="tab:orange", linewidth=2)
+    axes[2].set_title("Mean Absolute Action")
+    axes[2].set_xlabel("actor-critic epoch")
+    axes[2].set_ylabel("|action|")
+    axes[2].set_ylim(0.0, 1.05)
+    axes[2].grid(True, alpha=0.25)
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_dreamer_imagined_rollout(
+    imagined_rollout: dict[str, np.ndarray],
+    output_path: Path,
+) -> None:
+    """Visualize one policy rollout generated inside the learned world model."""
+
+    observations = imagined_rollout["decoded_observations"]
+    actions = imagined_rollout["actions"].reshape(-1)
+    rewards = imagined_rollout["rewards"].reshape(-1)
+    obs_steps = np.arange(len(observations))
+    action_steps = np.arange(len(actions))
+
+    _prepare_output(output_path)
+    fig, axes = plt.subplots(3, 1, figsize=(8, 8), sharex=False)
+
+    axes[0].plot(obs_steps, observations[:, 0], label="imagined position", linewidth=2)
+    axes[0].plot(obs_steps, observations[:, 1], label="imagined velocity", linewidth=1.8)
+    axes[0].axhline(0.0, color="black", linewidth=1, linestyle="--", label="goal")
+    axes[0].set_title("Actor Rollout Inside the World Model")
+    axes[0].set_ylabel("decoded state")
+    axes[0].legend(loc="best")
+    axes[0].grid(True, alpha=0.25)
+
+    axes[1].plot(action_steps, actions, color="tab:orange", linewidth=2)
+    axes[1].set_title("Actions Produced by Actor")
+    axes[1].set_ylabel("action")
+    axes[1].set_ylim(-1.05, 1.05)
+    axes[1].grid(True, alpha=0.25)
+
+    axes[2].plot(action_steps, np.cumsum(rewards), color="tab:green", linewidth=2)
+    axes[2].set_title("Predicted Cumulative Reward")
+    axes[2].set_xlabel("imagined step")
+    axes[2].set_ylabel("return")
+    axes[2].grid(True, alpha=0.25)
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_actor_policy_field(
+    policy_grid: dict[str, np.ndarray],
+    output_path: Path,
+) -> None:
+    """Show what action the learned actor chooses across state space."""
+
+    positions = policy_grid["positions"]
+    velocities = policy_grid["velocities"]
+    actions = policy_grid["actions"]
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(7.5, 5.5))
+    mesh = ax.contourf(positions, velocities, actions, levels=24, cmap="coolwarm")
+    ax.contour(positions, velocities, actions, levels=[0.0], colors="black", linewidths=1)
+    ax.axvline(0.0, color="black", linewidth=1, linestyle="--", label="goal position")
+    ax.set_title("Learned Actor Policy Field")
+    ax.set_xlabel("position")
+    ax.set_ylabel("velocity")
+    ax.legend(loc="best")
+    fig.colorbar(mesh, ax=ax, label="actor action")
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_dreamer_actor_episode(
+    actor_log: dict[str, np.ndarray],
+    random_log: dict[str, np.ndarray],
+    output_path: Path,
+) -> None:
+    """Compare a learned actor rollout with a random-policy rollout."""
+
+    actor_obs = actor_log["observations"]
+    actor_actions = actor_log["actions"].reshape(-1)
+    actor_rewards = actor_log["rewards"].reshape(-1)
+    random_obs = random_log["observations"]
+    random_rewards = random_log["rewards"].reshape(-1)
+
+    actor_steps = np.arange(len(actor_obs))
+    random_steps = np.arange(len(random_obs))
+
+    _prepare_output(output_path)
+    fig, axes = plt.subplots(3, 1, figsize=(8, 8), sharex=False)
+
+    axes[0].plot(actor_steps, actor_obs[:, 0], label="actor position", linewidth=2)
+    axes[0].plot(
+        random_steps,
+        random_obs[:, 0],
+        label="random position",
+        linewidth=1.6,
+        linestyle="--",
+    )
+    axes[0].axhline(0.0, color="black", linewidth=1, linestyle=":", label="goal")
+    axes[0].set_title("Real Environment Position")
+    axes[0].set_ylabel("position")
+    axes[0].legend(loc="best")
+    axes[0].grid(True, alpha=0.25)
+
+    axes[1].plot(np.arange(len(actor_actions)), actor_actions, color="tab:orange")
+    axes[1].set_title("Actor Actions in Real Environment")
+    axes[1].set_ylabel("action")
+    axes[1].set_ylim(-1.05, 1.05)
+    axes[1].grid(True, alpha=0.25)
+
+    axes[2].plot(
+        np.arange(len(actor_rewards)),
+        np.cumsum(actor_rewards),
+        label="actor return",
+        linewidth=2,
+    )
+    axes[2].plot(
+        np.arange(len(random_rewards)),
+        np.cumsum(random_rewards),
+        label="random return",
+        linewidth=1.8,
+        linestyle="--",
+    )
+    axes[2].set_title("Cumulative Reward")
+    axes[2].set_xlabel("real environment step")
+    axes[2].set_ylabel("return")
+    axes[2].legend(loc="best")
+    axes[2].grid(True, alpha=0.25)
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_dreamer_like_training_curves(
+    history: dict[str, Sequence[float]],
+    output_path: Path,
+) -> None:
+    """Show the main losses and returns in the fuller Dreamer-like loop."""
+
+    iterations = np.arange(1, len(history["real_return"]) + 1)
+
+    _prepare_output(output_path)
+    fig, axes = plt.subplots(4, 1, figsize=(8, 10), sharex=True)
+
+    axes[0].plot(iterations, history["world_total"], label="total", linewidth=2)
+    axes[0].plot(iterations, history["world_obs"], label="obs", linewidth=1.6)
+    axes[0].plot(iterations, history["world_reward"], label="reward", linewidth=1.6)
+    axes[0].set_title("RSSM World Model Losses")
+    axes[0].set_ylabel("loss")
+    axes[0].legend(loc="best")
+    axes[0].grid(True, alpha=0.25)
+
+    axes[1].plot(iterations, history["world_kl"], label="KL", linewidth=2)
+    axes[1].plot(
+        iterations,
+        history["world_continue"],
+        label="continuation BCE",
+        linewidth=1.8,
+    )
+    axes[1].set_title("Stochastic State and Continuation Training")
+    axes[1].set_ylabel("loss")
+    axes[1].legend(loc="best")
+    axes[1].grid(True, alpha=0.25)
+
+    axes[2].plot(iterations, history["actor"], label="actor", linewidth=2)
+    axes[2].plot(iterations, history["value"], label="value", linewidth=2)
+    axes[2].plot(
+        iterations,
+        history["imagined_return"],
+        label="imagined return",
+        linewidth=1.8,
+    )
+    axes[2].set_title("Actor-Critic on Imagined Rollouts")
+    axes[2].set_ylabel("loss / return")
+    axes[2].legend(loc="best")
+    axes[2].grid(True, alpha=0.25)
+
+    axes[3].plot(iterations, history["real_return"], linewidth=2)
+    axes[3].set_title("Evaluation Return in the Real Environment")
+    axes[3].set_xlabel("training iteration")
+    axes[3].set_ylabel("real return")
+    axes[3].grid(True, alpha=0.25)
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_rssm_reconstruction(
+    reconstruction: dict[str, np.ndarray],
+    output_path: Path,
+) -> None:
+    """Compare posterior RSSM reconstructions with a replay sequence."""
+
+    obs = reconstruction["observations"]
+    obs_pred = reconstruction["obs_pred"]
+    rewards = reconstruction["rewards"].reshape(-1)
+    reward_pred = reconstruction["reward_pred"].reshape(-1)
+    continue_prob = reconstruction["continue_prob"].reshape(-1)
+    obs_steps = np.arange(len(obs))
+    transition_steps = np.arange(len(rewards))
+
+    _prepare_output(output_path)
+    fig, axes = plt.subplots(3, 1, figsize=(8, 8.5), sharex=False)
+
+    axes[0].plot(obs_steps, obs[:, 0], label="real position", linewidth=2)
+    axes[0].plot(
+        obs_steps,
+        obs_pred[:, 0],
+        label="decoded position",
+        linewidth=1.8,
+        linestyle="--",
+    )
+    axes[0].axhline(0.0, color="black", linewidth=1, linestyle=":", label="goal")
+    axes[0].set_title("RSSM Posterior Reconstruction")
+    axes[0].set_ylabel("position")
+    axes[0].legend(loc="best")
+    axes[0].grid(True, alpha=0.25)
+
+    axes[1].plot(obs_steps, obs[:, 1], label="real velocity", linewidth=2)
+    axes[1].plot(
+        obs_steps,
+        obs_pred[:, 1],
+        label="decoded velocity",
+        linewidth=1.8,
+        linestyle="--",
+    )
+    axes[1].set_title("Velocity Reconstruction")
+    axes[1].set_ylabel("velocity")
+    axes[1].legend(loc="best")
+    axes[1].grid(True, alpha=0.25)
+
+    axes[2].plot(transition_steps, rewards, label="real reward", linewidth=2)
+    axes[2].plot(
+        transition_steps,
+        reward_pred,
+        label="predicted reward",
+        linewidth=1.8,
+        linestyle="--",
+    )
+    axes[2].plot(
+        transition_steps,
+        continue_prob,
+        label="predicted continuation",
+        linewidth=1.6,
+        linestyle=":",
+    )
+    axes[2].set_title("Reward and Continuation Heads")
+    axes[2].set_xlabel("sequence step")
+    axes[2].legend(loc="best")
+    axes[2].grid(True, alpha=0.25)
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_dreamer_like_imagined_rollout(
+    imagined_rollout: dict[str, np.ndarray],
+    output_path: Path,
+) -> None:
+    """Show RSSM imagined states, actions, rewards, and continuation."""
+
+    observations = imagined_rollout["decoded_observations"]
+    actions = imagined_rollout["actions"].reshape(-1)
+    rewards = imagined_rollout["rewards"].reshape(-1)
+    continues = imagined_rollout["continues"].reshape(-1)
+    obs_steps = np.arange(len(observations))
+    transition_steps = np.arange(len(actions))
+
+    _prepare_output(output_path)
+    fig, axes = plt.subplots(4, 1, figsize=(8, 10), sharex=False)
+
+    axes[0].plot(obs_steps, observations[:, 0], label="imagined position", linewidth=2)
+    axes[0].plot(obs_steps, observations[:, 1], label="imagined velocity", linewidth=1.8)
+    axes[0].axhline(0.0, color="black", linewidth=1, linestyle=":", label="goal")
+    axes[0].set_title("RSSM Imagined Actor Rollout")
+    axes[0].legend(loc="best")
+    axes[0].grid(True, alpha=0.25)
+
+    axes[1].plot(transition_steps, actions, color="tab:orange", linewidth=2)
+    axes[1].set_title("Actor Actions")
+    axes[1].set_ylabel("action")
+    axes[1].set_ylim(-1.05, 1.05)
+    axes[1].grid(True, alpha=0.25)
+
+    axes[2].plot(transition_steps, np.cumsum(rewards), color="tab:green", linewidth=2)
+    axes[2].set_title("Predicted Cumulative Reward")
+    axes[2].set_ylabel("return")
+    axes[2].grid(True, alpha=0.25)
+
+    axes[3].plot(transition_steps, continues, linewidth=2)
+    axes[3].set_title("Predicted Continuation Probability")
+    axes[3].set_xlabel("imagined step")
+    axes[3].set_ylabel("p(continue)")
+    axes[3].set_ylim(-0.05, 1.05)
+    axes[3].grid(True, alpha=0.25)
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
 def _plot_prediction_panel(
     ax: plt.Axes,
     target: np.ndarray,

@@ -145,3 +145,22 @@ python examples/run_prior_posterior_latent_world_model.py
 对应笔记：
 
 - [Prior 与 Posterior Latent：世界模型如何“先猜，再校正”](../docs/notes/world-models-8-prior-and-posterior-latent.md)
+
+### Dreamer actor-critic
+
+```bash
+pip install -r requirements.txt
+python examples/run_dreamer_actor_critic.py
+```
+
+运行后会在 `outputs/dreamer_actor_critic` 下生成教学图示：
+
+- `01_dreamer_like_training_curves.png`：RSSM world model、actor/value、imagined return 和真实环境 return 的训练变化。
+- `02_rssm_reconstruction.png`：posterior RSSM 对 observation、reward 和 continuation 的拟合情况。
+- `03_rssm_imagined_actor_rollout.png`：actor 在 RSSM 里想象出的状态、动作、回报和 continuation。
+- `04_actor_policy_field.png`：actor 在不同位置/速度下会输出什么动作。
+- `05_actor_vs_random_episode.png`：学到的 actor 与随机策略在真实环境中的对比。
+
+对应笔记：
+
+- [Dreamer 的 Actor-Critic：如何在想象中训练策略](../docs/notes/world-models-10-dreamer-actor-critic.md)

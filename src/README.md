@@ -29,6 +29,7 @@
 - `planning.py`：random shooting、imagined rollout 和 receding-horizon planning。
 - `latent.py`：latent dynamics 训练和 open-loop rollout 对比。
 - `stochastic.py`：stochastic latent state 训练、采样、rollout，以及 prior/posterior latent 对齐分析。
+- `dreamer.py`：Dreamer actor-critic 教学代码，包含简化 latent actor-critic 与更完整的 RSSM / stochastic prior-posterior / continuation / lambda-return / replay buffer 演示。
 - `visualization.py`：训练过程和规划结果的可视化。
 
 对应笔记：
@@ -40,3 +41,5 @@
 - [为什么要转向 latent dynamics](../docs/notes/world-models-6-latent-dynamics.md)
 - [为什么世界模型需要 stochastic latent state](../docs/notes/world-models-7-stochastic-latent-state.md)
 - [Prior 与 Posterior Latent：世界模型如何“先猜，再校正”](../docs/notes/world-models-8-prior-and-posterior-latent.md)
+- [PlaNet 与 Dreamer：同一个世界模型，两种使用方式](../docs/notes/world-models-9-planet-dreamer.md)
+- [Dreamer 的 Actor-Critic：如何在想象中训练策略](../docs/notes/world-models-10-dreamer-actor-critic.md)

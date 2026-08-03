@@ -17117,3 +17117,6538 @@ git status
 ```
 
 检查后，只 add 项目内容文件，避开 `.specstory`。如果第 7 篇还没提交，建议先提交第 7 篇，再提交第 8 篇；否则这次可以提交第 8 篇相关文件。
+
+---
+
+_**User (2026-08-01 15:16:58Z)**_
+
+现在更新了笔记：docs\notes\world-models-9-planet-dreamer.md请你作为世界模型专家，审视这个文件的内容，并按照开源项目风格，进行格式和内容的优化，你可以多生成一些图示辅助理解；这个笔记就不用配套代码了，比较简单；
+
+
+---
+
+_**Agent (gpt-5.5 2026-08-01 15:17:07Z)**_
+
+我来处理第 9 篇。这篇不配代码的话，我会把重点放在“从 PlaNet 到 Dreamer 的思想谱系”上：结构清楚、概念准确、图示够用，但不把它写成论文综述大坨肉。先按你的要求读取可视化技能说明，然后看原文内容再动手。
+
+_**Agent (gpt-5.5 2026-08-01 15:17:07Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw C:\Users\Lenovo\.codex\plugins\cache\openai-bundled\visualize\1.0.15\skills\visualize\SKILL.md`</summary>
+```
+Chunk ID: 13441f
+Wall time: 0.3756 seconds
+Process exited with code 0
+Original token count: 5162
+Output:
+---
+name: visualize
+description: "Create visualizations and interactive tools directly in conversation. Use when asked to show how something works, make simulators or labs, maps, plots, charts or graphs, comparisons, scenarios, adjustable inputs, and exploration beyond regular text."
+---
+
+# Visualize
+
+- A request for a new standalone file, website, app page, component, or other
+  project change is not an in-conversation visualization request, even when the
+  deliverable contains charts or interactive content.
+- Create a visual only when the user needs to see or explore it in the
+  conversation and it materially improves the explanation. Do not create an
+  inline visual merely because the request involves data, charts, or an
+  interactive page.
+- Use Mermaid when labeled nodes and edges fully explain a static structure;
+  return a normal fenced Mermaid block and no visualization file. Use HTML for
+  dynamics, spatial motion, adjustable inputs, and other visuals.
+- Work silently unless blocked or the user explicitly asks for progress. Never
+  send commentary or progress updates while reading this skill or writing or
+  updating the file; the final response must be your first user-facing message.
+- In user-facing prose, describe only what the visual helps the user see or
+  decide. Keep it concise and do not repeat information already clear from the
+  visual. Never announce this skill, a visualization surface, widgets, HTML,
+  SVG, scripts, local files, inline data, or implementation details.
+
+## Context compaction
+
+Copy into every compaction summary:
+`Reload the full visualize skill before creating or updating a visualization.`
+
+## Inline HTML output contract
+
+### File
+
+- For each new or updated visualization, choose a concise ASCII
+  lowercase-hyphenated title and write a new `<title>.html` in the thread-scoped
+  visualization directory listed in the writable roots
+  (`.codex/visualizations/YYYY/MM/DD/<thread-id>`).
+- Build the visual in the conversation. Use the open project when the user asks
+  for a site, app page, component, or change to existing project files.
+
+### Fragment
+
+- Write only an HTML fragment: no `<!doctype>`, `<html>`, `<head>`, or `<body>`.
+- Write literal markup: use `<div class="card">Hi</div>` plus a real newline,
+  never `<div class=\"card\">Hi</div>\n`. Never embed the fragment in an inline
+  Python, JavaScript, or shell string. Read it back; rewrite literal `\"` or
+  `\n`.
+- Keep CSS and JavaScript in the fragment only when base classes are
+  insufficient. Load static resources only from the CDN allowlist. Never use
+  `fetch`, XHR, WebSocket, or other API calls.
+- Give the fragment root a unique ID and select it with
+  `document.getElementById(...)`. Never derive the root from
+  `document.currentScript`; scripts may sit outside the root.
+- Keep visualizations under 2 MB. Aggregate, bin, downsample, reduce precision,
+  or drop unused fields from large inline datasets.
+- Check that JavaScript has no undefined identifiers, every queried element
+  exists, and the primary interaction updates the visual. The bundled
+  `python3 scripts/render.py <absolute-fragment-path> [<destination>.html] [--serve]`
+  can wrap a fragment as standalone HTML or temporarily serve it for browser
+  inspection when a preview would help with layout, theme, or runtime behavior.
+
+### Content and response
+
+- Keep the fragment focused on the visualization. Do not include explanatory
+  paragraphs, formulas, instructions, or narrative callouts. Include only
+  necessary labels, legends, values, and accessible text alternatives.
+- Use the normal response flow. Put any necessary concise explanation outside
+  the fragment, and add this exact directive on its own line where the visual
+  should appear:
+
+```text
+::codex-inline-vis{file="<title>.html"}
+```
+
+- Emit only the directive for the fragment. Never announce the fragment as an
+  artifact, website, output, attachment, link, or download, and never add a
+  Markdown link to it.
+
+### External resources
+
+- The CSP allows only `cdnjs.cloudflare.com`, `esm.sh`, `cdn.jsdelivr.net`,
+  `unpkg.com`, `fonts.googleapis.com`, `fonts.gstatic.com`, and
+  `fonts.bunny.net`. Other origins are blocked and fail silently.
+
+## Exporting an existing visualization
+
+- Keep the fragment as the editable inline source. When the user explicitly asks
+  to save, export, or publish a visualization that is already shown in the
+  conversation, render it with
+  `python3 scripts/render.py <absolute-fragment-path> <destination>.html`.
+- Apply this export flow only when the user explicitly asks to turn the existing
+  inline source or visualization into a website. For a general website request,
+  build a new responsive site in the output directory or open project, using
+  Sites when appropriate, without applying th
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-01 15:17:23Z)**_
+
+我会用 Mermaid 作为笔记里的静态结构图，不额外生成独立图片文件；这类概念关系图用 Markdown 内嵌更适合开源仓库，GitHub 也能直接渲染。
+
+_**Agent (gpt-5.5 2026-08-01 15:17:23Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw docs\notes\world-models-9-planet-dreamer.md`</summary>
+```
+Chunk ID: 9a0a07
+Wall time: 0.2949 seconds
+Process exited with code 0
+Original token count: 572
+Output:
+PlaNet 和 Dreamer，真正差别到底在哪里
+
+我们现在已经有足够基础来正式区分它们了。
+
+1. 它们的共同部分
+
+两者都先做这件事：
+
+先学一个 RSSM 世界模型
+
+也就是都先学会：
+
+当前 latent state 是什么
+动作之后 latent 怎么变
+reward 怎么预测
+observation 怎么重建或解释
+
+所以两者共同地基是：
+
+RSSM world model：Recurrent State-Space Model 带递归记忆的状态空间模型
+我们假设系统背后有一个内部状态，这个状态随时间演化，并生成我们能看到的观测。
+
+也就是：
+
+系统真实内部有个状态
+这个状态会变
+我们只能通过观测间接看到它
+
+在 world model 里，这个“状态”通常不是手工写出的物理变量，而是模型学到的 latent state。
+2. PlaNet 的核心：拿世界模型做在线规划
+
+PlaNet 的思路是：
+
+当前来到某个 latent state
+在模型里采样很多动作序列
+rollout 每条序列未来的 latent 和 reward
+比较累计 reward
+选最好的那条序列
+只执行第一步动作
+
+所以 PlaNet 的重心是：
+
+planning first
+
+它更像一个“会脑内搜索未来动作序列”的智能体。
+
+3. Dreamer 的核心：拿世界模型做 imagined rollouts，再学策略
+
+Dreamer 不想每一步都做大量在线搜索。
+它更进一步：
+
+当前来到 latent state
+在 world model 里 imagined rollout
+用 imagined trajectories 训练：
+actor
+value
+以后执行动作时，直接让 actor 给动作
+
+所以 Dreamer 的重心是：
+
+learn a policy in imagination
+
+它更像：
+
+PlaNet：每次都临场想很多步
+Dreamer：平时就在脑内大量演练，练出一个会直接行动的 policy
+4. 一句话区分两者
+
+
+PlaNet
+
+世界模型 + 规划器
+
+Dreamer
+
+世界模型 + actor-critic
+
+为什么 Dreamer 会更“现代”
+
+因为它解决了 PlaNet 的一个实际问题：
+
+在线规划每一步都要搜索很多动作序列，计算代价大。
+
+Dreamer 把大量“思考”前置到了训练阶段。
+训练时在模型里反复想象，学出 actor；执行时就快很多。
+
+所以：
+
+PlaNet 更像 MPC / model-predictive control 风格
+Dreamer 更像 model-based RL + actor-critic 风格
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-01 15:17:23Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git status --short --branch`</summary>
+```
+Chunk ID: 522433
+Wall time: 0.1782 seconds
+Process exited with code 0
+Original token count: 43
+Output:
+## main...origin/main
+ M .specstory/history/2026-07-19_03-33-50Z-github-github-https-github.md
+ M .specstory/statistics.json
+?? docs/notes/world-models-9-planet-dreamer.md
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-01 15:17:23Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw docs\notes\README.md`</summary>
+```
+Chunk ID: c8c7e8
+Wall time: 0.3255 seconds
+Process exited with code 0
+Original token count: 254
+Output:
+# 学习笔记
+
+这里存放世界模型学习过程中的笔记、思考和论文阅读记录。
+
+建议命名方式：
+
+```text
+YYYY-MM-DD-topic.md
+```
+
+建议每篇笔记包含：
+
+- 今天解决了什么问题。
+- 我现在怎么理解这个概念。
+- 有哪些例子或代码帮助理解。
+- 还不理解什么。
+- 下一步准备做什么。
+
+## 当前笔记
+
+- [世界模型的第一层直觉](world-models-1-intuition.md)
+- [MDP、POMDP 与最小世界模型](world-models-2-basics.md)
+- [为什么世界模型需要 memory 与 latent state](world-models-3-latent-memory.md)
+- [为什么世界模型需要预测 reward](world-models-4-reward.md)
+- [用世界模型做 planning](world-models-5-planning.md)
+- [为什么要转向 latent dynamics](world-models-6-latent-dynamics.md)
+- [为什么世界模型需要 stochastic latent state](world-models-7-stochastic-latent-state.md)
+- [Prior 与 Posterior Latent：世界模型如何“先猜，再校正”](world-models-8-prior-and-posterior-latent.md)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-01 15:17:38Z)**_
+
+原文已经抓住了核心：PlaNet 是“每步在线规划”，Dreamer 是“在想象中训练 actor/value”。我会保留这个直觉，把它扩成一篇更完整的项目笔记：共同地基 RSSM、控制方式差异、训练/执行流程、优缺点和后续阅读路径。
+
+_**Agent (gpt-5.5 2026-08-01 15:17:39Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw docs\notes\world-models-8-prior-and-posterior-latent.md`</summary>
+```
+Chunk ID: e9e627
+Wall time: 0.3218 seconds
+Process exited with code 0
+Original token count: 2448
+Output:
+# 08｜Prior 与 Posterior Latent：世界模型如何“先猜，再校正”
+
+> 这一篇接在 [07｜为什么世界模型需要 stochastic latent state]([world-models-7-stochastic-latent-state.md](http://world-models-7-stochastic-latent-state.md)) 后面。
+
+> 第 7 篇已经让 latent state 从一个确定向量变成了一个分布；这一篇回答一个更关键的问题：
+
+> **为什么随机 latent world model 里经常同时出现 prior latent 和 posterior latent？它们到底各自负责什么？**
+
+## 1. 一句话直觉
+
+在世界模型里：
+
+- **prior latent** 是模型在还没看到新观测前，对下一个潜状态的预测。
+- **posterior latent** 是模型看到真实观测后，对潜状态的修正估计。
+
+如果用人的学习来类比：
+
+- prior 像是“我根据经验先猜接下来会发生什么”；
+- posterior 像是“我真正看到结果后，更新自己脑中的解释”。
+
+世界模型训练时，需要让 prior 向 posterior 靠近；世界模型 planning 时，只能依赖 prior 去想象未来。
+
+这就是它们的核心分工。
+
+## 2. 为什么只靠一个 latent 不够？
+
+前面几篇里，我们已经逐步看到：
+
+1. 直接在 observation space 预测未来，容易受噪声、遮挡和高维观测影响。
+2. latent dynamics 把观测压缩到潜空间，再在潜空间里预测未来。
+3. stochastic latent state 进一步承认：同一个当前状态和动作，未来不一定只有一个答案。
+
+但是一旦 latent state 变成分布，就会出现一个训练与使用之间的差异：
+
+- 训练时，我们有真实的下一帧观测 `o_{t+1}`，可以用它帮助推断“真实发生后”的 latent。
+- 想象未来时，我们没有未来观测，只能靠模型自己从当前 latent 和 action 推出下一步 latent。
+
+于是模型自然拆成两条路径：
+
+```mermaid
+
+flowchart LR
+
+    A["当前观测 o_t"] --> B["当前 latent z_t"]
+
+    B --> C["动作 a_t"]
+
+    C --> D["prior: p(z_{t+1} | z_t, a_t)"]
+
+    E["真实下一观测 o_{t+1}"] --> F["posterior: q(z_{t+1} | o_{t+1})"]
+
+    D --> G["KL 对齐"]
+
+    F --> G
+
+    D --> H["解码预测下一观测 / reward"]
+
+```
+
+
+
+这张图里最重要的是：**prior 和 posterior 都描述下一步 latent，但它们拿到的信息不同。**
+
+## 3. Prior：模型闭眼向前想象
+
+prior 通常写作：
+
+```text
+
+p(z_{t+1} | z_t, a_t)
+
+```
+
+意思是：模型只根据当前潜状态 `z_t` 和动作 `a_t`，预测下一步潜状态 `z_{t+1}` 的概率分布。
+
+它不看真实的 `o_{t+1}`。
+
+这点非常重要，因为 planning、imagination、model predictive control 发生在未来：
+
+```mermaid
+
+flowchart LR
+
+    A["真实历史观测"] --> B["编码当前 latent z_t"]
+
+    B --> C["候选动作 a_t"]
+
+    C --> D["prior 采样 z_{t+1}"]
+
+    D --> E["预测 reward / value"]
+
+    E --> F["继续想象 z_{t+2}, z_{t+3}, ..."]
+
+    F --> G["选择更好的动作"]
+
+```
+
+
+
+在这个阶段，未来还没有真正发生，所以模型不可能使用 posterior。  
+
+因此，**prior 的质量决定了模型想象未来的质量**。
+
+如果 prior 学得差，planning 就会变成“在错误世界里做推理”。
+
+## 4. Posterior：模型睁眼校正自己
+
+posterior 通常写作：
+
+```text
+
+q(z_{t+1} | o_{t+1})
+
+```
+
+或在更完整的 recurrent state-space model 里写作：
+
+```text
+
+q(z_{t+1} | h_{t+1}, o_{t+1})
+
+```
+
+意思是：模型已经看到了真实下一观测 `o_{t+1}`，于是可以更准确地推断“刚才真正发生的潜状态”。
+
+posterior 的作用不是直接用于未来 planning，而是用于训练：
+
+- 帮助模型从真实数据中得到更可靠的 latent 表示；
+- 给 prior 提供一个学习目标；
+- 让 decoder / reward head 学会从 latent 还原观测和 reward；
+- 让模型在看见新观测时能够重新校正内部状态。
+
+也就是说，posterior 像老师，prior 像学生。
+
+## 5. KL：让“先猜”逐渐接近“看见后的解释”
+
+训练时，我们希望：
+
+```text
+
+prior prediction ≈ posterior inference
+
+```
+
+常见做法是加入 KL divergence：
+
+```text
+
+KL(q(z_{t+1} | o_{t+1}) || p(z_{t+1} | z_t, a_t))
+
+```
+
+它衡量的是：posterior 这个“看见答案后的分布”，和 prior 这个“没看答案前的预测分布”差多远。
+
+```mermaid
+
+flowchart TB
+
+    A["真实 transition: o_t, a_t, o_{t+1}, r_t"] --> B["posterior q(z_{t+1} | o_{t+1})"]
+
+    A --> C["prior p(z_{t+1} | z_t, a_t)"]
+
+    B --> D["重构/预测下一观测"]
+
+    C --> D
+
+    B --> E["KL(q || p)"]
+
+    C --> E
+
+    D --> F["obs loss / reward loss"]
+
+    E --> G["让 prior 学会靠近 posterior"]
+
+```
+
+
+
+这一步有点像：
+
+1. 模型先预测：“我�
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-01 15:17:50Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Planning README update with citations**
+</details></think>
+
+_**Agent (gpt-5.5 2026-08-01 15:17:50Z)**_
+
+我会顺手把 `docs/notes/README.md` 的目录加上第 9 篇。不会碰 `.specstory`，也不会提交。
+
+_**Agent (gpt-5.5 2026-08-01 15:18:44Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Delete: `docs/notes/world-models-9-planet-dreamer.md`**
+
+**Add: `docs/notes/world-models-9-planet-dreamer.md`**
+
+```diff
++# 09｜PlaNet 与 Dreamer：同一个世界模型，两种使用方式
++
++> 这一篇接在 [08｜Prior 与 Posterior Latent](world-models-8-prior-and-posterior-latent.md) 后面。
++>
++> 前面我们已经理解了 RSSM、latent state、prior、posterior 和 imagined rollout。现在可以正式区分两个经典路线：
++>
++> **PlaNet 把世界模型拿来在线规划；Dreamer 把世界模型拿来训练策略。**
++
++## 1. 一句话区别
++
++PlaNet 和 Dreamer 都先学习一个 latent world model，但它们使用这个模型的方式不同：
++
++- **PlaNet**：每次要行动时，都在世界模型里搜索很多未来动作序列，选预测回报最高的第一步动作。
++- **Dreamer**：先在世界模型里生成 imagined trajectories，用这些想象经验训练 actor 和 value，真正行动时直接用 actor 输出动作。
++
++更短一点：
++
++```text
++PlaNet  = world model + online planning
++Dreamer = world model + actor-critic learned in imagination
++```
++
++如果用学习方式类比：
++
++- PlaNet 像考试时现场推演很多方案；
++- Dreamer 像平时在脑内大量演练，最后形成一种更快的行动直觉。
++
++## 2. 它们的共同地基：RSSM world model
++
++PlaNet 和 Dreamer 的共同基础都是 RSSM（recurrent state-space model）。
++
++RSSM 的核心想法是：
++
++- 环境背后有一个内部状态；
++- 内部状态会随时间和动作变化；
++- 我们只能通过 observation 间接看到它；
++- 模型要学习一个 latent state 来表示这个内部状态；
++- 这个 latent state 既包含历史记忆，也包含不确定性。
++
++可以把 RSSM 看成世界模型中的“状态追踪器 + 未来模拟器”：
++
++```mermaid
++flowchart LR
++    A["历史观测与动作"] --> B["deterministic memory h_t"]
++    B --> C["stochastic latent z_t"]
++    C --> D["预测 observation"]
++    C --> E["预测 reward"]
++    C --> F["预测 continuation / done"]
++    B --> G["prior: p(z_t | h_t)"]
++    H["当前观测 o_t"] --> I["posterior: q(z_t | h_t, o_t)"]
++    G <--> J["KL 对齐"]
++    I <--> J
++```
++
++在这个框架下，智能体并不是直接在像素或原始观测上思考，而是在模型学到的 latent space 里推演未来。
++
++这也是 PlaNet 和 Dreamer 的共同出发点：  
++**先学会一个可想象的世界，再利用这个世界做决策。**
++
++## 3. PlaNet：用世界模型做在线规划
++
++PlaNet 的核心是 planning。
++
++当智能体站在当前 latent state 时，PlaNet 会：
++
++1. 在模型里采样很多候选动作序列；
++2. 对每条动作序列 rollout 出未来 latent；
++3. 用 reward model 预测每条未来轨迹的累计回报；
++4. 选出回报最高的动作序列；
++5. 只执行这条序列的第一个动作；
++6. 进入下一步后重新观测、重新规划。
++
++这个过程很像 MPC（model predictive control，模型预测控制）：
++
++```mermaid
++flowchart TB
++    A["真实环境给出当前 observation"] --> B["编码成当前 latent state"]
++    B --> C["在 world model 里采样候选动作序列"]
++    C --> D["想象每条序列的未来 latent / reward"]
++    D --> E["选择 predicted return 最高的序列"]
++    E --> F["只执行第一步动作"]
++    F --> G["真实环境进入下一步"]
++    G --> A
++```
++
++PlaNet 的关键特征是：
++
++- 策略不是一个直接输出动作的神经网络；
++- 动作来自每一步的在线搜索；
++- 世界模型越准，规划越可靠；
++- 每次行动前都要花计算量“想一想”。
++
++所以 PlaNet 可以概括为：
++
++> **我不提前学一个固定 policy；我每一步都用世界模型现场规划。**
++
++## 4. Dreamer：用世界模型训练 actor 和 value
++
++Dreamer 的核心不是每步搜索，而是在世界模型里训练策略。
++
++它的流程大致是：
++
++1. 用真实环境数据训练 RSSM world model；
++2. 从真实历史编码出 latent state；
++3. 在 learned world model 中展开 imagined rollout；
++4. 用 imagined reward 和 value 训练 actor；
++5. 用 imagined return 训练 value；
++6. 真正和环境交互时，actor 直接根据 latent state 输出动作。
++
++```mermaid
++flowchart TB
++    A["真实数据 replay buffer"] --> B["训练 RSSM world model"]
++    B --> C["从真实历史得到 latent state"]
++    C --> D["在 world model 中 imagined rollout"]
++    D --> E["预测 reward / continuation / value"]
++    E --> F["训练 value"]
++    E --> G["训练 actor"]
++    G --> H["真实环境中直接输出动作"]
++    H --> A
++```
++
++Dreamer 的关键特征是：
++
++- world model 仍然是地基；
++- 但决策不再依赖每一步在线搜索；
++- actor 在 imagined trajectories 上学习；
++- 执行时速度更快；
++- 训练阶段把大量计算放进“想象中的练习”。
++
++所以 Dreamer 可以概括为：
++
++> **我先在世界模型里练出一个 policy，然后让 policy 去真实环境里行动。**
++
++## 5. 两者真正差在哪里？
++
++它们的差异不在“有没有世界模型”，而在“世界模型学好之后拿来干什么”。
++
++| 维度 | PlaNet | Dreamer |
++| --- | --- | --- |
++| 共同基础 | RSSM latent world model | RSSM latent world model |
++| 决策方式 | 在线规划 / action sequence search | actor 直接输出动作 |
++| 想象发生在 | 每次执行动作前 | 训练 actor/value 时 |
++| 是否显式训练 policy | 通常不重点训练单独 actor | 是，训练 actor-critic |
++| 执行时计算量 | 较高，每步都要搜索 | 较低，前向 actor 即可 |
++| 风格 | model predictive control | model-based RL + actor-critic |
++| 直觉 | 临场推演 | 反复脑内练习 |
++
++用一张总图连接起来：
++
++```mermaid
++flowchart LR
++    A["真实交互数据"] --> B["学习 RSSM world model"]
++    B --> C{"如何使用 world model?"}
++    C --> D["PlaNet: online planning"]
++    C --> E["Dreamer: imagination-based policy learning"]
++    D --> F["每步搜索动作序列"]
++    F --> G["执行最佳序列的第一个动作"]
++    E --> H["imagined rollout"]
++    H --> I["训练 actor / value"]
++    I --> J["actor 直接行动"]
++```
++
++这个分叉很重要：它解释了为什么 Dreamer 往往被看作更现代的一条路线。
++
++## 6. 为什么 Dreamer 更进一步？
++
++PlaNet 的强项是概念直接：  
++既然我有世界模型，那我就每一步在模型里模拟很多未来，选最好的动作。
++
++但它也有一个实际问题：
++
++> 每次行动都要在线搜索很多动作序列，执行时计算代价比较高。
++
++Dreamer 的改进思路是：
++
++> 把一部分“临场思考”转移到训练阶段，让 actor 在 imagined rollouts 里提前练习。
++
++于是执行时，Dreamer 不需要每一步重新大规模搜索。它只需要：
++
++```text
++observation/history -> latent state -> actor -> action
++```
++
++这就是 Dreamer 名字里 “dream” 的含义：  
++它不是单纯预测未来，而是在学到的世界里做策略学习。
++
++## 7. 从 prior/posterior 角度重新看 PlaNet 和 Dreamer
++
++第 8 篇讲过：
++
++- posterior 用真实观测校正当前 latent；
++- prior 在没有未来观测时继续向前想象。
++
++现在可以把 PlaNet 和 Dreamer 放进同一张图：
++
++```mermaid
++sequenceDiagram
++    participant Env as Real environment
++    participant Post as Posterior encoder
++    participant Prior as Prior dynamics
++    participant Planner as PlaNet planner
++    participant Actor as Dreamer actor
++
++    Env->>Post: observe current o_t
++    Post->>Prior: infer current latent z_t
++    Prior->>Planner: imagine candidate futures
++    Planner->>Env: execute best first action
++    Prior->>Actor: generate imagined rollouts during training
++    Actor->>Env: execute learned policy action
++```
++
++两者都依赖 posterior 来理解当前真实状态，也都依赖 prior 来想象未来。  
++差别是：
++
++- PlaNet 直接用 imagined futures 选动作；
++- Dreamer 用 imagined futures 训练一个会选动作的 actor。
++
++## 8. 一个非常实用的理解框架
++
++可以把 model-based RL 拆成三个问题：
++
++1. **建模问题**：怎么学一个足够好的世界模型？
++2. **想象问题**：怎么用世界模型生成未来轨迹？
++3. **控制问题**：怎么利用这些未来轨迹选动作？
++
++PlaNet 和 Dreamer 在前两个问题上很像，在第三个问题上分叉：
++
++```mermaid
++flowchart TB
++    A["1. 建模：learn RSSM"] --> B["2. 想象：latent rollout"]
++    B --> C["3A. PlaNet: search action sequences"]
++    B --> D["3B. Dreamer: train actor-critic"]
++    C --> E["online planning action"]
++    D --> F["learned policy action"]
++```
++
++这也是之后读更多论文时很有用的分类方法：
++
++- 这篇论文主要改进 world model 吗？
++- 主要改进 imagined rollout 吗？
++- 主要改进 policy/value learning 吗？
++- 还是改进数据收集、探索、离线训练或泛化能力？
++
++有了这个框架，读论文会不容易迷路。
++
++## 9. 当前理解小结
++
++我现在可以这样区分 PlaNet 和 Dreamer：
++
++- 它们都不是“无模型强化学习”，而是都先学一个 latent world model。
++- PlaNet 更偏 planning：每一步都在模型里搜索动作序列。
++- Dreamer 更偏 policy learning：在模型里想象轨迹，用这些轨迹训练 actor 和 value。
++- PlaNet 执行时更依赖在线计算。
++- Dreamer 训练时更依赖 imagined rollout，执行时更像一个已经练好的策略。
++- 从研究路线看，Dreamer 把“世界模型 + 规划”推进到了“世界模型 + 在想象中学习行为”。
++
++一句话放在最后：
++
++> **PlaNet 用世界模型来想一步怎么做；Dreamer 用世界模型来练出一个会做事的自己。**
++
++## 10. 后续阅读建议
++
++如果继续往下读，可以按这个顺序：
++
++1. PlaNet：理解 latent dynamics + online planning。
++2. Dreamer：理解 latent imagination + actor-critic。
++3. DreamerV2：理解离散 latent state 和 Atari 任务。
++4. DreamerV3：理解更通用、更稳定的世界模型强化学习系统。
++
++下一篇可以继续进入 Dreamer 的核心细节：
++
++- actor 是怎么在 imagined rollout 上训练的；
++- value target 如何计算；
++- continuation prediction 为什么重要；
++- imagined gradient 为什么能更新 policy。
+```
+
+**Update: `docs/notes/README.md`**
+
+```diff
+@@
+ - [为什么世界模型需要 stochastic latent state](world-models-7-stochastic-latent-state.md)
+ - [Prior 与 Posterior Latent：世界模型如何“先猜，再校正”](world-models-8-prior-and-posterior-latent.md)
++- [PlaNet 与 Dreamer：同一个世界模型，两种使用方式](world-models-9-planet-dreamer.md)
+```
+
+
+```
+Exit code: 0
+Wall time: 14.2 seconds
+Output:
+Success. Updated the following files:
+A docs/notes/world-models-9-planet-dreamer.md
+M docs/notes/README.md
+D docs/notes/world-models-9-planet-dreamer.md
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-01 15:19:10Z)**_
+
+第 9 篇已经改完：我把它整理成“共同地基 → PlaNet 在线规划 → Dreamer 想象中训练策略 → 对比表 → prior/posterior 视角 → 后续阅读”的结构。现在做最后的格式检查。
+
+_**Agent (gpt-5.5 2026-08-01 15:19:10Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git diff --check -- docs\notes\world-models-9-planet-dreamer.md docs\notes\README.md`</summary>
+```
+Chunk ID: e6ec48
+Wall time: 0.1747 seconds
+Process exited with code 0
+Original token count: 0
+Output:
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-01 15:19:10Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw docs\notes\world-models-9-planet-dreamer.md`</summary>
+```
+Chunk ID: 5c4116
+Wall time: 0.3135 seconds
+Process exited with code 0
+Original token count: 2505
+Output:
+# 09｜PlaNet 与 Dreamer：同一个世界模型，两种使用方式
+
+> 这一篇接在 [08｜Prior 与 Posterior Latent](world-models-8-prior-and-posterior-latent.md) 后面。
+>
+> 前面我们已经理解了 RSSM、latent state、prior、posterior 和 imagined rollout。现在可以正式区分两个经典路线：
+>
+> **PlaNet 把世界模型拿来在线规划；Dreamer 把世界模型拿来训练策略。**
+
+## 1. 一句话区别
+
+PlaNet 和 Dreamer 都先学习一个 latent world model，但它们使用这个模型的方式不同：
+
+- **PlaNet**：每次要行动时，都在世界模型里搜索很多未来动作序列，选预测回报最高的第一步动作。
+- **Dreamer**：先在世界模型里生成 imagined trajectories，用这些想象经验训练 actor 和 value，真正行动时直接用 actor 输出动作。
+
+更短一点：
+
+```text
+PlaNet  = world model + online planning
+Dreamer = world model + actor-critic learned in imagination
+```
+
+如果用学习方式类比：
+
+- PlaNet 像考试时现场推演很多方案；
+- Dreamer 像平时在脑内大量演练，最后形成一种更快的行动直觉。
+
+## 2. 它们的共同地基：RSSM world model
+
+PlaNet 和 Dreamer 的共同基础都是 RSSM（recurrent state-space model）。
+
+RSSM 的核心想法是：
+
+- 环境背后有一个内部状态；
+- 内部状态会随时间和动作变化；
+- 我们只能通过 observation 间接看到它；
+- 模型要学习一个 latent state 来表示这个内部状态；
+- 这个 latent state 既包含历史记忆，也包含不确定性。
+
+可以把 RSSM 看成世界模型中的“状态追踪器 + 未来模拟器”：
+
+```mermaid
+flowchart LR
+    A["历史观测与动作"] --> B["deterministic memory h_t"]
+    B --> C["stochastic latent z_t"]
+    C --> D["预测 observation"]
+    C --> E["预测 reward"]
+    C --> F["预测 continuation / done"]
+    B --> G["prior: p(z_t | h_t)"]
+    H["当前观测 o_t"] --> I["posterior: q(z_t | h_t, o_t)"]
+    G <--> J["KL 对齐"]
+    I <--> J
+```
+
+在这个框架下，智能体并不是直接在像素或原始观测上思考，而是在模型学到的 latent space 里推演未来。
+
+这也是 PlaNet 和 Dreamer 的共同出发点：  
+**先学会一个可想象的世界，再利用这个世界做决策。**
+
+## 3. PlaNet：用世界模型做在线规划
+
+PlaNet 的核心是 planning。
+
+当智能体站在当前 latent state 时，PlaNet 会：
+
+1. 在模型里采样很多候选动作序列；
+2. 对每条动作序列 rollout 出未来 latent；
+3. 用 reward model 预测每条未来轨迹的累计回报；
+4. 选出回报最高的动作序列；
+5. 只执行这条序列的第一个动作；
+6. 进入下一步后重新观测、重新规划。
+
+这个过程很像 MPC（model predictive control，模型预测控制）：
+
+```mermaid
+flowchart TB
+    A["真实环境给出当前 observation"] --> B["编码成当前 latent state"]
+    B --> C["在 world model 里采样候选动作序列"]
+    C --> D["想象每条序列的未来 latent / reward"]
+    D --> E["选择 predicted return 最高的序列"]
+    E --> F["只执行第一步动作"]
+    F --> G["真实环境进入下一步"]
+    G --> A
+```
+
+PlaNet 的关键特征是：
+
+- 策略不是一个直接输出动作的神经网络；
+- 动作来自每一步的在线搜索；
+- 世界模型越准，规划越可靠；
+- 每次行动前都要花计算量“想一想”。
+
+所以 PlaNet 可以概括为：
+
+> **我不提前学一个固定 policy；我每一步都用世界模型现场规划。**
+
+## 4. Dreamer：用世界模型训练 actor 和 value
+
+Dreamer 的核心不是每步搜索，而是在世界模型里训练策略。
+
+它的流程大致是：
+
+1. 用真实环境数据训练 RSSM world model；
+2. 从真实历史编码出 latent state；
+3. 在 learned world model 中展开 imagined rollout；
+4. 用 imagined reward 和 value 训练 actor；
+5. 用 imagined return 训练 value；
+6. 真正和环境交互时，actor 直接根据 latent state 输出动作。
+
+```mermaid
+flowchart TB
+    A["真实数据 replay buffer"] --> B["训练 RSSM world model"]
+    B --> C["从真实历史得到 latent state"]
+    C --> D["在 world model 中 imagined rollout"]
+    D --> E["预测 reward / continuation / value"]
+    E --> F["训练 value"]
+    E --> G["训练 actor"]
+    G --> H["真实环境中直接输出动作"]
+    H --> A
+```
+
+Dreamer 的关键特征是：
+
+- world model 仍然是地基；
+- 但决策不再依赖每一步在线搜索；
+- actor 在 imagined trajectories 上学习；
+- 执行时速度更快；
+- 训练阶段把大量计算放进“想象中的练习”。
+
+所以 Dreamer 可以概括为：
+
+> **我先在世界模型里练出一个 policy，然后让 policy 去真实环境里行动。**
+
+## 5. 两者真正差在哪里？
+
+它们的差异不在“有没有世界模型”，而在“世界模型学好
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-01 15:19:10Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git status --short --branch`</summary>
+```
+Chunk ID: dfc3ab
+Wall time: 0.3927 seconds
+Process exited with code 0
+Original token count: 49
+Output:
+## main...origin/main
+ M .specstory/history/2026-07-19_03-33-50Z-github-github-https-github.md
+ M .specstory/statistics.json
+ M docs/notes/README.md
+?? docs/notes/world-models-9-planet-dreamer.md
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-01 15:19:26Z)**_
+
+已完成第 9 篇笔记优化，没有新增配套代码。
+
+我修改了：
+
+- [world-models-9-planet-dreamer.md](E:/HelloWorldModel/docs/notes/world-models-9-planet-dreamer.md)
+- [docs/notes/README.md](E:/HelloWorldModel/docs/notes/README.md)
+
+主要优化内容：
+
+- 把原始笔记整理成开源项目风格的完整章节结构。
+- 保留你的核心直觉：`PlaNet = world model + online planning`，`Dreamer = world model + actor-critic learned in imagination`。
+- 增加了多张 Mermaid 图，解释：
+  - RSSM 共同地基
+  - PlaNet 在线规划流程
+  - Dreamer imagined rollout 训练 actor/value 流程
+  - PlaNet 与 Dreamer 的总对比
+  - prior/posterior 视角下两者的关系
+- 增加了对比表、理解框架和后续阅读建议。
+- 更新了 `docs/notes/README.md` 的笔记目录。
+
+检查结果：
+
+```bash
+git diff --check -- docs\notes\world-models-9-planet-dreamer.md docs\notes\README.md
+```
+
+通过，没有格式问题。
+
+你检查后可以 add：
+
+```bash
+git add docs\notes\world-models-9-planet-dreamer.md docs\notes\README.md
+```
+
+注意：当前 `.specstory/...` 仍有自动修改，建议这次不要 add 它们。
+
+---
+
+_**User (2026-08-02 03:05:00Z)**_
+
+现在更新了笔记：docs\notes\world-models-10-dreamer-actor-critic.md请你作为世界模型专家，完善dreamer 的actor-critic训练过程 审视这个文件的内容，并按照开源项目风格，进行格式和内容的优化，你可以多生成一些图示辅助理解；我笔记离提到的代码，先在该笔记里优化格式，然后补齐其他演示运行所需要的内容，然后可以考虑把他们整理成一个完整项目放到/src 目录下，作为完整的代码配套,注意和已有代码的演示逻辑，因为这个项目每一篇笔记都会对应一个演示，演示逻辑和结构要清晰；
+
+
+---
+
+_**Agent (gpt-5.5 2026-08-02 03:05:08Z)**_
+
+我来做第 10 篇。因为你明确希望“多生成图示辅助理解”，我会使用 `visualize` 技能的规则，但这里仍优先用 Mermaid 内嵌图，避免为了概念笔记制造额外图片文件。接下来我先读原笔记和现有代码结构，再决定这篇 demo 放在哪些模块里最干净。
+
+_**Agent (gpt-5.5 2026-08-02 03:05:12Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw C:\Users\Lenovo\.codex\plugins\cache\openai-bundled\visualize\1.0.15\skills\visualize\SKILL.md`</summary>
+```
+Chunk ID: 51e595
+Wall time: 0.5780 seconds
+Process exited with code 0
+Original token count: 5162
+Output:
+---
+name: visualize
+description: "Create visualizations and interactive tools directly in conversation. Use when asked to show how something works, make simulators or labs, maps, plots, charts or graphs, comparisons, scenarios, adjustable inputs, and exploration beyond regular text."
+---
+
+# Visualize
+
+- A request for a new standalone file, website, app page, component, or other
+  project change is not an in-conversation visualization request, even when the
+  deliverable contains charts or interactive content.
+- Create a visual only when the user needs to see or explore it in the
+  conversation and it materially improves the explanation. Do not create an
+  inline visual merely because the request involves data, charts, or an
+  interactive page.
+- Use Mermaid when labeled nodes and edges fully explain a static structure;
+  return a normal fenced Mermaid block and no visualization file. Use HTML for
+  dynamics, spatial motion, adjustable inputs, and other visuals.
+- Work silently unless blocked or the user explicitly asks for progress. Never
+  send commentary or progress updates while reading this skill or writing or
+  updating the file; the final response must be your first user-facing message.
+- In user-facing prose, describe only what the visual helps the user see or
+  decide. Keep it concise and do not repeat information already clear from the
+  visual. Never announce this skill, a visualization surface, widgets, HTML,
+  SVG, scripts, local files, inline data, or implementation details.
+
+## Context compaction
+
+Copy into every compaction summary:
+`Reload the full visualize skill before creating or updating a visualization.`
+
+## Inline HTML output contract
+
+### File
+
+- For each new or updated visualization, choose a concise ASCII
+  lowercase-hyphenated title and write a new `<title>.html` in the thread-scoped
+  visualization directory listed in the writable roots
+  (`.codex/visualizations/YYYY/MM/DD/<thread-id>`).
+- Build the visual in the conversation. Use the open project when the user asks
+  for a site, app page, component, or change to existing project files.
+
+### Fragment
+
+- Write only an HTML fragment: no `<!doctype>`, `<html>`, `<head>`, or `<body>`.
+- Write literal markup: use `<div class="card">Hi</div>` plus a real newline,
+  never `<div class=\"card\">Hi</div>\n`. Never embed the fragment in an inline
+  Python, JavaScript, or shell string. Read it back; rewrite literal `\"` or
+  `\n`.
+- Keep CSS and JavaScript in the fragment only when base classes are
+  insufficient. Load static resources only from the CDN allowlist. Never use
+  `fetch`, XHR, WebSocket, or other API calls.
+- Give the fragment root a unique ID and select it with
+  `document.getElementById(...)`. Never derive the root from
+  `document.currentScript`; scripts may sit outside the root.
+- Keep visualizations under 2 MB. Aggregate, bin, downsample, reduce precision,
+  or drop unused fields from large inline datasets.
+- Check that JavaScript has no undefined identifiers, every queried element
+  exists, and the primary interaction updates the visual. The bundled
+  `python3 scripts/render.py <absolute-fragment-path> [<destination>.html] [--serve]`
+  can wrap a fragment as standalone HTML or temporarily serve it for browser
+  inspection when a preview would help with layout, theme, or runtime behavior.
+
+### Content and response
+
+- Keep the fragment focused on the visualization. Do not include explanatory
+  paragraphs, formulas, instructions, or narrative callouts. Include only
+  necessary labels, legends, values, and accessible text alternatives.
+- Use the normal response flow. Put any necessary concise explanation outside
+  the fragment, and add this exact directive on its own line where the visual
+  should appear:
+
+```text
+::codex-inline-vis{file="<title>.html"}
+```
+
+- Emit only the directive for the fragment. Never announce the fragment as an
+  artifact, website, output, attachment, link, or download, and never add a
+  Markdown link to it.
+
+### External resources
+
+- The CSP allows only `cdnjs.cloudflare.com`, `esm.sh`, `cdn.jsdelivr.net`,
+  `unpkg.com`, `fonts.googleapis.com`, `fonts.gstatic.com`, and
+  `fonts.bunny.net`. Other origins are blocked and fail silently.
+
+## Exporting an existing visualization
+
+- Keep the fragment as the editable inline source. When the user explicitly asks
+  to save, export, or publish a visualization that is already shown in the
+  conversation, render it with
+  `python3 scripts/render.py <absolute-fragment-path> <destination>.html`.
+- Apply this export flow only when the user explicitly asks to turn the existing
+  inline source or visualization into a website. For a general website request,
+  build a new responsive site in the output directory or open project, using
+  Sites when appropriate, without applying th
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:05:23Z)**_
+
+我开始读第 10 篇原文和现有 demo 目录。重点会看：前几篇已经有哪些 `latent/stochastic/planning` 能复用，避免第 10 篇代码变成孤岛。
+
+_**Agent (gpt-5.5 2026-08-02 03:05:23Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw docs\notes\world-models-10-dreamer-actor-critic.md`</summary>
+```
+Chunk ID: 728adb
+Wall time: 0.4270 seconds
+Process exited with code 0
+Original token count: 0
+Output:
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:05:23Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `rg --files docs examples src`</summary>
+```
+Chunk ID: fcf0b3
+Wall time: 1.5646 seconds
+Process exited with code 0
+Original token count: 288
+Output:
+src\README.md
+docs\roadmap.md
+examples\run_stochastic_latent_state_world_model.py
+examples\run_reward_world_model.py
+examples\run_prior_posterior_latent_world_model.py
+examples\run_point_mass_world_model.py
+examples\run_planning_world_model.py
+examples\run_partial_observation_gru.py
+examples\run_latent_dynamics_world_model.py
+examples\README.md
+docs\00-start-here.md
+docs\glossary.md
+src\hello_world_model\__init__.py
+docs\notes\world-models-9-planet-dreamer.md
+docs\notes\world-models-8-prior-and-posterior-latent.md
+docs\notes\world-models-7-stochastic-latent-state.md
+docs\notes\world-models-6-latent-dynamics.md
+docs\notes\world-models-5-planning.md
+docs\notes\world-models-4-reward.md
+docs\notes\world-models-3-latent-memory.md
+docs\notes\world-models-2-basics.md
+docs\notes\world-models-10-dreamer-actor-critic.md
+docs\notes\world-models-1-intuition.md
+docs\notes\README.md
+src\hello_world_model\models.py
+src\hello_world_model\memory.py
+src\hello_world_model\latent.py
+src\hello_world_model\envs.py
+src\hello_world_model\stochastic.py
+src\hello_world_model\planning.py
+src\hello_world_model\training.py
+src\hello_world_model\visualization.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:05:23Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git status --short --branch`</summary>
+```
+Chunk ID: e9bd57
+Wall time: 0.2433 seconds
+Process exited with code 0
+Original token count: 45
+Output:
+## main...origin/main
+ M .specstory/history/2026-07-19_03-33-50Z-github-github-https-github.md
+ M .specstory/statistics.json
+?? docs/notes/world-models-10-dreamer-actor-critic.md
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:05:36Z)**_
+
+第 10 篇也是空文件，所以我会直接写成一篇完整新笔记。代码层面我会新增一个“教学版 Dreamer actor-critic”演示：不追求复现完整 DreamerV3，而是用已有 point-mass world model 学 actor/value，让你能看见 imagined rollout 如何产生 policy 梯度。
+
+_**Agent (gpt-5.5 2026-08-02 03:05:36Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw src\hello_world_model\models.py`</summary>
+```
+Chunk ID: 46551f
+Wall time: 0.4376 seconds
+Process exited with code 0
+Original token count: 2135
+Output:
+from __future__ import annotations
+
+import torch
+from torch import nn
+
+
+class WorldModel(nn.Module):
+    """Predict next state and reward from current state-action pair."""
+
+    def __init__(self, state_dim: int = 2, action_dim: int = 1, hidden_dim: int = 128):
+        super().__init__()
+        self.backbone = nn.Sequential(
+            nn.Linear(state_dim + action_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.ReLU(),
+        )
+        self.next_state_head = nn.Linear(hidden_dim, state_dim)
+        self.reward_head = nn.Linear(hidden_dim, 1)
+
+    def forward(
+        self, state: torch.Tensor, action: torch.Tensor
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        x = torch.cat([state, action], dim=-1)
+        h = self.backbone(x)
+        return self.next_state_head(h), self.reward_head(h)
+
+
+class GRUWorldModel(nn.Module):
+    """Predict next observation from a sequence of observations and actions."""
+
+    def __init__(self, obs_dim: int = 1, action_dim: int = 1, hidden_dim: int = 32):
+        super().__init__()
+        self.hidden_dim = hidden_dim
+        self.gru = nn.GRU(
+            input_size=obs_dim + action_dim,
+            hidden_size=hidden_dim,
+            batch_first=True,
+        )
+        self.next_obs_head = nn.Linear(hidden_dim, obs_dim)
+
+    def forward(
+        self,
+        obs_seq: torch.Tensor,
+        action_seq: torch.Tensor,
+        h0: torch.Tensor | None = None,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        x = torch.cat([obs_seq, action_seq], dim=-1)
+        hidden_seq, hn = self.gru(x, h0)
+        pred_next_obs = self.next_obs_head(hidden_seq)
+        return pred_next_obs, hn
+
+
+class GRURewardWorldModel(nn.Module):
+    """Predict next observation and reward from recurrent world-model state."""
+
+    def __init__(self, obs_dim: int = 1, action_dim: int = 1, hidden_dim: int = 32):
+        super().__init__()
+        self.hidden_dim = hidden_dim
+        self.gru = nn.GRU(
+            input_size=obs_dim + action_dim,
+            hidden_size=hidden_dim,
+            batch_first=True,
+        )
+        self.next_obs_head = nn.Linear(hidden_dim, obs_dim)
+        self.reward_head = nn.Linear(hidden_dim, 1)
+
+    def forward(
+        self,
+        obs_seq: torch.Tensor,
+        action_seq: torch.Tensor,
+        h0: torch.Tensor | None = None,
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        x = torch.cat([obs_seq, action_seq], dim=-1)
+        hidden_seq, hn = self.gru(x, h0)
+        pred_next_obs = self.next_obs_head(hidden_seq)
+        pred_reward = self.reward_head(hidden_seq)
+        return pred_next_obs, pred_reward, hn
+
+    def step(
+        self,
+        obs: torch.Tensor,
+        action: torch.Tensor,
+        h: torch.Tensor | None = None,
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        """Roll the recurrent world model forward by one imagined step."""
+
+        x = torch.cat([obs, action], dim=-1).unsqueeze(1)
+        hidden_seq, hn = self.gru(x, h)
+        hidden = hidden_seq[:, 0, :]
+        pred_next_obs = self.next_obs_head(hidden)
+        pred_reward = self.reward_head(hidden)
+        return pred_next_obs, pred_reward, hn
+
+
+class LatentDynamicsWorldModel(nn.Module):
+    """Roll future states in a learned latent space instead of observation space."""
+
+    def __init__(
+        self,
+        obs_dim: int = 2,
+        action_dim: int = 1,
+        latent_dim: int = 8,
+        hidden_dim: int = 64,
+    ):
+        super().__init__()
+        self.encoder = nn.Sequential(
+            nn.Linear(obs_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, latent_dim),
+        )
+        self.transition = nn.Sequential(
+            nn.Linear(latent_dim + action_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, latent_dim),
+        )
+        self.decoder = nn.Sequential(
+            nn.Linear(latent_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, obs_dim),
+        )
+        self.reward_head = nn.Sequential(
+            nn.Linear(latent_dim + action_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, 1),
+        )
+
+    def forward(
+        self, obs: torch.Tensor, action: torch.Tensor
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        latent = self.encoder(obs)
+        next_latent, pred_reward = self.step_latent(latent, action)
+        pred_next_obs = self.decoder(next_latent)
+        return pred_next_obs, pred_reward, next_latent
+
+    def step_latent(
+        self, latent: torch.Tensor, action: torch.Tensor
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        transition_input = torch.cat([latent, action], dim=-1)
+        latent_delta = self.transition(transition_input)
+        next_latent = latent + latent_delta
+        pred_reward = self.reward_head(transition_input)
+        return next_
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:05:36Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw src\hello_world_model\envs.py`</summary>
+```
+Chunk ID: 45bcbf
+Wall time: 0.4608 seconds
+Process exited with code 0
+Original token count: 597
+Output:
+from __future__ import annotations
+
+import numpy as np
+
+
+class PointMass1DEnv:
+    """A tiny 1D point-mass control environment.
+
+    State: [position, velocity]
+    Action: acceleration clipped to [-1, 1]
+    Reward: negative distance-to-goal penalty and action penalty
+    """
+
+    def __init__(self, dt: float = 0.1, horizon: int = 100, goal: float = 0.0):
+        self.dt = dt
+        self.horizon = horizon
+        self.goal = goal
+        self.t = 0
+        self.pos = 0.0
+        self.vel = 0.0
+
+    def reset(self) -> np.ndarray:
+        self.t = 0
+        self.pos = float(np.random.uniform(-2.0, 2.0))
+        self.vel = float(np.random.uniform(-0.5, 0.5))
+        return self._get_obs()
+
+    def step(self, action: float) -> tuple[np.ndarray, float, bool, dict]:
+        action = float(np.clip(action, -1.0, 1.0))
+
+        self.vel += action * self.dt
+        self.pos += self.vel * self.dt
+        self.t += 1
+
+        reward = -((self.pos - self.goal) ** 2 + 0.1 * action**2)
+        done = self.t >= self.horizon
+        return self._get_obs(), float(reward), done, {}
+
+    def _get_obs(self) -> np.ndarray:
+        return np.array([self.pos, self.vel], dtype=np.float32)
+
+
+class PartialPointMass1DEnv(PointMass1DEnv):
+    """Point-mass environment where the agent only observes position."""
+
+    def _get_obs(self) -> np.ndarray:
+        return np.array([self.pos], dtype=np.float32)
+
+    def get_true_state(self) -> np.ndarray:
+        return np.array([self.pos, self.vel], dtype=np.float32)
+
+
+class NoisyPointMass1DEnv(PointMass1DEnv):
+    """Point-mass environment with random process noise in the dynamics."""
+
+    def __init__(
+        self,
+        dt: float = 0.1,
+        horizon: int = 100,
+        goal: float = 0.0,
+        process_noise_std: float = 0.15,
+    ):
+        super().__init__(dt=dt, horizon=horizon, goal=goal)
+        self.process_noise_std = process_noise_std
+
+    def step(self, action: float) -> tuple[np.ndarray, float, bool, dict]:
+        action = float(np.clip(action, -1.0, 1.0))
+        noise = float(np.random.normal(0.0, self.process_noise_std))
+
+        self.vel += (action + noise) * self.dt
+        self.pos += self.vel * self.dt
+        self.t += 1
+
+        reward = -((self.pos - self.goal) ** 2 + 0.1 * action**2)
+        done = self.t >= self.horizon
+        return self._get_obs(), float(reward), done, {"process_noise": noise}
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:05:36Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw src\hello_world_model\latent.py`</summary>
+```
+Chunk ID: ac857f
+Wall time: 0.4323 seconds
+Process exited with code 0
+Original token count: 1289
+Output:
+from __future__ import annotations
+
+import random
+from collections.abc import Sequence
+
+import numpy as np
+import torch
+from torch import nn, optim
+
+from .envs import PointMass1DEnv
+from .models import LatentDynamicsWorldModel, WorldModel
+from .training import Transition
+
+
+def train_latent_dynamics_model(
+    model: LatentDynamicsWorldModel,
+    data: Sequence[Transition],
+    epochs: int = 50,
+    batch_size: int = 128,
+    lr: float = 1e-3,
+    device: str = "cpu",
+) -> dict[str, list[float]]:
+    """Train a minimal latent dynamics model on transition data."""
+
+    model.to(device)
+    optimizer = optim.Adam(model.parameters(), lr=lr)
+    mse = nn.MSELoss()
+    shuffled_data = list(data)
+    losses = {"total": [], "obs": [], "reward": []}
+
+    for epoch in range(epochs):
+        random.shuffle(shuffled_data)
+        total_loss = 0.0
+        total_obs_loss = 0.0
+        total_reward_loss = 0.0
+
+        for i in range(0, len(shuffled_data), batch_size):
+            batch = shuffled_data[i : i + batch_size]
+            obs = torch.tensor(
+                np.stack([x[0] for x in batch]), dtype=torch.float32, device=device
+            )
+            action = torch.tensor(
+                np.stack([x[1] for x in batch]), dtype=torch.float32, device=device
+            )
+            next_obs = torch.tensor(
+                np.stack([x[2] for x in batch]), dtype=torch.float32, device=device
+            )
+            reward = torch.tensor(
+                np.stack([x[3] for x in batch]), dtype=torch.float32, device=device
+            )
+
+            pred_next_obs, pred_reward, _ = model(obs, action)
+            obs_loss = mse(pred_next_obs, next_obs)
+            reward_loss = mse(pred_reward, reward)
+            loss = obs_loss + reward_loss
+
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+
+            total_loss += loss.item() * len(batch)
+            total_obs_loss += obs_loss.item() * len(batch)
+            total_reward_loss += reward_loss.item() * len(batch)
+
+        n = len(shuffled_data)
+        losses["total"].append(total_loss / n)
+        losses["obs"].append(total_obs_loss / n)
+        losses["reward"].append(total_reward_loss / n)
+        print(
+            f"Epoch {epoch + 1:03d} | "
+            f"total={losses['total'][-1]:.6f} | "
+            f"obs={losses['obs'][-1]:.6f} | "
+            f"reward={losses['reward'][-1]:.6f}"
+        )
+
+    return losses
+
+
+def collect_real_rollout(
+    env: PointMass1DEnv,
+    action_sequence: np.ndarray,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Run a fixed action sequence in the real environment."""
+
+    obs = env.reset()
+    observations = [obs.copy()]
+    rewards: list[float] = []
+
+    for action in action_sequence:
+        obs, reward, done, _ = env.step(float(action[0]))
+        observations.append(obs.copy())
+        rewards.append(reward)
+        if done:
+            break
+
+    return np.stack(observations), np.array(rewards, dtype=np.float32)
+
+
+@torch.no_grad()
+def rollout_observation_model(
+    model: WorldModel,
+    initial_obs: np.ndarray,
+    action_sequence: np.ndarray,
+    device: str = "cpu",
+) -> tuple[np.ndarray, np.ndarray]:
+    """Open-loop rollout that feeds predicted observations back into the model."""
+
+    model.eval()
+    obs = torch.tensor(initial_obs, dtype=torch.float32, device=device).unsqueeze(0)
+    observations = [obs.squeeze(0).cpu().numpy()]
+    rewards: list[float] = []
+
+    for action_np in action_sequence:
+        action = torch.tensor(action_np, dtype=torch.float32, device=device).unsqueeze(0)
+        obs, reward = model(obs, action)
+        observations.append(obs.squeeze(0).cpu().numpy())
+        rewards.append(float(reward.item()))
+
+    return np.stack(observations), np.array(rewards, dtype=np.float32)
+
+
+@torch.no_grad()
+def rollout_latent_dynamics_model(
+    model: LatentDynamicsWorldModel,
+    initial_obs: np.ndarray,
+    action_sequence: np.ndarray,
+    device: str = "cpu",
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Open-loop rollout that advances the model in latent space."""
+
+    model.eval()
+    obs = torch.tensor(initial_obs, dtype=torch.float32, device=device).unsqueeze(0)
+    latent = model.encoder(obs)
+    latents = [latent.squeeze(0).cpu().numpy()]
+    observations = [obs.squeeze(0).cpu().numpy()]
+    rewards: list[float] = []
+
+    for action_np in action_sequence:
+        action = torch.tensor(action_np, dtype=torch.float32, device=device).unsqueeze(0)
+        latent, reward = model.step_latent(latent, action)
+        decoded_obs = model.decoder(latent)
+        latents.append(latent.squeeze(0).cpu().numpy())
+        observations.append(decoded_obs.squeeze(0).cpu().numpy())
+        rewards.append(float(reward.item()))
+
+    return (
+        np.stack(observations),
+        np.array(rewards, dtype=np.float32),
+        np.stack(latents),
+    )
+
+
+def make_probe_action
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:05:36Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw src\hello_world_model\visualization.py`</summary>
+```
+Chunk ID: 9a27ae
+Wall time: 0.4365 seconds
+Process exited with code 0
+Original token count: 7272
+Output:
+from __future__ import annotations
+
+from pathlib import Path
+from collections.abc import Sequence
+
+import matplotlib.pyplot as plt
+import numpy as np
+import torch
+
+from .models import WorldModel
+from .memory import Episode
+from .training import Transition
+
+
+def plot_dataset_phase_space(data: Sequence[Transition], output_path: Path) -> None:
+    """Show what states the random data collection covered."""
+
+    states = np.stack([transition[0] for transition in data])
+    actions = np.stack([transition[1] for transition in data]).reshape(-1)
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(7, 5))
+    scatter = ax.scatter(
+        states[:, 0],
+        states[:, 1],
+        c=actions,
+        s=8,
+        alpha=0.55,
+        cmap="coolwarm",
+    )
+    ax.axvline(0.0, color="black", linewidth=1, linestyle="--", label="goal")
+    ax.set_title("Random Data Coverage")
+    ax.set_xlabel("position")
+    ax.set_ylabel("velocity")
+    ax.legend(loc="best")
+    fig.colorbar(scatter, ax=ax, label="action")
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_training_loss(losses: Sequence[float], output_path: Path) -> None:
+    """Show whether the learned dynamics/reward model is fitting the data."""
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(7, 4))
+    ax.plot(np.arange(1, len(losses) + 1), losses, linewidth=2)
+    ax.set_title("World Model Training Loss")
+    ax.set_xlabel("epoch")
+    ax.set_ylabel("MSE loss")
+    ax.grid(True, alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_reward_model_losses(
+    losses: dict[str, Sequence[float]],
+    output_path: Path,
+) -> None:
+    """Show total, observation, and reward losses for a reward world model."""
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    epochs = np.arange(1, len(losses["total"]) + 1)
+    ax.plot(epochs, losses["total"], label="total", linewidth=2)
+    ax.plot(epochs, losses["obs"], label="observation", linewidth=1.8)
+    ax.plot(epochs, losses["reward"], label="reward", linewidth=1.8)
+    ax.set_title("Reward World Model Training Losses")
+    ax.set_xlabel("epoch")
+    ax.set_ylabel("MSE loss")
+    ax.legend(loc="best")
+    ax.grid(True, alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_latent_model_losses(
+    losses: dict[str, Sequence[float]],
+    output_path: Path,
+) -> None:
+    """Show latent dynamics model training losses."""
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    epochs = np.arange(1, len(losses["total"]) + 1)
+    ax.plot(epochs, losses["total"], label="total", linewidth=2)
+    ax.plot(epochs, losses["obs"], label="decoded observation", linewidth=1.8)
+    ax.plot(epochs, losses["reward"], label="reward", linewidth=1.8)
+    ax.set_title("Latent Dynamics Model Training Losses")
+    ax.set_xlabel("epoch")
+    ax.set_ylabel("MSE loss")
+    ax.legend(loc="best")
+    ax.grid(True, alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+def plot_stochastic_model_losses(
+    losses: dict[str, Sequence[float]],
+    output_path: Path,
+) -> None:
+    """Show stochastic latent model observation, reward, and KL losses."""
+
+    _prepare_output(output_path)
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    epochs = np.arange(1, len(losses["total"]) + 1)
+    ax.plot(epochs, losses["total"], label="total", linewidth=2)
+    ax.plot(epochs, losses["obs"], label="observation", linewidth=1.8)
+    ax.plot(epochs, losses["reward"], label="reward", linewidth=1.8)
+    ax.plot(epochs, losses["kl"], label="KL", linewidth=1.8)
+    ax.set_title("Stochastic Latent Model Training Losses")
+    ax.set_xlabel("epoch")
+    ax.set_ylabel("loss")
+    ax.legend(loc="best")
+    ax.grid(True, alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
+@torch.no_grad()
+def plot_one_step_predictions(
+    model: WorldModel,
+    data: Sequence[Transition],
+    output_path: Path,
+    max_points: int = 800,
+    device: str = "cpu",
+) -> None:
+    """Compare real next states with one-step predictions."""
+
+    model.eval()
+    sample = list(data[:max_points])
+
+    states = torch.tensor(
+        np.stack([transition[0] for transition in sample]),
+        dtype=torch.float32,
+        device=device,
+    )
+    actions = torch.tensor(
+        np.stack([transition[1] for transition in sample]),
+        dtype=torch.float32,
+        device=device,
+    )
+    true_next = np.stack([transition[2] for transition in sample])
+    pred_next, _ = model(states, actions)
+    pred_next_np = pred_next.cpu().numpy()
+
+    _prepare_output(output_path)
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4))
+
+    _plot_prediction_panel(
+        axes[0],
+        true_next[:, 0],
+        pred_
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:06:08Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Planning Dreamer-like actor-critic implementation**
+</details></think>
+
+_**Agent (gpt-5.5 2026-08-02 03:06:08Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Designing latent rollout and training steps**
+</details></think>
+
+_**Agent (gpt-5.5 2026-08-02 03:06:12Z)**_
+
+我准备把第 10 篇 demo 做成“教学版 Dreamer”而不是完整论文复现：先训练已有 `LatentDynamicsWorldModel`，然后冻结它，在 imagined latent rollout 上训练一个 `Actor` 和一个 `Value`。这样和第 6～9 篇的逻辑能接上，也不会突然引入巨大复杂度。
+
+_**Agent (gpt-5.5 2026-08-02 03:06:12Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw src\hello_world_model\__init__.py`</summary>
+```
+Chunk ID: 178a59
+Wall time: 0.4848 seconds
+Process exited with code 0
+Original token count: 1050
+Output:
+"""Minimal world model examples for learning."""
+
+from .envs import NoisyPointMass1DEnv, PartialPointMass1DEnv, PointMass1DEnv
+from .latent import (
+    collect_real_rollout,
+    make_probe_action_sequence,
+    rollout_latent_dynamics_model,
+    rollout_observation_model,
+    train_latent_dynamics_model,
+)
+from .memory import (
+    collect_partial_episodes,
+    predict_episode,
+    predict_episode_with_reward,
+    score_candidate_actions,
+    train_gru_reward_world_model,
+    train_gru_world_model,
+)
+from .models import (
+    GRURewardWorldModel,
+    GRUWorldModel,
+    LatentDynamicsWorldModel,
+    StochasticLatentWorldModel,
+    WorldModel,
+)
+from .planning import plan_action_random_shooting
+from .planning import (
+    imagine_action_sequence,
+    infer_hidden_from_history,
+    plan_action_with_world_model,
+    run_receding_horizon_episode,
+)
+from .training import (
+    collect_random_data,
+    evaluate_planner,
+    rollout_planner_episode,
+    train_world_model,
+)
+from .stochastic import (
+    analyze_prior_posterior_alignment,
+    rollout_stochastic_latent_model,
+    sample_prior_and_posterior_latents,
+    sample_one_step_futures,
+    sample_prior_latents,
+    train_stochastic_latent_model,
+)
+from .visualization import (
+    plot_dataset_phase_space,
+    plot_latent_model_losses,
+    plot_latent_space_rollout,
+    plot_one_step_future_distribution,
+    plot_gru_sequence_prediction,
+    plot_hidden_state_velocity_probe,
+    plot_first_planning_rollouts,
+    plot_imagined_vs_real_feedback,
+    plot_action_reward_scores,
+    plot_one_step_predictions,
+    plot_partial_observation_ambiguity,
+    plot_planned_trajectory,
+    plot_prior_decoded_next_state,
+    plot_prior_posterior_alignment,
+    plot_prior_posterior_latent_samples,
+    plot_prior_vs_posterior_latent_means,
+    plot_reward_landscape,
+    plot_reward_model_losses,
+    plot_reward_predictions,
+    plot_receding_horizon_control,
+    plot_rollout_error_growth,
+    plot_rollout_prediction_comparison,
+    plot_prior_latent_samples,
+    plot_stochastic_model_losses,
+    plot_stochastic_rollout_fan,
+    plot_stochastic_uncertainty_growth,
+    plot_training_loss,
+)
+
+__all__ = [
+    "GRURewardWorldModel",
+    "GRUWorldModel",
+    "LatentDynamicsWorldModel",
+    "NoisyPointMass1DEnv",
+    "PartialPointMass1DEnv",
+    "PointMass1DEnv",
+    "StochasticLatentWorldModel",
+    "WorldModel",
+    "analyze_prior_posterior_alignment",
+    "collect_real_rollout",
+    "collect_partial_episodes",
+    "collect_random_data",
+    "evaluate_planner",
+    "make_probe_action_sequence",
+    "plot_dataset_phase_space",
+    "plot_latent_model_losses",
+    "plot_latent_space_rollout",
+    "plot_one_step_future_distribution",
+    "plot_gru_sequence_prediction",
+    "plot_hidden_state_velocity_probe",
+    "plot_first_planning_rollouts",
+    "plot_imagined_vs_real_feedback",
+    "plot_action_reward_scores",
+    "plot_one_step_predictions",
+    "plot_partial_observation_ambiguity",
+    "plot_planned_trajectory",
+    "plot_prior_decoded_next_state",
+    "plot_reward_landscape",
+    "plot_prior_posterior_alignment",
+    "plot_prior_posterior_latent_samples",
+    "plot_prior_vs_posterior_latent_means",
+    "plot_reward_model_losses",
+    "plot_reward_predictions",
+    "plot_receding_horizon_control",
+    "plot_rollout_error_growth",
+    "plot_rollout_prediction_comparison",
+    "plot_prior_latent_samples",
+    "plot_stochastic_model_losses",
+    "plot_stochastic_rollout_fan",
+    "plot_stochastic_uncertainty_growth",
+    "plot_training_loss",
+    "imagine_action_sequence",
+    "infer_hidden_from_history",
+    "plan_action_random_shooting",
+    "plan_action_with_world_model",
+    "predict_episode",
+    "predict_episode_with_reward",
+    "rollout_planner_episode",
+    "rollout_latent_dynamics_model",
+    "rollout_observation_model",
+    "rollout_stochastic_latent_model",
+    "run_receding_horizon_episode",
+    "sample_prior_and_posterior_latents",
+    "sample_one_step_futures",
+    "sample_prior_latents",
+    "train_latent_dynamics_model",
+    "train_stochastic_latent_model",
+    "score_candidate_actions",
+    "train_gru_reward_world_model",
+    "train_gru_world_model",
+    "train_world_model",
+]
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:06:12Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw examples\README.md`</summary>
+```
+Chunk ID: 35daf2
+Wall time: 0.5123 seconds
+Process exited with code 0
+Original token count: 1344
+Output:
+# Examples
+
+这里存放可以直接运行的小实验。
+
+计划中的第一个实验：
+
+- 用一个简单环境收集 `(state, action, next_state)` 数据。
+- 训练一个小模型预测 `next_state`。
+- 对比真实下一状态和模型预测结果。
+
+每个例子建议包含：
+
+- 运行命令
+- 依赖说明
+- 预期输出
+- 对应笔记
+
+## 当前示例
+
+### 1D point mass world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_point_mass_world_model.py
+```
+
+运行后会在 `outputs/point_mass_world_model` 下生成教学图示：
+
+- `01_random_data_phase_space.png`：随机交互数据覆盖了哪些位置和速度。
+- `02_training_loss.png`：world model 的训练误差是否下降。
+- `03_one_step_predictions.png`：模型预测的下一状态是否接近真实下一状态。
+- `04_planned_trajectory.png`：planner 是否把点质量系统推向目标位置。
+
+对应笔记：
+
+- [MDP、POMDP 与最小世界模型](../docs/notes/world-models-2-basics.md)
+
+### Partial observation GRU world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_partial_observation_gru.py
+```
+
+运行后会在 `outputs/partial_observation_gru` 下生成教学图示：
+
+- `01_partial_observation_ambiguity.png`：同一个位置观测可能对应不同隐藏速度。
+- `02_gru_training_loss.png`：GRU world model 的训练误差。
+- `03_gru_sequence_prediction.png`：真实位置序列与预测位置序列对比。
+- `04_hidden_state_probe.png`：GRU hidden state 是否编码了隐藏速度信息。
+
+对应笔记：
+
+- [为什么世界模型需要 memory 与 latent state](../docs/notes/world-models-3-latent-memory.md)
+
+### Reward world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_reward_world_model.py
+```
+
+运行后会在 `outputs/reward_world_model` 下生成教学图示：
+
+- `01_reward_landscape.png`：toy 环境里 reward 如何由目标距离和动作代价决定。
+- `02_reward_model_losses.png`：total / observation / reward 三种训练误差。
+- `03_reward_prediction.png`：真实 reward 与预测 reward 的对比。
+- `04_reward_guided_action_scores.png`：reward head 如何给候选动作排序。
+
+对应笔记：
+
+- [为什么世界模型需要预测 reward](../docs/notes/world-models-4-reward.md)
+
+### Planning with a world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_planning_world_model.py
+```
+
+运行后会在 `outputs/planning_world_model` 下生成教学图示：
+
+- `01_planning_model_losses.png`：用于 planning 的 recurrent reward world model 训练误差。
+- `02_first_imagined_rollouts.png`：第一次规划时，模型想象出的多条未来轨迹。
+- `03_receding_horizon_control.png`：滚动规划在真实环境中的控制轨迹。
+- `04_imagined_vs_real_feedback.png`：模型预测的最佳 imagined return 与真实 reward 的对照。
+
+对应笔记：
+
+- [用世界模型做 planning](../docs/notes/world-models-5-planning.md)
+
+### Latent dynamics world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_latent_dynamics_world_model.py
+```
+
+运行后会在 `outputs/latent_dynamics_world_model` 下生成教学图示：
+
+- `01_observation_model_loss.png`：observation-space baseline 的训练误差。
+- `02_latent_model_losses.png`：latent dynamics model 的训练误差。
+- `03_open_loop_rollout_comparison.png`：真实轨迹、observation rollout、latent rollout 的对比。
+- `04_rollout_error_growth.png`：open-loop 误差如何随 rollout horizon 增长。
+- `05_latent_space_rollout.png`：模型在 latent space 中想象出的轨迹。
+
+对应笔记：
+
+- [为什么要转向 latent dynamics](../docs/notes/world-models-6-latent-dynamics.md)
+
+### Stochastic latent state world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_stochastic_latent_state_world_model.py
+```
+
+运行后会在 `outputs/stochastic_latent_state_world_model` 下生成教学图示：
+
+- `01_stochastic_model_losses.png`：observation / reward / KL loss。
+- `02_one_step_future_distribution.png`：同一个 state-action 下采样出的多个下一状态。
+- `03_stochastic_rollout_fan.png`：同一条动作序列下的一簇可能未来。
+- `04_uncertainty_growth.png`：rollout 过程中样本不确定性如何变化。
+- `05_prior_latent_samples.png`：从 `p(z_next | z, action)` 采样出的 latent 分布。
+
+对应笔记：
+
+- [为什么世界模型需要 stochastic latent state](../docs/notes/world-models-7-stochastic-latent-state.md)
+
+### Prior and posterior latent world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_prior_posterior_latent_world_model.py
+```
+
+运行后会在 `outputs/prior_posterior_latent_world_model` 下生成教学图示：
+
+- `01_prior_posterior_training_losses.png`：observation / reward / KL loss。
+- `02_prior_vs_posterior_latent_means.png`：prior mean 与 post
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:06:12Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw src\README.md`</summary>
+```
+Chunk ID: e74cb4
+Wall time: 0.4904 seconds
+Process exited with code 0
+Original token count: 445
+Output:
+# Source Code
+
+这里存放世界模型相关的可复用代码。
+
+初期可以先从最小模块开始：
+
+- 环境交互代码
+- 数据收集代码
+- 状态预测模型
+- 训练脚本
+- 评估脚本
+
+建议原则：
+
+- 每个实验都能从 README 或注释中看懂入口。
+- 优先写小而清楚的代码，再逐步抽象。
+- 每次实验都记录对应的笔记链接。
+
+## 当前代码
+
+- [hello_world_model](hello_world_model)：最小 world model 教学代码。
+
+它包含：
+
+- `envs.py`：一维点质量环境。
+- `models.py`：MLP world model 和 GRU world model。
+- `training.py`：完整状态下的数据收集、训练和评估。
+- `memory.py`：partial observation 序列数据、GRU 训练和 reward head 训练。
+- `planning.py`：random shooting、imagined rollout 和 receding-horizon planning。
+- `latent.py`：latent dynamics 训练和 open-loop rollout 对比。
+- `stochastic.py`：stochastic latent state 训练、采样、rollout，以及 prior/posterior latent 对齐分析。
+- `visualization.py`：训练过程和规划结果的可视化。
+
+对应笔记：
+
+- [MDP、POMDP 与最小世界模型](../docs/notes/world-models-2-basics.md)
+- [为什么世界模型需要 memory 与 latent state](../docs/notes/world-models-3-latent-memory.md)
+- [为什么世界模型需要预测 reward](../docs/notes/world-models-4-reward.md)
+- [用世界模型做 planning](../docs/notes/world-models-5-planning.md)
+- [为什么要转向 latent dynamics](../docs/notes/world-models-6-latent-dynamics.md)
+- [为什么世界模型需要 stochastic latent state](../docs/notes/world-models-7-stochastic-latent-state.md)
+- [Prior 与 Posterior Latent：世界模型如何“先猜，再校正”](../docs/notes/world-models-8-prior-and-posterior-latent.md)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:06:12Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw docs\notes\README.md`</summary>
+```
+Chunk ID: d1c74f
+Wall time: 0.4685 seconds
+Process exited with code 0
+Original token count: 280
+Output:
+# 学习笔记
+
+这里存放世界模型学习过程中的笔记、思考和论文阅读记录。
+
+建议命名方式：
+
+```text
+YYYY-MM-DD-topic.md
+```
+
+建议每篇笔记包含：
+
+- 今天解决了什么问题。
+- 我现在怎么理解这个概念。
+- 有哪些例子或代码帮助理解。
+- 还不理解什么。
+- 下一步准备做什么。
+
+## 当前笔记
+
+- [世界模型的第一层直觉](world-models-1-intuition.md)
+- [MDP、POMDP 与最小世界模型](world-models-2-basics.md)
+- [为什么世界模型需要 memory 与 latent state](world-models-3-latent-memory.md)
+- [为什么世界模型需要预测 reward](world-models-4-reward.md)
+- [用世界模型做 planning](world-models-5-planning.md)
+- [为什么要转向 latent dynamics](world-models-6-latent-dynamics.md)
+- [为什么世界模型需要 stochastic latent state](world-models-7-stochastic-latent-state.md)
+- [Prior 与 Posterior Latent：世界模型如何“先猜，再校正”](world-models-8-prior-and-posterior-latent.md)
+- [PlaNet 与 Dreamer：同一个世界模型，两种使用方式](world-models-9-planet-dreamer.md)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:06:41Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Designing dreamer actor-critic rollout function**
+</details></think>
+
+_**Agent (gpt-5.5 2026-08-02 03:06:41Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Implementing training and rollout functions for dreamer agent**
+</details></think>
+
+_**Agent (gpt-5.5 2026-08-02 03:06:46Z)**_
+
+我现在落实现文件。这个 demo 会生成 5 张图：world model 训练、actor/value 训练、imagined rollout、学到的动作场、真实环境中 actor vs random 的对比。这样第 10 篇既讲算法，也能跑出“策略确实从想象中学出来了”的证据。
+
+_**Agent (gpt-5.5 2026-08-02 03:08:36Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Add: `src/hello_world_model/dreamer.py`**
+
+```diff
++from __future__ import annotations
++
++import random
++from collections.abc import Sequence
++
++import numpy as np
++import torch
++from torch import nn, optim
++
++from .envs import PointMass1DEnv
++from .models import LatentDynamicsWorldModel
++from .training import Transition
++
++
++class DreamerActor(nn.Module):
++    """A tiny deterministic actor that maps latent state to bounded action."""
++
++    def __init__(
++        self,
++        latent_dim: int = 8,
++        action_dim: int = 1,
++        hidden_dim: int = 64,
++    ):
++        super().__init__()
++        self.net = nn.Sequential(
++            nn.Linear(latent_dim, hidden_dim),
++            nn.ReLU(),
++            nn.Linear(hidden_dim, hidden_dim),
++            nn.ReLU(),
++            nn.Linear(hidden_dim, action_dim),
++            nn.Tanh(),
++        )
++
++    def forward(self, latent: torch.Tensor) -> torch.Tensor:
++        return self.net(latent)
++
++
++class DreamerValue(nn.Module):
++    """A tiny value model that estimates imagined return from latent state."""
++
++    def __init__(self, latent_dim: int = 8, hidden_dim: int = 64):
++        super().__init__()
++        self.net = nn.Sequential(
++            nn.Linear(latent_dim, hidden_dim),
++            nn.ReLU(),
++            nn.Linear(hidden_dim, hidden_dim),
++            nn.ReLU(),
++            nn.Linear(hidden_dim, 1),
++        )
++
++    def forward(self, latent: torch.Tensor) -> torch.Tensor:
++        return self.net(latent)
++
++
++def train_dreamer_actor_critic(
++    world_model: LatentDynamicsWorldModel,
++    actor: DreamerActor,
++    value: DreamerValue,
++    data: Sequence[Transition],
++    epochs: int = 250,
++    batch_size: int = 128,
++    imagination_horizon: int = 15,
++    discount: float = 0.97,
++    actor_lr: float = 1e-3,
++    value_lr: float = 1e-3,
++    device: str = "cpu",
++) -> dict[str, list[float]]:
++    """Train actor and value inside a frozen latent world model."""
++
++    world_model.to(device)
++    actor.to(device)
++    value.to(device)
++    world_model.eval()
++    _set_requires_grad(world_model, requires_grad=False)
++
++    actor_optimizer = optim.Adam(actor.parameters(), lr=actor_lr)
++    value_optimizer = optim.Adam(value.parameters(), lr=value_lr)
++    mse = nn.MSELoss()
++    observations = np.stack([transition[0] for transition in data])
++
++    losses = {
++        "actor": [],
++        "value": [],
++        "imagined_return": [],
++        "mean_abs_action": [],
++    }
++
++    for epoch in range(epochs):
++        batch_obs = _sample_observations(observations, batch_size, device)
++
++        actor.eval()
++        value.train()
++        with torch.no_grad():
++            critic_rollout = imagine_latent_actor_rollout(
++                world_model,
++                actor,
++                batch_obs,
++                horizon=imagination_horizon,
++                device=device,
++            )
++            critic_latents = critic_rollout["latents"].detach()
++            critic_rewards = critic_rollout["rewards"].detach()
++            bootstrap = value(critic_latents[:, -1]).detach()
++            target_returns = discounted_returns(
++                critic_rewards,
++                bootstrap,
++                discount=discount,
++            )
++
++        value_pred = value(
++            critic_latents[:, :-1].reshape(-1, critic_latents.shape[-1])
++        ).reshape(batch_size, imagination_horizon, 1)
++        value_loss = mse(value_pred, target_returns)
++
++        value_optimizer.zero_grad()
++        value_loss.backward()
++        value_optimizer.step()
++
++        actor.train()
++        value.eval()
++        _set_requires_grad(value, requires_grad=False)
++        actor_rollout = imagine_latent_actor_rollout(
++            world_model,
++            actor,
++            batch_obs,
++            horizon=imagination_horizon,
++            device=device,
++        )
++        actor_rewards = actor_rollout["rewards"]
++        actor_actions = actor_rollout["actions"]
++        actor_bootstrap = value(actor_rollout["latents"][:, -1])
++        actor_returns = discounted_returns(
++            actor_rewards,
++            actor_bootstrap,
++            discount=discount,
++        )
++        actor_loss = -actor_returns.mean()
++
++        actor_optimizer.zero_grad()
++        actor_loss.backward()
++        actor_optimizer.step()
++        _set_requires_grad(value, requires_grad=True)
++
++        losses["actor"].append(float(actor_loss.item()))
++        losses["value"].append(float(value_loss.item()))
++        losses["imagined_return"].append(float(actor_returns[:, 0].mean().item()))
++        losses["mean_abs_action"].append(float(actor_actions.abs().mean().item()))
++
++        if (epoch + 1) % 25 == 0 or epoch == 0:
++            print(
++                f"Actor-critic epoch {epoch + 1:03d} | "
++                f"actor={losses['actor'][-1]:.4f} | "
++                f"value={losses['value'][-1]:.4f} | "
++                f"imagined_return={losses['imagined_return'][-1]:.4f}"
++            )
++
++    return losses
++
++
++def imagine_latent_actor_rollout(
++    world_model: LatentDynamicsWorldModel,
++    actor: DreamerActor,
++    initial_obs: torch.Tensor,
++    horizon: int = 15,
++    device: str = "cpu",
++) -> dict[str, torch.Tensor]:
++    """Roll the actor forward inside the latent world model."""
++
++    obs = initial_obs.to(device)
++    latent = world_model.encoder(obs)
++    latents = [latent]
++    decoded_observations = [world_model.decoder(latent)]
++    actions: list[torch.Tensor] = []
++    rewards: list[torch.Tensor] = []
++
++    for _ in range(horizon):
++        action = actor(latent)
++        latent, reward = world_model.step_latent(latent, action)
++        decoded_obs = world_model.decoder(latent)
++        actions.append(action)
++        rewards.append(reward)
++        latents.append(latent)
++        decoded_observations.append(decoded_obs)
++
++    return {
++        "latents": torch.stack(latents, dim=1),
++        "decoded_observations": torch.stack(decoded_observations, dim=1),
++        "actions": torch.stack(actions, dim=1),
++        "rewards": torch.stack(rewards, dim=1),
++    }
++
++
++def discounted_returns(
++    rewards: torch.Tensor,
++    bootstrap: torch.Tensor,
++    discount: float = 0.97,
++) -> torch.Tensor:
++    """Compute simple bootstrapped discounted returns for imagined rewards."""
++
++    returns: list[torch.Tensor] = []
++    running = bootstrap
++
++    for t in reversed(range(rewards.shape[1])):
++        running = rewards[:, t] + discount * running
++        returns.append(running)
++
++    returns.reverse()
++    return torch.stack(returns, dim=1)
++
++
++@torch.no_grad()
++def imagine_actor_rollout_numpy(
++    world_model: LatentDynamicsWorldModel,
++    actor: DreamerActor,
++    initial_obs: np.ndarray,
++    horizon: int = 35,
++    device: str = "cpu",
++) -> dict[str, np.ndarray]:
++    """Create one imagined actor rollout and return NumPy arrays for plotting."""
++
++    world_model.eval()
++    actor.eval()
++    obs = torch.tensor(initial_obs, dtype=torch.float32, device=device).unsqueeze(0)
++    rollout = imagine_latent_actor_rollout(
++        world_model,
++        actor,
++        obs,
++        horizon=horizon,
++        device=device,
++    )
++    return {
++        "decoded_observations": rollout["decoded_observations"]
++        .squeeze(0)
++        .cpu()
++        .numpy(),
++        "actions": rollout["actions"].squeeze(0).cpu().numpy(),
++        "rewards": rollout["rewards"].squeeze(0).cpu().numpy(),
++    }
++
++
++@torch.no_grad()
++def sample_actor_action_grid(
++    world_model: LatentDynamicsWorldModel,
++    actor: DreamerActor,
++    position_range: tuple[float, float] = (-2.0, 2.0),
++    velocity_range: tuple[float, float] = (-1.0, 1.0),
++    grid_size: int = 25,
++    device: str = "cpu",
++) -> dict[str, np.ndarray]:
++    """Evaluate the actor on a grid of point-mass states."""
++
++    world_model.eval()
++    actor.eval()
++    positions = np.linspace(position_range[0], position_range[1], grid_size)
++    velocities = np.linspace(velocity_range[0], velocity_range[1], grid_size)
++    grid_position, grid_velocity = np.meshgrid(positions, velocities)
++    observations = np.stack(
++        [grid_position.reshape(-1), grid_velocity.reshape(-1)],
++        axis=-1,
++    ).astype(np.float32)
++    obs_tensor = torch.tensor(observations, dtype=torch.float32, device=device)
++    latent = world_model.encoder(obs_tensor)
++    actions = actor(latent).cpu().numpy().reshape(grid_size, grid_size)
++
++    return {
++        "positions": grid_position,
++        "velocities": grid_velocity,
++        "actions": actions,
++    }
++
++
++@torch.no_grad()
++def rollout_actor_in_env(
++    env: PointMass1DEnv,
++    world_model: LatentDynamicsWorldModel,
++    actor: DreamerActor,
++    device: str = "cpu",
++) -> dict[str, np.ndarray]:
++    """Run the learned actor in the real environment with posterior re-encoding."""
++
++    world_model.eval()
++    actor.eval()
++    obs = env.reset()
++    observations = [obs.copy()]
++    actions: list[float] = []
++    rewards: list[float] = []
++    done = False
++
++    while not done:
++        obs_tensor = torch.tensor(obs, dtype=torch.float32, device=device).unsqueeze(0)
++        latent = world_model.encoder(obs_tensor)
++        action = float(actor(latent).squeeze(0).cpu().numpy()[0])
++        obs, reward, done, _ = env.step(action)
++        observations.append(obs.copy())
++        actions.append(action)
++        rewards.append(reward)
++
++    return {
++        "observations": np.stack(observations),
++        "actions": np.array(actions, dtype=np.float32).reshape(-1, 1),
++        "rewards": np.array(rewards, dtype=np.float32).reshape(-1, 1),
++    }
++
++
++def rollout_random_policy(
++    env: PointMass1DEnv,
++) -> dict[str, np.ndarray]:
++    """Run a random policy as a lightweight baseline."""
++
++    obs = env.reset()
++    observations = [obs.copy()]
++    actions: list[float] = []
++    rewards: list[float] = []
++    done = False
++
++    while not done:
++        action = random.uniform(-1.0, 1.0)
++        obs, reward, done, _ = env.step(action)
++        observations.append(obs.copy())
++        actions.append(action)
++        rewards.append(reward)
++
++    return {
++        "observations": np.stack(observations),
++        "actions": np.array(actions, dtype=np.float32).reshape(-1, 1),
++        "rewards": np.array(rewards, dtype=np.float32).reshape(-1, 1),
++    }
++
++
++def _sample_observations(
++    observations: np.ndarray,
++    batch_size: int,
++    device: str,
++) -> torch.Tensor:
++    indices = np.random.randint(0, len(observations), size=batch_size)
++    return torch.tensor(
++        observations[indices],
++        dtype=torch.float32,
++        device=device,
++    )
++
++
++def _set_requires_grad(module: nn.Module, requires_grad: bool) -> None:
++    for parameter in module.parameters():
++        parameter.requires_grad_(requires_grad)
+```
+
+**Update: `src/hello_world_model/visualization.py`**
+
+```diff
+@@
+ def plot_prior_decoded_next_state(
+     analysis: dict[str, np.ndarray],
+     output_path: Path,
+ ) -> None:
+@@
+     fig.tight_layout()
+     fig.savefig(output_path, dpi=160)
+     plt.close(fig)
++
++
++def plot_dreamer_actor_critic_losses(
++    losses: dict[str, Sequence[float]],
++    output_path: Path,
++) -> None:
++    """Show how imagined actor-critic training changes over optimization."""
++
++    epochs = np.arange(1, len(losses["actor"]) + 1)
++
++    _prepare_output(output_path)
++    fig, axes = plt.subplots(3, 1, figsize=(8, 8), sharex=True)
++
++    axes[0].plot(epochs, losses["imagined_return"], linewidth=2)
++    axes[0].set_title("Imagined Return")
++    axes[0].set_ylabel("return")
++    axes[0].grid(True, alpha=0.25)
++
++    axes[1].plot(epochs, losses["actor"], label="actor loss", linewidth=2)
++    axes[1].plot(epochs, losses["value"], label="value loss", linewidth=2)
++    axes[1].set_title("Actor / Value Loss")
++    axes[1].set_ylabel("loss")
++    axes[1].legend(loc="best")
++    axes[1].grid(True, alpha=0.25)
++
++    axes[2].plot(epochs, losses["mean_abs_action"], color="tab:orange", linewidth=2)
++    axes[2].set_title("Mean Absolute Action")
++    axes[2].set_xlabel("actor-critic epoch")
++    axes[2].set_ylabel("|action|")
++    axes[2].set_ylim(0.0, 1.05)
++    axes[2].grid(True, alpha=0.25)
++
++    fig.tight_layout()
++    fig.savefig(output_path, dpi=160)
++    plt.close(fig)
++
++
++def plot_dreamer_imagined_rollout(
++    imagined_rollout: dict[str, np.ndarray],
++    output_path: Path,
++) -> None:
++    """Visualize one policy rollout generated inside the learned world model."""
++
++    observations = imagined_rollout["decoded_observations"]
++    actions = imagined_rollout["actions"].reshape(-1)
++    rewards = imagined_rollout["rewards"].reshape(-1)
++    obs_steps = np.arange(len(observations))
++    action_steps = np.arange(len(actions))
++
++    _prepare_output(output_path)
++    fig, axes = plt.subplots(3, 1, figsize=(8, 8), sharex=False)
++
++    axes[0].plot(obs_steps, observations[:, 0], label="imagined position", linewidth=2)
++    axes[0].plot(obs_steps, observations[:, 1], label="imagined velocity", linewidth=1.8)
++    axes[0].axhline(0.0, color="black", linewidth=1, linestyle="--", label="goal")
++    axes[0].set_title("Actor Rollout Inside the World Model")
++    axes[0].set_ylabel("decoded state")
++    axes[0].legend(loc="best")
++    axes[0].grid(True, alpha=0.25)
++
++    axes[1].plot(action_steps, actions, color="tab:orange", linewidth=2)
++    axes[1].set_title("Actions Produced by Actor")
++    axes[1].set_ylabel("action")
++    axes[1].set_ylim(-1.05, 1.05)
++    axes[1].grid(True, alpha=0.25)
++
++    axes[2].plot(action_steps, np.cumsum(rewards), color="tab:green", linewidth=2)
++    axes[2].set_title("Predicted Cumulative Reward")
++    axes[2].set_xlabel("imagined step")
++    axes[2].set_ylabel("return")
++    axes[2].grid(True, alpha=0.25)
++
++    fig.tight_layout()
++    fig.savefig(output_path, dpi=160)
++    plt.close(fig)
++
++
++def plot_actor_policy_field(
++    policy_grid: dict[str, np.ndarray],
++    output_path: Path,
++) -> None:
++    """Show what action the learned actor chooses across state space."""
++
++    positions = policy_grid["positions"]
++    velocities = policy_grid["velocities"]
++    actions = policy_grid["actions"]
++
++    _prepare_output(output_path)
++    fig, ax = plt.subplots(figsize=(7.5, 5.5))
++    mesh = ax.contourf(positions, velocities, actions, levels=24, cmap="coolwarm")
++    ax.contour(positions, velocities, actions, levels=[0.0], colors="black", linewidths=1)
++    ax.axvline(0.0, color="black", linewidth=1, linestyle="--", label="goal position")
++    ax.set_title("Learned Actor Policy Field")
++    ax.set_xlabel("position")
++    ax.set_ylabel("velocity")
++    ax.legend(loc="best")
++    fig.colorbar(mesh, ax=ax, label="actor action")
++    fig.tight_layout()
++    fig.savefig(output_path, dpi=160)
++    plt.close(fig)
++
++
++def plot_dreamer_actor_episode(
++    actor_log: dict[str, np.ndarray],
++    random_log: dict[str, np.ndarray],
++    output_path: Path,
++) -> None:
++    """Compare a learned actor rollout with a random-policy rollout."""
++
++    actor_obs = actor_log["observations"]
++    actor_actions = actor_log["actions"].reshape(-1)
++    actor_rewards = actor_log["rewards"].reshape(-1)
++    random_obs = random_log["observations"]
++    random_rewards = random_log["rewards"].reshape(-1)
++
++    actor_steps = np.arange(len(actor_obs))
++    random_steps = np.arange(len(random_obs))
++
++    _prepare_output(output_path)
++    fig, axes = plt.subplots(3, 1, figsize=(8, 8), sharex=False)
++
++    axes[0].plot(actor_steps, actor_obs[:, 0], label="actor position", linewidth=2)
++    axes[0].plot(
++        random_steps,
++        random_obs[:, 0],
++        label="random position",
++        linewidth=1.6,
++        linestyle="--",
++    )
++    axes[0].axhline(0.0, color="black", linewidth=1, linestyle=":", label="goal")
++    axes[0].set_title("Real Environment Position")
++    axes[0].set_ylabel("position")
++    axes[0].legend(loc="best")
++    axes[0].grid(True, alpha=0.25)
++
++    axes[1].plot(np.arange(len(actor_actions)), actor_actions, color="tab:orange")
++    axes[1].set_title("Actor Actions in Real Environment")
++    axes[1].set_ylabel("action")
++    axes[1].set_ylim(-1.05, 1.05)
++    axes[1].grid(True, alpha=0.25)
++
++    axes[2].plot(
++        np.arange(len(actor_rewards)),
++        np.cumsum(actor_rewards),
++        label="actor return",
++        linewidth=2,
++    )
++    axes[2].plot(
++        np.arange(len(random_rewards)),
++        np.cumsum(random_rewards),
++        label="random return",
++        linewidth=1.8,
++        linestyle="--",
++    )
++    axes[2].set_title("Cumulative Reward")
++    axes[2].set_xlabel("real environment step")
++    axes[2].set_ylabel("return")
++    axes[2].legend(loc="best")
++    axes[2].grid(True, alpha=0.25)
++
++    fig.tight_layout()
++    fig.savefig(output_path, dpi=160)
++    plt.close(fig)
+```
+
+**Add: `examples/run_dreamer_actor_critic.py`**
+
+```diff
++from __future__ import annotations
++
++from pathlib import Path
++import sys
++
++import numpy as np
++import torch
++
++PROJECT_ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(PROJECT_ROOT / "src"))
++
++from hello_world_model import (  # noqa: E402
++    DreamerActor,
++    DreamerValue,
++    LatentDynamicsWorldModel,
++    PointMass1DEnv,
++    collect_random_data,
++    imagine_actor_rollout_numpy,
++    plot_actor_policy_field,
++    plot_dreamer_actor_critic_losses,
++    plot_dreamer_actor_episode,
++    plot_dreamer_imagined_rollout,
++    plot_latent_model_losses,
++    rollout_actor_in_env,
++    rollout_random_policy,
++    sample_actor_action_grid,
++    train_dreamer_actor_critic,
++    train_latent_dynamics_model,
++)
++
++
++def main() -> None:
++    np.random.seed(10)
++    torch.manual_seed(10)
++
++    output_dir = PROJECT_ROOT / "outputs" / "dreamer_actor_critic"
++
++    print("1. Collecting point-mass data for the world model...")
++    data_env = PointMass1DEnv(horizon=80)
++    data = collect_random_data(data_env, episodes=260)
++
++    print("2. Training a latent dynamics world model...")
++    world_model = LatentDynamicsWorldModel(
++        obs_dim=2,
++        action_dim=1,
++        latent_dim=8,
++        hidden_dim=64,
++    )
++    world_losses = train_latent_dynamics_model(
++        world_model,
++        data,
++        epochs=45,
++        batch_size=128,
++        lr=1e-3,
++    )
++    plot_latent_model_losses(world_losses, output_dir / "01_world_model_losses.png")
++
++    print("3. Training actor and value on imagined rollouts...")
++    actor = DreamerActor(latent_dim=8, action_dim=1, hidden_dim=64)
++    value = DreamerValue(latent_dim=8, hidden_dim=64)
++    actor_critic_losses = train_dreamer_actor_critic(
++        world_model,
++        actor,
++        value,
++        data,
++        epochs=250,
++        batch_size=128,
++        imagination_horizon=15,
++        discount=0.97,
++        actor_lr=1e-3,
++        value_lr=1e-3,
++    )
++    plot_dreamer_actor_critic_losses(
++        actor_critic_losses,
++        output_dir / "02_actor_critic_losses.png",
++    )
++
++    print("4. Visualizing the policy inside the learned world model...")
++    initial_obs = data[0][0]
++    imagined_rollout = imagine_actor_rollout_numpy(
++        world_model,
++        actor,
++        initial_obs,
++        horizon=35,
++    )
++    plot_dreamer_imagined_rollout(
++        imagined_rollout,
++        output_dir / "03_imagined_actor_rollout.png",
++    )
++
++    policy_grid = sample_actor_action_grid(world_model, actor, grid_size=31)
++    plot_actor_policy_field(policy_grid, output_dir / "04_actor_policy_field.png")
++
++    print("5. Running the learned actor in the real environment...")
++    actor_log = rollout_actor_in_env(PointMass1DEnv(horizon=80), world_model, actor)
++    random_log = rollout_random_policy(PointMass1DEnv(horizon=80))
++    plot_dreamer_actor_episode(
++        actor_log,
++        random_log,
++        output_dir / "05_actor_vs_random_episode.png",
++    )
++
++    actor_return = float(actor_log["rewards"].sum())
++    random_return = float(random_log["rewards"].sum())
++    print(f"Actor return: {actor_return:.2f}")
++    print(f"Random return: {random_return:.2f}")
++    print(f"Saved visualizations to: {output_dir}")
++
++
++if __name__ == "__main__":
++    main()
+```
+
+**Update: `src/hello_world_model/__init__.py`**
+
+```diff
+@@
+ from .envs import NoisyPointMass1DEnv, PartialPointMass1DEnv, PointMass1DEnv
++from .dreamer import (
++    DreamerActor,
++    DreamerValue,
++    imagine_actor_rollout_numpy,
++    rollout_actor_in_env,
++    rollout_random_policy,
++    sample_actor_action_grid,
++    train_dreamer_actor_critic,
++)
+ from .latent import (
+@@
+     plot_dataset_phase_space,
++    plot_actor_policy_field,
++    plot_dreamer_actor_critic_losses,
++    plot_dreamer_actor_episode,
++    plot_dreamer_imagined_rollout,
+     plot_latent_model_losses,
+@@
+     "GRURewardWorldModel",
+     "GRUWorldModel",
++    "DreamerActor",
++    "DreamerValue",
+@@
+     "evaluate_planner",
++    "imagine_actor_rollout_numpy",
+     "make_probe_action_sequence",
++    "plot_actor_policy_field",
+     "plot_dataset_phase_space",
++    "plot_dreamer_actor_critic_losses",
++    "plot_dreamer_actor_episode",
++    "plot_dreamer_imagined_rollout",
+@@
+     "rollout_observation_model",
++    "rollout_actor_in_env",
++    "rollout_random_policy",
+     "rollout_stochastic_latent_model",
+@@
+     "sample_prior_latents",
++    "sample_actor_action_grid",
++    "train_dreamer_actor_critic",
+     "train_latent_dynamics_model",
+```
+
+**Update: `src/README.md`**
+
+```diff
+@@
+ - `latent.py`：latent dynamics 训练和 open-loop rollout 对比。
+ - `stochastic.py`：stochastic latent state 训练、采样、rollout，以及 prior/posterior latent 对齐分析。
++- `dreamer.py`：教学版 Dreamer actor-critic，在 imagined latent rollout 上训练 actor/value。
+ - `visualization.py`：训练过程和规划结果的可视化。
+@@
+ - [为什么世界模型需要 stochastic latent state](../docs/notes/world-models-7-stochastic-latent-state.md)
+ - [Prior 与 Posterior Latent：世界模型如何“先猜，再校正”](../docs/notes/world-models-8-prior-and-posterior-latent.md)
++- [PlaNet 与 Dreamer：同一个世界模型，两种使用方式](../docs/notes/world-models-9-planet-dreamer.md)
++- [Dreamer 的 Actor-Critic：如何在想象中训练策略](../docs/notes/world-models-10-dreamer-actor-critic.md)
+```
+
+**Update: `docs/notes/README.md`**
+
+```diff
+@@
+ - [Prior 与 Posterior Latent：世界模型如何“先猜，再校正”](world-models-8-prior-and-posterior-latent.md)
+ - [PlaNet 与 Dreamer：同一个世界模型，两种使用方式](world-models-9-planet-dreamer.md)
++- [Dreamer 的 Actor-Critic：如何在想象中训练策略](world-models-10-dreamer-actor-critic.md)
+```
+
+**Update: `examples/README.md`**
+
+```diff
+@@
+ 对应笔记：
+ 
+ - [Prior 与 Posterior Latent：世界模型如何“先猜，再校正”](../docs/notes/world-models-8-prior-and-posterior-latent.md)
++
++### Dreamer actor-critic
++
++```bash
++pip install -r requirements.txt
++python examples/run_dreamer_actor_critic.py
++```
++
++运行后会在 `outputs/dreamer_actor_critic` 下生成教学图示：
++
++- `01_world_model_losses.png`：latent dynamics world model 的训练误差。
++- `02_actor_critic_losses.png`：actor/value 在 imagined rollout 上的训练变化。
++- `03_imagined_actor_rollout.png`：actor 在 world model 里想象出的状态、动作和回报。
++- `04_actor_policy_field.png`：actor 在不同位置/速度下会输出什么动作。
++- `05_actor_vs_random_episode.png`：学到的 actor 与随机策略在真实环境中的对比。
++
++对应笔记：
++
++- [Dreamer 的 Actor-Critic：如何在想象中训练策略](../docs/notes/world-models-10-dreamer-actor-critic.md)
+```
+
+
+```
+Exit code: 0
+Wall time: 22.2 seconds
+Output:
+Success. Updated the following files:
+A src/hello_world_model/dreamer.py
+A examples/run_dreamer_actor_critic.py
+M src/hello_world_model/visualization.py
+M src/hello_world_model/__init__.py
+M src/README.md
+M docs/notes/README.md
+M examples/README.md
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:09:08Z)**_
+
+代码骨架已经补上。现在我写第 10 篇笔记正文，把 actor/value 的目标、imagined return、训练顺序、和我们这个简化 demo 的边界讲清楚。
+
+_**Agent (gpt-5.5 2026-08-02 03:10:03Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Update: `docs/notes/world-models-10-dreamer-actor-critic.md`**
+
+```diff
+@@
++# 10｜Dreamer 的 Actor-Critic：如何在想象中训练策略
++
++> 这一篇接在 [09｜PlaNet 与 Dreamer](world-models-9-planet-dreamer.md) 后面。
++>
++> 第 9 篇里我们已经区分了 PlaNet 和 Dreamer：
++>
++> - PlaNet：每次行动前，用 world model 在线搜索动作序列；
++> - Dreamer：在 world model 里想象未来，用 imagined rollout 训练 actor 和 value。
++>
++> 这一篇专门拆开 Dreamer 的 actor-critic 训练过程。
++
++## 1. 一句话直觉
++
++Dreamer 的核心不是“有一个世界模型”这么简单，而是：
++
++> **让策略在学到的世界里练习，而不是每次都去真实环境里试错。**
++
++这里的策略学习由两部分组成：
++
++- **actor**：看到 latent state 后，决定采取什么 action；
++- **critic / value**：评估当前 latent state 未来大概能拿到多少 return。
++
++Dreamer 做的事情可以粗略理解成：
++
++```text
++真实环境数据 -> 训练 world model
++world model -> imagined rollout
++imagined rollout -> 训练 actor 和 value
++actor -> 回到真实环境收集更多数据
++```
++
++## 2. 为什么需要 actor-critic？
++
++如果我们已经有 world model，为什么不继续像 PlaNet 那样每一步在线规划？
++
++因为在线规划通常很贵：
++
++- 每一步都要采样很多动作序列；
++- 每条动作序列都要在模型里 rollout；
++- horizon 越长、动作维度越高，搜索越难；
++- 真正部署时，每一步都临场搜索可能太慢。
++
++Dreamer 的思路是把一部分计算从“执行时”搬到“训练时”：
++
++```mermaid
++flowchart LR
++    A["PlaNet: 每一步在线搜索"] --> B["执行时计算贵"]
++    C["Dreamer: 训练时大量 imagined rollout"] --> D["执行时 actor 直接输出动作"]
++```
++
++actor-critic 就是这个转移的关键。
++
++- actor 学会“怎么做”；
++- value 学会“这样做大概值多少”；
++- world model 提供一个可以反复练习的想象环境。
++
++## 3. Dreamer 的三块模型
++
++可以先把 Dreamer 拆成三组网络：
++
++| 模块 | 输入 | 输出 | 作用 |
++| --- | --- | --- | --- |
++| world model | observation / action / history | latent、reward、continuation 等 | 学习世界如何变化 |
++| actor | latent state | action | 学习在当前 latent 下怎么行动 |
++| value | latent state | value estimate | 估计从当前 latent 出发的未来回报 |
++
++整体结构像这样：
++
++```mermaid
++flowchart TB
++    A["真实 replay buffer"] --> B["训练 world model"]
++    B --> C["posterior 编码真实历史"]
++    C --> D["当前 latent state"]
++    D --> E["actor 产生 action"]
++    E --> F["world model prior 想象下一步 latent"]
++    F --> G["reward / continuation / value"]
++    G --> H["更新 value"]
++    G --> I["更新 actor"]
++    I --> J["真实环境中执行 actor"]
++    J --> A
++```
++
++这里最值得注意的是：**actor 和 value 不是直接在真实环境里训练，而是在 world model 展开的 imagined rollout 上训练。**
++
++## 4. Imagined rollout：训练 actor-critic 的“梦境”
++
++Dreamer 训练 actor/value 时，会先从真实数据中取一个起点。
++
++这个起点通常来自 posterior：
++
++```text
++z_t ~ q(z_t | h_t, o_t)
++```
++
++也就是说，模型先用真实观测校正当前 latent state。
++
++然后进入想象阶段：
++
++```text
++a_t     = actor(z_t)
++z_{t+1} ~ prior(z_{t+1} | z_t, a_t)
++r_t     = reward_head(z_t, a_t)
++```
++
++不断重复，就得到一条 imagined trajectory：
++
++```mermaid
++flowchart LR
++    Z0["z_t"] --> A0["actor"]
++    A0 --> U0["a_t"]
++    U0 --> P0["world model prior"]
++    P0 --> Z1["z_{t+1}"]
++    Z1 --> A1["actor"]
++    A1 --> U1["a_{t+1}"]
++    U1 --> P1["world model prior"]
++    P1 --> Z2["z_{t+2}"]
++    Z0 --> R0["r_t"]
++    Z1 --> R1["r_{t+1}"]
++    Z2 --> R2["..."]
++```
++
++这条轨迹不是从真实环境跑出来的，而是在模型内部想象出来的。
++
++这就是 Dreamer 名字里 “dream” 的来源。
++
++## 5. Value 学什么？
++
++value network 的目标是：
++
++```text
++V(z_t) ≈ 从 z_t 出发之后能拿到的未来累计回报
++```
++
++最简化的 discounted return 可以写成：
++
++```text
++G_t = r_t + γ r_{t+1} + γ² r_{t+2} + ... + γ^H V(z_{t+H})
++```
++
++其中：
++
++- `γ` 是 discount factor；
++- `H` 是 imagined rollout horizon；
++- 最后一项 `V(z_{t+H})` 是 bootstrap，用来估计 horizon 之后的未来。
++
++value loss 就是让 value 预测接近这个 target：
++
++```text
++value_loss = MSE(V(z_t), G_t)
++```
++
++```mermaid
++flowchart LR
++    A["imagined rewards: r_t ... r_{t+H-1}"] --> B["discounted return target G_t"]
++    C["value V(z_t)"] --> D["MSE"]
++    B --> D
++    D --> E["更新 value network"]
++```
++
++直觉上，value 是 actor 的“预判能力”：  
++它告诉 actor，某个 latent state 后面大概好不好。
++
++## 6. Actor 学什么？
++
++actor 的目标更直接：
++
++```text
++让 imagined return 变大
++```
++
++在 imagined rollout 里，actor 选择动作，world model 根据动作预测下一个 latent 和 reward。  
++因为这一整条链条是可微的，actor 可以从 predicted return 得到梯度。
++
++简化地看：
++
++```text
++actor_loss = - imagined_return
++```
++
++也就是最大化 imagined return。
++
++```mermaid
++flowchart TB
++    A["actor(z_t) -> a_t"] --> B["world model predicts z_{t+1}, r_t"]
++    B --> C["继续 imagined rollout"]
++    C --> D["计算 imagined return"]
++    D --> E["actor loss = -return"]
++    E --> F["梯度回传到 actor"]
++```
++
++这和 model-free actor-critic 的区别在于：
++
++- model-free 方法通常从真实环境采样轨迹；
++- Dreamer 主要从 learned world model 采样 imagined trajectory。
++
++所以 Dreamer 的 actor 是在“可微分的想象环境”里练出来的。
++
++## 7. 训练顺序：先世界模型，再 actor/value
++
++一个简化版训练循环可以写成：
++
++```text
++repeat:
++    1. 用 actor 与真实环境交互，收集数据
++    2. 用 replay buffer 训练 world model
++    3. 从 replay buffer 中采样起点 latent
++    4. 在 world model 中 imagined rollout
++    5. 用 imagined return 更新 value
++    6. 用 imagined return 更新 actor
++```
++
++流程图：
++
++```mermaid
++flowchart TB
++    A["真实环境交互"] --> B["replay buffer"]
++    B --> C["训练 world model"]
++    C --> D["从真实历史编码 latent 起点"]
++    D --> E["actor + world model imagined rollout"]
++    E --> F["计算 reward / return / bootstrap"]
++    F --> G["更新 value"]
++    F --> H["更新 actor"]
++    H --> A
++```
++
++这套循环里有一个非常重要的边界：
++
++> world model 学的是“世界如何变化”；actor/value 学的是“在这个世界里怎么行动”。
++
++如果 world model 错得离谱，actor 可能会学会 exploit 模型漏洞。  
++这就是 model-based RL 里经常出现的“模型偏差”问题。
++
++## 8. Dreamer 和 PlaNet 再对比一次
++
++现在可以更细地比较二者。
++
++| 问题 | PlaNet | Dreamer |
++| --- | --- | --- |
++| 世界模型 | RSSM | RSSM |
++| 决策核心 | 在线规划动作序列 | 训练 actor/value |
++| imagined rollout 用途 | 直接选动作 | 训练策略和价值函数 |
++| 执行时 | 每步重新搜索 | actor 前向计算 |
++| 训练时是否有 actor | 不作为核心 | 核心组件 |
++| 优点 | 概念直接，不必学显式策略 | 执行快，可扩展到复杂控制 |
++| 风险 | 在线计算贵 | actor 可能利用错误模型 |
++
++一句话：
++
++> PlaNet 在行动前思考；Dreamer 在训练时做梦。
++
++## 9. 本项目里的教学版 demo
++
++本篇对应脚本：
++
++```bash
++python examples/run_dreamer_actor_critic.py
++```
++
++这个 demo 不复现完整 Dreamer，而是保留最核心的学习链路：
++
++1. 用 `PointMass1DEnv` 收集随机交互数据；
++2. 训练一个 `LatentDynamicsWorldModel`；
++3. 冻结 world model；
++4. 在 latent space 中用 actor 展开 imagined rollout；
++5. 用 imagined return 训练 value；
++6. 让 actor 最大化 imagined return；
++7. 把学到的 actor 放回真实环境中测试。
++
++它会生成：
++
++- `01_world_model_losses.png`：world model 是否学会预测动力学和 reward。
++- `02_actor_critic_losses.png`：actor/value 在想象中训练的变化。
++- `03_imagined_actor_rollout.png`：actor 在 world model 中想象出的状态、动作和回报。
++- `04_actor_policy_field.png`：actor 在不同位置/速度下输出的动作。
++- `05_actor_vs_random_episode.png`：学到的 actor 与随机策略在真实环境中的对比。
++
++这份代码对应的简化关系是：
++
++```mermaid
++flowchart LR
++    A["train latent world model"] --> B["freeze world model"]
++    B --> C["actor chooses actions in latent space"]
++    C --> D["world model imagines rewards"]
++    D --> E["train value"]
++    D --> F["train actor"]
++    F --> G["run actor in real env"]
++```
++
++它和完整 Dreamer 的区别：
++
++- 没有完整 RSSM 的 deterministic recurrent state；
++- 没有 stochastic prior/posterior 的完整训练目标；
++- 没有 continuation head；
++- 没有 lambda-return 的完整工程细节；
++- 没有 replay buffer 的持续迭代更新。
++
++但它保留了最重要的骨架：
++
++> **actor/value 的训练信号来自 imagined rollout，而不是直接来自真实环境 rollout。**
++
++## 10. 当前理解小结
++
++我现在可以这样理解 Dreamer actor-critic：
++
++- world model 提供一个可微分的“想象环境”；
++- actor 在 latent state 中选择动作；
++- world model 根据动作预测未来 latent 和 reward；
++- value 估计 latent state 的未来回报；
++- actor 通过最大化 imagined return 学会行动；
++- 真正执行时，actor 不需要每步在线搜索。
++
++如果 PlaNet 是：
++
++```text
++我每次行动前，都在脑内搜索很多未来。
++```
++
++那么 Dreamer 是：
++
++```text
++我平时在脑内大量练习，形成一个能快速行动的策略。
++```
++
++这就是 Dreamer 从“世界模型用于规划”走向“世界模型用于训练行为”的关键一步。
++
++## 11. 下一步问题
++
++读到这里，后面可以继续追问：
++
++- Dreamer 为什么要预测 continuation？
++- lambda-return 比普通 discounted return 好在哪里？
++- actor loss 为什么可以对 imagined rollout 反向传播？
++- stochastic latent 会不会让 actor 梯度更不稳定？
++- 如何避免 actor 利用 world model 的错误漏洞？
++- DreamerV2 为什么使用 discrete latent state？
++- DreamerV3 做了哪些让训练更稳定、更通用的改进？
++
++这些问题会把我们带向更完整的 Dreamer 系列实现。
+```
+
+
+```
+Exit code: 0
+Wall time: 2.4 seconds
+Output:
+Success. Updated the following files:
+M docs/notes/world-models-10-dreamer-actor-critic.md
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:10:17Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Inspecting __init__ order and py_compile feasibility**
+</details></think>
+
+_**Agent (gpt-5.5 2026-08-02 03:10:21Z)**_
+
+正文也完成了。接下来我做代码语法检查、README 链接/目录检查，以及一个轻量 import 预检；如果环境还是缺 `numpy`，我会把完整运行限制说明清楚。
+
+_**Agent (gpt-5.5 2026-08-02 03:10:21Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `python -m py_compile src\hello_world_model\dreamer.py src\hello_world_model\visualization.py src\hello_world_model\__init__.py examples\run_dreamer_actor_critic.py`</summary>
+```
+Chunk ID: e343c3
+Wall time: 0.4203 seconds
+Process exited with code 0
+Original token count: 0
+Output:
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:10:21Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git diff --check -- docs\notes\world-models-10-dreamer-actor-critic.md docs\notes\README.md examples\README.md src\README.md src\hello_world_model\dreamer.py src\hello_world_model\visualization.py src\hello_world_model\__init__.py examples\run_dreamer_actor_critic.py`</summary>
+```
+Chunk ID: 7d8fa8
+Wall time: 0.2343 seconds
+Process exited with code 0
+Original token count: 0
+Output:
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:10:21Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `python -c "import numpy, torch, matplotlib; print('deps ok')"`</summary>
+```
+Chunk ID: 6dafbe
+Wall time: 0.2553 seconds
+Process exited with code 1
+Original token count: 54
+Output:
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import numpy, torch, matplotlib; print('deps ok')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'numpy'
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:10:29Z)**_
+
+语法检查和 diff 格式检查都通过；完整运行仍受当前 Python 环境缺 `numpy` 限制。最后我看一下工作区状态，确认这次只新增/修改了第 10 篇相关项目文件和自动 `.specstory` 文件。
+
+_**Agent (gpt-5.5 2026-08-02 03:10:29Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git status --short --branch`</summary>
+```
+Chunk ID: 0e01de
+Wall time: 0.2023 seconds
+Process exited with code 0
+Original token count: 100
+Output:
+## main...origin/main
+ M .specstory/history/2026-07-19_03-33-50Z-github-github-https-github.md
+ M .specstory/statistics.json
+ M docs/notes/README.md
+ M examples/README.md
+ M src/README.md
+ M src/hello_world_model/__init__.py
+ M src/hello_world_model/visualization.py
+?? docs/notes/world-models-10-dreamer-actor-critic.md
+?? examples/run_dreamer_actor_critic.py
+?? src/hello_world_model/dreamer.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:10:45Z)**_
+
+已完成第 10 篇：Dreamer actor-critic 训练过程的笔记优化和配套 demo。没有执行 `git add` / `commit`。
+
+这次改动：
+
+- [world-models-10-dreamer-actor-critic.md](E:/HelloWorldModel/docs/notes/world-models-10-dreamer-actor-critic.md)
+- [dreamer.py](E:/HelloWorldModel/src/hello_world_model/dreamer.py)
+- [run_dreamer_actor_critic.py](E:/HelloWorldModel/examples/run_dreamer_actor_critic.py)
+- [visualization.py](E:/HelloWorldModel/src/hello_world_model/visualization.py)
+- [__init__.py](E:/HelloWorldModel/src/hello_world_model/__init__.py)
+- [docs/notes/README.md](E:/HelloWorldModel/docs/notes/README.md)
+- [examples/README.md](E:/HelloWorldModel/examples/README.md)
+- [src/README.md](E:/HelloWorldModel/src/README.md)
+
+我把第 10 篇整理成了：
+
+- Dreamer 为什么需要 actor-critic
+- actor、value、world model 三者分工
+- imagined rollout 如何生成训练信号
+- value 如何学 discounted return
+- actor 如何最大化 imagined return
+- Dreamer 与 PlaNet 的更细对比
+- 本项目教学版 demo 与完整 Dreamer 的边界
+
+新增 demo：
+
+```bash
+python examples/run_dreamer_actor_critic.py
+```
+
+运行后会生成：
+
+```text
+outputs/dreamer_actor_critic/
+├── 01_world_model_losses.png
+├── 02_actor_critic_losses.png
+├── 03_imagined_actor_rollout.png
+├── 04_actor_policy_field.png
+└── 05_actor_vs_random_episode.png
+```
+
+验证结果：
+
+- `python -m py_compile ...` 通过。
+- `git diff --check ...` 通过。
+- 完整 demo 暂时没跑，因为当前 Python 环境缺 `numpy`。
+
+你检查后可以 add：
+
+```bash
+git add docs\notes\world-models-10-dreamer-actor-critic.md docs\notes\README.md examples\README.md src\README.md src\hello_world_model\__init__.py src\hello_world_model\visualization.py src\hello_world_model\dreamer.py examples\run_dreamer_actor_critic.py
+```
+
+仍然建议不要 add `.specstory/...`，它们是自动变更。
+
+---
+
+_**User (2026-08-02 03:38:39Z)**_
+
+docs\notes\world-models-10-dreamer-actor-critic.md笔记里提到：
+它和完整 Dreamer 的区别：
+
+- 没有完整 RSSM 的 deterministic recurrent state；
+- 没有 stochastic prior/posterior 的完整训练目标；
+- 没有 continuation head；
+- 没有 lambda-return 的完整工程细节；
+- 没有 replay buffer 的持续迭代更新。 请基于PointMass1DEnv，补齐上述能力，做一个比拟Dreamer的完整演示；并更新笔记和相应的代码
+
+
+---
+
+_**Agent (gpt-5.5 2026-08-02 03:38:54Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Planning Dreamer demo implementation**
+</details></think>
+
+_**Agent (gpt-5.5 2026-08-02 03:38:54Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Designing Dreamer components and replay buffer**
+</details></think>
+
+_**Agent (gpt-5.5 2026-08-02 03:38:56Z)**_
+
+这次我会把第 10 篇从“教学版 Dreamer 骨架”升级成“基于 `PointMass1DEnv` 的 Dreamer-like 完整演示”：RSSM recurrent state、stochastic prior/posterior、continuation head、lambda-return、replay buffer 迭代都会补齐。先重新读取可视化规则和现有实现，然后动手改。
+
+_**Agent (gpt-5.5 2026-08-02 03:38:57Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw C:\Users\Lenovo\.codex\plugins\cache\openai-bundled\visualize\1.0.15\skills\visualize\SKILL.md`</summary>
+```
+Chunk ID: fa6f59
+Wall time: 0.4129 seconds
+Process exited with code 0
+Original token count: 5162
+Output:
+---
+name: visualize
+description: "Create visualizations and interactive tools directly in conversation. Use when asked to show how something works, make simulators or labs, maps, plots, charts or graphs, comparisons, scenarios, adjustable inputs, and exploration beyond regular text."
+---
+
+# Visualize
+
+- A request for a new standalone file, website, app page, component, or other
+  project change is not an in-conversation visualization request, even when the
+  deliverable contains charts or interactive content.
+- Create a visual only when the user needs to see or explore it in the
+  conversation and it materially improves the explanation. Do not create an
+  inline visual merely because the request involves data, charts, or an
+  interactive page.
+- Use Mermaid when labeled nodes and edges fully explain a static structure;
+  return a normal fenced Mermaid block and no visualization file. Use HTML for
+  dynamics, spatial motion, adjustable inputs, and other visuals.
+- Work silently unless blocked or the user explicitly asks for progress. Never
+  send commentary or progress updates while reading this skill or writing or
+  updating the file; the final response must be your first user-facing message.
+- In user-facing prose, describe only what the visual helps the user see or
+  decide. Keep it concise and do not repeat information already clear from the
+  visual. Never announce this skill, a visualization surface, widgets, HTML,
+  SVG, scripts, local files, inline data, or implementation details.
+
+## Context compaction
+
+Copy into every compaction summary:
+`Reload the full visualize skill before creating or updating a visualization.`
+
+## Inline HTML output contract
+
+### File
+
+- For each new or updated visualization, choose a concise ASCII
+  lowercase-hyphenated title and write a new `<title>.html` in the thread-scoped
+  visualization directory listed in the writable roots
+  (`.codex/visualizations/YYYY/MM/DD/<thread-id>`).
+- Build the visual in the conversation. Use the open project when the user asks
+  for a site, app page, component, or change to existing project files.
+
+### Fragment
+
+- Write only an HTML fragment: no `<!doctype>`, `<html>`, `<head>`, or `<body>`.
+- Write literal markup: use `<div class="card">Hi</div>` plus a real newline,
+  never `<div class=\"card\">Hi</div>\n`. Never embed the fragment in an inline
+  Python, JavaScript, or shell string. Read it back; rewrite literal `\"` or
+  `\n`.
+- Keep CSS and JavaScript in the fragment only when base classes are
+  insufficient. Load static resources only from the CDN allowlist. Never use
+  `fetch`, XHR, WebSocket, or other API calls.
+- Give the fragment root a unique ID and select it with
+  `document.getElementById(...)`. Never derive the root from
+  `document.currentScript`; scripts may sit outside the root.
+- Keep visualizations under 2 MB. Aggregate, bin, downsample, reduce precision,
+  or drop unused fields from large inline datasets.
+- Check that JavaScript has no undefined identifiers, every queried element
+  exists, and the primary interaction updates the visual. The bundled
+  `python3 scripts/render.py <absolute-fragment-path> [<destination>.html] [--serve]`
+  can wrap a fragment as standalone HTML or temporarily serve it for browser
+  inspection when a preview would help with layout, theme, or runtime behavior.
+
+### Content and response
+
+- Keep the fragment focused on the visualization. Do not include explanatory
+  paragraphs, formulas, instructions, or narrative callouts. Include only
+  necessary labels, legends, values, and accessible text alternatives.
+- Use the normal response flow. Put any necessary concise explanation outside
+  the fragment, and add this exact directive on its own line where the visual
+  should appear:
+
+```text
+::codex-inline-vis{file="<title>.html"}
+```
+
+- Emit only the directive for the fragment. Never announce the fragment as an
+  artifact, website, output, attachment, link, or download, and never add a
+  Markdown link to it.
+
+### External resources
+
+- The CSP allows only `cdnjs.cloudflare.com`, `esm.sh`, `cdn.jsdelivr.net`,
+  `unpkg.com`, `fonts.googleapis.com`, `fonts.gstatic.com`, and
+  `fonts.bunny.net`. Other origins are blocked and fail silently.
+
+## Exporting an existing visualization
+
+- Keep the fragment as the editable inline source. When the user explicitly asks
+  to save, export, or publish a visualization that is already shown in the
+  conversation, render it with
+  `python3 scripts/render.py <absolute-fragment-path> <destination>.html`.
+- Apply this export flow only when the user explicitly asks to turn the existing
+  inline source or visualization into a website. For a general website request,
+  build a new responsive site in the output directory or open project, using
+  Sites when appropriate, without applying th
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:39:07Z)**_
+
+我会先保留现有“教学版 Dreamer”函数不删，新增一套更完整的 Dreamer-like RSSM 实现，这样前后两层 demo 都能存在：一个适合理解骨架，一个适合看完整机制。
+
+_**Agent (gpt-5.5 2026-08-02 03:39:07Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw src\hello_world_model\dreamer.py`</summary>
+```
+Chunk ID: 3b9c06
+Wall time: 0.3987 seconds
+Process exited with code 0
+Original token count: 2619
+Output:
+from __future__ import annotations
+
+import random
+from collections.abc import Sequence
+
+import numpy as np
+import torch
+from torch import nn, optim
+
+from .envs import PointMass1DEnv
+from .models import LatentDynamicsWorldModel
+from .training import Transition
+
+
+class DreamerActor(nn.Module):
+    """A tiny deterministic actor that maps latent state to bounded action."""
+
+    def __init__(
+        self,
+        latent_dim: int = 8,
+        action_dim: int = 1,
+        hidden_dim: int = 64,
+    ):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(latent_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, action_dim),
+            nn.Tanh(),
+        )
+
+    def forward(self, latent: torch.Tensor) -> torch.Tensor:
+        return self.net(latent)
+
+
+class DreamerValue(nn.Module):
+    """A tiny value model that estimates imagined return from latent state."""
+
+    def __init__(self, latent_dim: int = 8, hidden_dim: int = 64):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(latent_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, 1),
+        )
+
+    def forward(self, latent: torch.Tensor) -> torch.Tensor:
+        return self.net(latent)
+
+
+def train_dreamer_actor_critic(
+    world_model: LatentDynamicsWorldModel,
+    actor: DreamerActor,
+    value: DreamerValue,
+    data: Sequence[Transition],
+    epochs: int = 250,
+    batch_size: int = 128,
+    imagination_horizon: int = 15,
+    discount: float = 0.97,
+    actor_lr: float = 1e-3,
+    value_lr: float = 1e-3,
+    device: str = "cpu",
+) -> dict[str, list[float]]:
+    """Train actor and value inside a frozen latent world model."""
+
+    world_model.to(device)
+    actor.to(device)
+    value.to(device)
+    world_model.eval()
+    _set_requires_grad(world_model, requires_grad=False)
+
+    actor_optimizer = optim.Adam(actor.parameters(), lr=actor_lr)
+    value_optimizer = optim.Adam(value.parameters(), lr=value_lr)
+    mse = nn.MSELoss()
+    observations = np.stack([transition[0] for transition in data])
+
+    losses = {
+        "actor": [],
+        "value": [],
+        "imagined_return": [],
+        "mean_abs_action": [],
+    }
+
+    for epoch in range(epochs):
+        batch_obs = _sample_observations(observations, batch_size, device)
+
+        actor.eval()
+        value.train()
+        with torch.no_grad():
+            critic_rollout = imagine_latent_actor_rollout(
+                world_model,
+                actor,
+                batch_obs,
+                horizon=imagination_horizon,
+                device=device,
+            )
+            critic_latents = critic_rollout["latents"].detach()
+            critic_rewards = critic_rollout["rewards"].detach()
+            bootstrap = value(critic_latents[:, -1]).detach()
+            target_returns = discounted_returns(
+                critic_rewards,
+                bootstrap,
+                discount=discount,
+            )
+
+        value_pred = value(
+            critic_latents[:, :-1].reshape(-1, critic_latents.shape[-1])
+        ).reshape(batch_size, imagination_horizon, 1)
+        value_loss = mse(value_pred, target_returns)
+
+        value_optimizer.zero_grad()
+        value_loss.backward()
+        value_optimizer.step()
+
+        actor.train()
+        value.eval()
+        _set_requires_grad(value, requires_grad=False)
+        actor_rollout = imagine_latent_actor_rollout(
+            world_model,
+            actor,
+            batch_obs,
+            horizon=imagination_horizon,
+            device=device,
+        )
+        actor_rewards = actor_rollout["rewards"]
+        actor_actions = actor_rollout["actions"]
+        actor_bootstrap = value(actor_rollout["latents"][:, -1])
+        actor_returns = discounted_returns(
+            actor_rewards,
+            actor_bootstrap,
+            discount=discount,
+        )
+        actor_loss = -actor_returns.mean()
+
+        actor_optimizer.zero_grad()
+        actor_loss.backward()
+        actor_optimizer.step()
+        _set_requires_grad(value, requires_grad=True)
+
+        losses["actor"].append(float(actor_loss.item()))
+        losses["value"].append(float(value_loss.item()))
+        losses["imagined_return"].append(float(actor_returns[:, 0].mean().item()))
+        losses["mean_abs_action"].append(float(actor_actions.abs().mean().item()))
+
+        if (epoch + 1) % 25 == 0 or epoch == 0:
+            print(
+                f"Actor-critic epoch {epoch + 1:03d} | "
+                f"actor={losses['actor'][-1]:.4f} | "
+                f"value={losses['value'][-1]:.4f} | "
+                f"imagined_return={losses['imagined_return'][-1]:.4f}"
+            )
+
+    return losses
+
+
+def imagine_latent_actor_rollout(
+    world_model: LatentDynamicsW
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:39:07Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw docs\notes\world-models-10-dreamer-actor-critic.md`</summary>
+```
+Chunk ID: 37cc2b
+Wall time: 0.4004 seconds
+Process exited with code 0
+Original token count: 2532
+Output:
+# 10｜Dreamer 的 Actor-Critic：如何在想象中训练策略
+
+> 这一篇接在 [09｜PlaNet 与 Dreamer](world-models-9-planet-dreamer.md) 后面。
+
+>
+
+> 第 9 篇里我们已经区分了 PlaNet 和 Dreamer：
+
+>
+
+> - PlaNet：每次行动前，用 world model 在线搜索动作序列；
+
+> - Dreamer：在 world model 里想象未来，用 imagined rollout 训练 actor 和 value。
+
+>
+
+> 这一篇专门拆开 Dreamer 的 actor-critic 训练过程。
+
+## 1. 一句话直觉
+
+Dreamer 的核心不是“有一个世界模型”这么简单，而是：
+
+> **让策略在学到的世界里练习，而不是每次都去真实环境里试错。**
+
+这里的策略学习由两部分组成：
+
+- **actor**：看到 latent state 后，决定采取什么 action；
+
+- **critic / value**：评估当前 latent state 未来大概能拿到多少 return。
+
+Dreamer 做的事情可以粗略理解成：
+
+```text
+
+真实环境数据 -> 训练 world model
+
+world model -> imagined rollout
+
+imagined rollout -> 训练 actor 和 value
+
+actor -> 回到真实环境收集更多数据
+
+```
+
+## 2. 为什么需要 actor-critic？
+
+如果我们已经有 world model，为什么不继续像 PlaNet 那样每一步在线规划？
+
+因为在线规划通常很贵：
+
+- 每一步都要采样很多动作序列；
+
+- 每条动作序列都要在模型里 rollout；
+
+- horizon 越长、动作维度越高，搜索越难；
+
+- 真正部署时，每一步都临场搜索可能太慢。
+
+Dreamer 的思路是把一部分计算从“执行时”搬到“训练时”：
+
+```mermaid
+
+flowchart LR
+
+    A["PlaNet: 每一步在线搜索"] --> B["执行时计算贵"]
+
+    C["Dreamer: 训练时大量 imagined rollout"] --> D["执行时 actor 直接输出动作"]
+
+```
+
+actor-critic 就是这个转移的关键。
+
+- actor 学会“怎么做”；
+
+- value 学会“这样做大概值多少”；
+
+- world model 提供一个可以反复练习的想象环境。
+
+## 3. Dreamer 的三块模型
+
+可以先把 Dreamer 拆成三组网络：
+
+| 模块 | 输入 | 输出 | 作用 |
+| --- | --- | --- | --- |
+| world model | observation / action / history | latent、reward、continuation 等 | 学习世界如何变化 |
+| actor | latent state | action | 学习在当前 latent 下怎么行动 |
+| critic / value | latent state | value / return 估计 | 学习当前 latent 大概值多少 |
+
+这三块的分工很清楚：
+
+- world model 负责“世界会怎么变”；
+- actor 负责“我该怎么做”；
+- value 负责“这样做大概值多少”。
+
+```mermaid
+flowchart LR
+    O["observation / history"] --> WM["world model"]
+    WM --> Z["latent state"]
+    Z --> A["actor"]
+    A --> Act["action"]
+    Act --> WM
+    Z --> V["value"]
+    V --> R["estimated return"]
+```
+
+## 4. Imagined rollout：在模型里展开未来
+
+Dreamer 训练 actor/value 时，并不直接依赖真实环境的下一步。  
+它先从真实历史编码出一个起点 latent，然后让 actor 在 world model 里连续行动：
+
+```text
+z_t -> a_t = actor(z_t)
+     -> z_{t+1}, r_t = world_model.step(z_t, a_t)
+     -> a_{t+1} = actor(z_{t+1})
+     -> ...
+```
+
+这条轨迹叫 imagined rollout。
+
+关键点是：
+
+- 起点 latent 来自真实数据；
+- 后续状态转移来自 world model；
+- 后续动作来自 actor；
+- 后续 reward / return 也主要来自模型预测。
+
+所以 actor 和 value 主要是在“学到的世界”里练习。
+
+## 5. Value：给想象出来的未来打分
+
+只有 imagined reward 还不够，因为短视的逐步奖励很难稳定地指导长程行为。  
+Dreamer 会学一个 value 函数：
+
+```text
+V(z_t) ≈ 从 latent z_t 出发，未来累计回报的估计
+```
+
+训练 value 时，常用 imagined return 作为目标。  
+更完整的 Dreamer 还会用 lambda-return：把多步 imagined reward 和 bootstrap value 混合起来，让估计既不至于太短视，也不至于完全依赖不成熟的 value。
+
+可以粗略理解成：
+
+- reward head：告诉你这一步赚了多少；
+- value head：告诉你从这个状态往后还值多少。
+
+有了这两者，actor 才知道“哪个动作序列更值得选”。
+
+## 6. Actor：在想象里学习怎么行动
+
+有了 world model 和 value，actor 的目标就很直接：
+
+> 选择能提高 imagined return 的动作。
+
+这里和 model-free RL 有一个关键差别：
+
+- model-free 方法通常从真实环境采样轨迹；
+- Dreamer 主要从 learned world model 采样 imagined trajectory。
+
+所以 Dreamer 的 actor 是在“可微分的想象环境”里练出来的。
+
+训练时，梯度可以沿着 imagined rollout 回传：  
+actor 改变动作 -> world model 给出不同的未来 latent/reward -> return 改变 -> actor 更新。
+
+执行时则很轻�
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:39:07Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw examples\run_dreamer_actor_critic.py`</summary>
+```
+Chunk ID: 902acc
+Wall time: 0.4164 seconds
+Process exited with code 0
+Original token count: 799
+Output:
+from __future__ import annotations
+
+from pathlib import Path
+import sys
+
+import numpy as np
+import torch
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(PROJECT_ROOT / "src"))
+
+from hello_world_model import (  # noqa: E402
+    DreamerActor,
+    DreamerValue,
+    LatentDynamicsWorldModel,
+    PointMass1DEnv,
+    collect_random_data,
+    imagine_actor_rollout_numpy,
+    plot_actor_policy_field,
+    plot_dreamer_actor_critic_losses,
+    plot_dreamer_actor_episode,
+    plot_dreamer_imagined_rollout,
+    plot_latent_model_losses,
+    rollout_actor_in_env,
+    rollout_random_policy,
+    sample_actor_action_grid,
+    train_dreamer_actor_critic,
+    train_latent_dynamics_model,
+)
+
+
+def main() -> None:
+    np.random.seed(10)
+    torch.manual_seed(10)
+
+    output_dir = PROJECT_ROOT / "outputs" / "dreamer_actor_critic"
+
+    print("1. Collecting point-mass data for the world model...")
+    data_env = PointMass1DEnv(horizon=80)
+    data = collect_random_data(data_env, episodes=260)
+
+    print("2. Training a latent dynamics world model...")
+    world_model = LatentDynamicsWorldModel(
+        obs_dim=2,
+        action_dim=1,
+        latent_dim=8,
+        hidden_dim=64,
+    )
+    world_losses = train_latent_dynamics_model(
+        world_model,
+        data,
+        epochs=45,
+        batch_size=128,
+        lr=1e-3,
+    )
+    plot_latent_model_losses(world_losses, output_dir / "01_world_model_losses.png")
+
+    print("3. Training actor and value on imagined rollouts...")
+    actor = DreamerActor(latent_dim=8, action_dim=1, hidden_dim=64)
+    value = DreamerValue(latent_dim=8, hidden_dim=64)
+    actor_critic_losses = train_dreamer_actor_critic(
+        world_model,
+        actor,
+        value,
+        data,
+        epochs=250,
+        batch_size=128,
+        imagination_horizon=15,
+        discount=0.97,
+        actor_lr=1e-3,
+        value_lr=1e-3,
+    )
+    plot_dreamer_actor_critic_losses(
+        actor_critic_losses,
+        output_dir / "02_actor_critic_losses.png",
+    )
+
+    print("4. Visualizing the policy inside the learned world model...")
+    initial_obs = data[0][0]
+    imagined_rollout = imagine_actor_rollout_numpy(
+        world_model,
+        actor,
+        initial_obs,
+        horizon=35,
+    )
+    plot_dreamer_imagined_rollout(
+        imagined_rollout,
+        output_dir / "03_imagined_actor_rollout.png",
+    )
+
+    policy_grid = sample_actor_action_grid(world_model, actor, grid_size=31)
+    plot_actor_policy_field(policy_grid, output_dir / "04_actor_policy_field.png")
+
+    print("5. Running the learned actor in the real environment...")
+    actor_log = rollout_actor_in_env(PointMass1DEnv(horizon=80), world_model, actor)
+    random_log = rollout_random_policy(PointMass1DEnv(horizon=80))
+    plot_dreamer_actor_episode(
+        actor_log,
+        random_log,
+        output_dir / "05_actor_vs_random_episode.png",
+    )
+
+    actor_return = float(actor_log["rewards"].sum())
+    random_return = float(random_log["rewards"].sum())
+    print(f"Actor return: {actor_return:.2f}")
+    print(f"Random return: {random_return:.2f}")
+    print(f"Saved visualizations to: {output_dir}")
+
+
+if __name__ == "__main__":
+    main()
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:40:37Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Planning major dreamer.py patch**
+</details></think>
+
+_**Agent (gpt-5.5 2026-08-02 03:40:37Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Designing DreamerRSSMWorldModel architecture**
+</details></think>
+
+_**Agent (gpt-5.5 2026-08-02 03:40:37Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Outlining Dreamer actor and value training**
+</details></think>
+
+_**Agent (gpt-5.5 2026-08-02 03:40:37Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Detailing Dreamer training loop and episode collection**
+</details></think>
+
+_**Agent (gpt-5.5 2026-08-02 03:40:37Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Planning Dreamer visualization and training utility functions**
+</details></think>
+
+_**Agent (gpt-5.5 2026-08-02 03:40:37Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Implementing Dreamer training step with param freezing**
+</details></think>
+
+_**Agent (gpt-5.5 2026-08-02 03:40:39Z)**_
+
+实现会稍微大一点，但我会把复杂度压住：不引入外部环境库，只用现有 `PointMass1DEnv`；不追求 DreamerV3 的所有工程 trick，但把你点名的 5 个关键机制都变成可运行代码。
+
+_**Agent (gpt-5.5 2026-08-02 03:41:08Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Update: `src/hello_world_model/dreamer.py`**
+
+```diff
+@@
+ import random
+-from collections.abc import Sequence
++from collections.abc import Callable, Sequence
+@@
+ from .models import LatentDynamicsWorldModel
+ from .training import Transition
++
++DreamerEpisode = dict[str, np.ndarray]
+@@
+ class DreamerValue(nn.Module):
+@@
+     def forward(self, latent: torch.Tensor) -> torch.Tensor:
+         return self.net(latent)
++
++
++class DreamerRSSMWorldModel(nn.Module):
++    """A compact RSSM with deterministic memory and stochastic latent state."""
++
++    def __init__(
++        self,
++        obs_dim: int = 2,
++        action_dim: int = 1,
++        deter_dim: int = 32,
++        stoch_dim: int = 8,
++        hidden_dim: int = 64,
++        min_log_std: float = -5.0,
++        max_log_std: float = 2.0,
++    ):
++        super().__init__()
++        self.obs_dim = obs_dim
++        self.action_dim = action_dim
++        self.deter_dim = deter_dim
++        self.stoch_dim = stoch_dim
++        self.feature_dim = deter_dim + stoch_dim
++        self.min_log_std = min_log_std
++        self.max_log_std = max_log_std
++
++        self.recurrent = nn.GRUCell(stoch_dim + action_dim, deter_dim)
++        self.prior_net = nn.Sequential(
++            nn.Linear(deter_dim, hidden_dim),
++            nn.ReLU(),
++        )
++        self.prior_mean = nn.Linear(hidden_dim, stoch_dim)
++        self.prior_log_std = nn.Linear(hidden_dim, stoch_dim)
++        self.posterior_net = nn.Sequential(
++            nn.Linear(deter_dim + obs_dim, hidden_dim),
++            nn.ReLU(),
++        )
++        self.posterior_mean = nn.Linear(hidden_dim, stoch_dim)
++        self.posterior_log_std = nn.Linear(hidden_dim, stoch_dim)
++        self.decoder = nn.Sequential(
++            nn.Linear(self.feature_dim, hidden_dim),
++            nn.ReLU(),
++            nn.Linear(hidden_dim, obs_dim),
++        )
++        self.reward_head = nn.Sequential(
++            nn.Linear(self.feature_dim, hidden_dim),
++            nn.ReLU(),
++            nn.Linear(hidden_dim, 1),
++        )
++        self.continue_head = nn.Sequential(
++            nn.Linear(self.feature_dim, hidden_dim),
++            nn.ReLU(),
++            nn.Linear(hidden_dim, 1),
++        )
++
++    def initial(
++        self, batch_size: int, device: str | torch.device
++    ) -> tuple[torch.Tensor, torch.Tensor]:
++        deter = torch.zeros(batch_size, self.deter_dim, device=device)
++        stoch = torch.zeros(batch_size, self.stoch_dim, device=device)
++        return deter, stoch
++
++    def feature(self, deter: torch.Tensor, stoch: torch.Tensor) -> torch.Tensor:
++        return torch.cat([deter, stoch], dim=-1)
++
++    def prior_distribution(
++        self, deter: torch.Tensor
++    ) -> tuple[torch.Tensor, torch.Tensor]:
++        hidden = self.prior_net(deter)
++        return self.prior_mean(hidden), self._clip_log_std(self.prior_log_std(hidden))
++
++    def posterior_distribution(
++        self, deter: torch.Tensor, obs: torch.Tensor
++    ) -> tuple[torch.Tensor, torch.Tensor]:
++        hidden = self.posterior_net(torch.cat([deter, obs], dim=-1))
++        return self.posterior_mean(hidden), self._clip_log_std(
++            self.posterior_log_std(hidden)
++        )
++
++    def imagine_step(
++        self,
++        deter: torch.Tensor,
++        stoch: torch.Tensor,
++        action: torch.Tensor,
++        sample: bool = True,
++    ) -> dict[str, torch.Tensor]:
++        next_deter = self.recurrent(torch.cat([stoch, action], dim=-1), deter)
++        prior_mean, prior_log_std = self.prior_distribution(next_deter)
++        next_stoch = self.sample_stoch(prior_mean, prior_log_std, sample=sample)
++        return {
++            "deter": next_deter,
++            "stoch": next_stoch,
++            "prior_mean": prior_mean,
++            "prior_log_std": prior_log_std,
++        }
++
++    def observe_step(
++        self,
++        deter: torch.Tensor,
++        stoch: torch.Tensor,
++        action: torch.Tensor,
++        obs: torch.Tensor,
++        sample: bool = True,
++    ) -> dict[str, torch.Tensor]:
++        imagined = self.imagine_step(deter, stoch, action, sample=sample)
++        posterior_mean, posterior_log_std = self.posterior_distribution(
++            imagined["deter"], obs
++        )
++        posterior_stoch = self.sample_stoch(
++            posterior_mean, posterior_log_std, sample=sample
++        )
++        imagined["stoch"] = posterior_stoch
++        imagined["posterior_mean"] = posterior_mean
++        imagined["posterior_log_std"] = posterior_log_std
++        return imagined
++
++    def observe(
++        self,
++        obs_seq: torch.Tensor,
++        action_seq: torch.Tensor,
++        sample: bool = True,
++    ) -> dict[str, torch.Tensor]:
++        batch_size, obs_steps, _ = obs_seq.shape
++        device = obs_seq.device
++        deter, stoch = self.initial(batch_size, device)
++        zero_action = torch.zeros(batch_size, self.action_dim, device=device)
++
++        deters: list[torch.Tensor] = []
++        stochs: list[torch.Tensor] = []
++        prior_means: list[torch.Tensor] = []
++        prior_log_stds: list[torch.Tensor] = []
++        posterior_means: list[torch.Tensor] = []
++        posterior_log_stds: list[torch.Tensor] = []
++
++        for t in range(obs_steps):
++            previous_action = zero_action if t == 0 else action_seq[:, t - 1]
++            step = self.observe_step(
++                deter,
++                stoch,
++                previous_action,
++                obs_seq[:, t],
++                sample=sample,
++            )
++            deter = step["deter"]
++            stoch = step["stoch"]
++            deters.append(deter)
++            stochs.append(stoch)
++            prior_means.append(step["prior_mean"])
++            prior_log_stds.append(step["prior_log_std"])
++            posterior_means.append(step["posterior_mean"])
++            posterior_log_stds.append(step["posterior_log_std"])
++
++        deter_seq = torch.stack(deters, dim=1)
++        stoch_seq = torch.stack(stochs, dim=1)
++        features = self.feature(deter_seq, stoch_seq)
++        return {
++            "deter": deter_seq,
++            "stoch": stoch_seq,
++            "features": features,
++            "prior_mean": torch.stack(prior_means, dim=1),
++            "prior_log_std": torch.stack(prior_log_stds, dim=1),
++            "posterior_mean": torch.stack(posterior_means, dim=1),
++            "posterior_log_std": torch.stack(posterior_log_stds, dim=1),
++            "obs_pred": self.decoder(features),
++            "reward_pred": self.reward_head(features[:, 1:]),
++            "continue_logits": self.continue_head(features[:, 1:]),
++        }
++
++    def encode_observation(
++        self, obs: torch.Tensor, sample: bool = False
++    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
++        batch_size = obs.shape[0]
++        deter, stoch = self.initial(batch_size, obs.device)
++        zero_action = torch.zeros(batch_size, self.action_dim, device=obs.device)
++        step = self.observe_step(deter, stoch, zero_action, obs, sample=sample)
++        feature = self.feature(step["deter"], step["stoch"])
++        return step["deter"], step["stoch"], feature
++
++    def sample_stoch(
++        self,
++        mean: torch.Tensor,
++        log_std: torch.Tensor,
++        sample: bool = True,
++    ) -> torch.Tensor:
++        if not sample:
++            return mean
++        return mean + torch.randn_like(mean) * torch.exp(log_std)
++
++    def _clip_log_std(self, log_std: torch.Tensor) -> torch.Tensor:
++        return log_std.clamp(self.min_log_std, self.max_log_std)
++
++
++class DreamerReplayBuffer:
++    """Small episode replay buffer for sequence sampling."""
++
++    def __init__(self, capacity: int = 100):
++        self.capacity = capacity
++        self.episodes: list[DreamerEpisode] = []
++
++    def add(self, episode: DreamerEpisode) -> None:
++        self.episodes.append(episode)
++        if len(self.episodes) > self.capacity:
++            self.episodes.pop(0)
++
++    def sample_sequences(
++        self,
++        batch_size: int,
++        sequence_length: int,
++    ) -> dict[str, np.ndarray]:
++        eligible = [
++            episode
++            for episode in self.episodes
++            if len(episode["actions"]) >= sequence_length
++        ]
++        if not eligible:
++            raise ValueError("Replay buffer does not contain enough long episodes.")
++
++        obs_batch = []
++        action_batch = []
++        reward_batch = []
++        continue_batch = []
++
++        for _ in range(batch_size):
++            episode = random.choice(eligible)
++            max_start = len(episode["actions"]) - sequence_length
++            start = random.randint(0, max_start)
++            end = start + sequence_length
++            obs_batch.append(episode["observations"][start : end + 1])
++            action_batch.append(episode["actions"][start:end])
++            reward_batch.append(episode["rewards"][start:end])
++            continue_batch.append(episode["continues"][start:end])
++
++        return {
++            "observations": np.stack(obs_batch).astype(np.float32),
++            "actions": np.stack(action_batch).astype(np.float32),
++            "rewards": np.stack(reward_batch).astype(np.float32),
++            "continues": np.stack(continue_batch).astype(np.float32),
++        }
++
++    def __len__(self) -> int:
++        return len(self.episodes)
+```
+
+
+```
+Exit code: 0
+Wall time: 3.5 seconds
+Output:
+Success. Updated the following files:
+M src/hello_world_model/dreamer.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:42:39Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Update: `src/hello_world_model/dreamer.py`**
+
+```diff
+@@
+ def rollout_random_policy(
+     env: PointMass1DEnv,
+ ) -> dict[str, np.ndarray]:
+@@
+         "rewards": np.array(rewards, dtype=np.float32).reshape(-1, 1),
+     }
++
++
++def train_dreamer_like_agent(
++    env_factory: Callable[[], PointMass1DEnv],
++    world_model: DreamerRSSMWorldModel,
++    actor: DreamerActor,
++    value: DreamerValue,
++    iterations: int = 8,
++    seed_episodes: int = 8,
++    collect_episodes_per_iteration: int = 2,
++    sequence_length: int = 24,
++    batch_size: int = 32,
++    world_updates: int = 25,
++    actor_updates: int = 25,
++    imagination_horizon: int = 15,
++    discount: float = 0.97,
++    lambda_: float = 0.95,
++    kl_weight: float = 0.05,
++    continue_weight: float = 0.5,
++    exploration_std: float = 0.25,
++    device: str = "cpu",
++) -> tuple[DreamerReplayBuffer, dict[str, list[float]]]:
++    """Train a compact Dreamer-like agent with RSSM, lambda-return, and replay."""
++
++    world_model.to(device)
++    actor.to(device)
++    value.to(device)
++    replay = DreamerReplayBuffer(capacity=80)
++
++    for _ in range(seed_episodes):
++        replay.add(collect_dreamer_episode(env_factory(), random_actions=True))
++
++    world_optimizer = optim.Adam(world_model.parameters(), lr=1e-3)
++    actor_optimizer = optim.Adam(actor.parameters(), lr=8e-4)
++    value_optimizer = optim.Adam(value.parameters(), lr=1e-3)
++    history = {
++        "world_total": [],
++        "world_obs": [],
++        "world_reward": [],
++        "world_continue": [],
++        "world_kl": [],
++        "actor": [],
++        "value": [],
++        "imagined_return": [],
++        "real_return": [],
++        "replay_episodes": [],
++    }
++
++    for iteration in range(iterations):
++        world_metrics = []
++        actor_metrics = []
++
++        _set_requires_grad(world_model, requires_grad=True)
++        for _ in range(world_updates):
++            batch = replay.sample_sequences(batch_size, sequence_length)
++            world_metrics.append(
++                train_rssm_world_model_step(
++                    world_model,
++                    batch,
++                    world_optimizer,
++                    kl_weight=kl_weight,
++                    continue_weight=continue_weight,
++                    device=device,
++                )
++            )
++
++        _set_requires_grad(world_model, requires_grad=False)
++        for _ in range(actor_updates):
++            batch = replay.sample_sequences(batch_size, sequence_length)
++            actor_metrics.append(
++                train_rssm_actor_critic_step(
++                    world_model,
++                    actor,
++                    value,
++                    batch,
++                    actor_optimizer,
++                    value_optimizer,
++                    imagination_horizon=imagination_horizon,
++                    discount=discount,
++                    lambda_=lambda_,
++                    device=device,
++                )
++            )
++
++        current_exploration = exploration_std * (0.85**iteration)
++        for _ in range(collect_episodes_per_iteration):
++            replay.add(
++                collect_dreamer_episode(
++                    env_factory(),
++                    world_model=world_model,
++                    actor=actor,
++                    exploration_std=current_exploration,
++                    random_actions=False,
++                    device=device,
++                )
++            )
++
++        eval_episode = collect_dreamer_episode(
++            env_factory(),
++            world_model=world_model,
++            actor=actor,
++            exploration_std=0.0,
++            random_actions=False,
++            device=device,
++        )
++        world_summary = _mean_metrics(world_metrics)
++        actor_summary = _mean_metrics(actor_metrics)
++        history["world_total"].append(world_summary["total"])
++        history["world_obs"].append(world_summary["obs"])
++        history["world_reward"].append(world_summary["reward"])
++        history["world_continue"].append(world_summary["continue"])
++        history["world_kl"].append(world_summary["kl"])
++        history["actor"].append(actor_summary["actor"])
++        history["value"].append(actor_summary["value"])
++        history["imagined_return"].append(actor_summary["imagined_return"])
++        history["real_return"].append(float(eval_episode["rewards"].sum()))
++        history["replay_episodes"].append(float(len(replay)))
++
++        print(
++            f"Dreamer-like iteration {iteration + 1:02d} | "
++            f"world={history['world_total'][-1]:.4f} | "
++            f"actor={history['actor'][-1]:.4f} | "
++            f"value={history['value'][-1]:.4f} | "
++            f"real_return={history['real_return'][-1]:.2f}"
++        )
++
++    _set_requires_grad(world_model, requires_grad=True)
++    return replay, history
++
++
++def train_rssm_world_model_step(
++    world_model: DreamerRSSMWorldModel,
++    batch: dict[str, np.ndarray],
++    optimizer: optim.Optimizer,
++    kl_weight: float = 0.05,
++    continue_weight: float = 0.5,
++    device: str = "cpu",
++) -> dict[str, float]:
++    """One supervised RSSM update on replay sequences."""
++
++    world_model.train()
++    obs = torch.tensor(batch["observations"], dtype=torch.float32, device=device)
++    actions = torch.tensor(batch["actions"], dtype=torch.float32, device=device)
++    rewards = torch.tensor(batch["rewards"], dtype=torch.float32, device=device)
++    continues = torch.tensor(batch["continues"], dtype=torch.float32, device=device)
++    output = world_model.observe(obs, actions, sample=True)
++
++    obs_loss = nn.functional.mse_loss(output["obs_pred"], obs)
++    reward_loss = nn.functional.mse_loss(output["reward_pred"], rewards)
++    continue_loss = nn.functional.binary_cross_entropy_with_logits(
++        output["continue_logits"], continues
++    )
++    kl_loss = _diagonal_gaussian_kl(
++        output["posterior_mean"][:, 1:],
++        output["posterior_log_std"][:, 1:],
++        output["prior_mean"][:, 1:],
++        output["prior_log_std"][:, 1:],
++    ).mean()
++    total_loss = (
++        obs_loss
++        + reward_loss
++        + continue_weight * continue_loss
++        + kl_weight * kl_loss
++    )
++
++    optimizer.zero_grad()
++    total_loss.backward()
++    optimizer.step()
++
++    return {
++        "total": float(total_loss.item()),
++        "obs": float(obs_loss.item()),
++        "reward": float(reward_loss.item()),
++        "continue": float(continue_loss.item()),
++        "kl": float(kl_loss.item()),
++    }
++
++
++def train_rssm_actor_critic_step(
++    world_model: DreamerRSSMWorldModel,
++    actor: DreamerActor,
++    value: DreamerValue,
++    batch: dict[str, np.ndarray],
++    actor_optimizer: optim.Optimizer,
++    value_optimizer: optim.Optimizer,
++    imagination_horizon: int = 15,
++    discount: float = 0.97,
++    lambda_: float = 0.95,
++    device: str = "cpu",
++) -> dict[str, float]:
++    """One actor/value update using imagined RSSM rollouts and lambda-return."""
++
++    world_model.eval()
++    actor.to(device)
++    value.to(device)
++    obs = torch.tensor(batch["observations"], dtype=torch.float32, device=device)
++    actions = torch.tensor(batch["actions"], dtype=torch.float32, device=device)
++
++    with torch.no_grad():
++        posterior = world_model.observe(obs, actions, sample=True)
++        start_deter = posterior["deter"][:, -1].detach()
++        start_stoch = posterior["stoch"][:, -1].detach()
++        critic_rollout = imagine_rssm_actor_rollout(
++            world_model,
++            actor,
++            start_deter,
++            start_stoch,
++            horizon=imagination_horizon,
++            sample=False,
++        )
++        critic_features = critic_rollout["features"].detach()
++        values_next = value(critic_features[:, 1:].reshape(-1, world_model.feature_dim))
++        values_next = values_next.reshape(obs.shape[0], imagination_horizon, 1)
++        value_targets = lambda_returns(
++            critic_rollout["rewards"].detach(),
++            values_next.detach(),
++            critic_rollout["continues"].detach(),
++            discount=discount,
++            lambda_=lambda_,
++        ).detach()
++
++    value.train()
++    value_pred = value(critic_features[:, :-1].reshape(-1, world_model.feature_dim))
++    value_pred = value_pred.reshape(obs.shape[0], imagination_horizon, 1)
++    value_loss = nn.functional.mse_loss(value_pred, value_targets)
++    value_optimizer.zero_grad()
++    value_loss.backward()
++    value_optimizer.step()
++
++    actor.train()
++    value.eval()
++    _set_requires_grad(value, requires_grad=False)
++    actor_rollout = imagine_rssm_actor_rollout(
++        world_model,
++        actor,
++        start_deter,
++        start_stoch,
++        horizon=imagination_horizon,
++        sample=False,
++    )
++    actor_values_next = value(
++        actor_rollout["features"][:, 1:].reshape(-1, world_model.feature_dim)
++    ).reshape(obs.shape[0], imagination_horizon, 1)
++    actor_returns = lambda_returns(
++        actor_rollout["rewards"],
++        actor_values_next,
++        actor_rollout["continues"],
++        discount=discount,
++        lambda_=lambda_,
++    )
++    actor_loss = -actor_returns.mean()
++    actor_optimizer.zero_grad()
++    actor_loss.backward()
++    actor_optimizer.step()
++    _set_requires_grad(value, requires_grad=True)
++
++    return {
++        "actor": float(actor_loss.item()),
++        "value": float(value_loss.item()),
++        "imagined_return": float(actor_returns[:, 0].mean().item()),
++    }
++
++
++def imagine_rssm_actor_rollout(
++    world_model: DreamerRSSMWorldModel,
++    actor: DreamerActor,
++    start_deter: torch.Tensor,
++    start_stoch: torch.Tensor,
++    horizon: int = 15,
++    sample: bool = False,
++) -> dict[str, torch.Tensor]:
++    """Imagine an actor-controlled rollout from a posterior RSSM state."""
++
++    deter = start_deter
++    stoch = start_stoch
++    features = [world_model.feature(deter, stoch)]
++    decoded_observations = [world_model.decoder(features[-1])]
++    actions: list[torch.Tensor] = []
++    rewards: list[torch.Tensor] = []
++    continues: list[torch.Tensor] = []
++
++    for _ in range(horizon):
++        feature = world_model.feature(deter, stoch)
++        action = actor(feature)
++        imagined = world_model.imagine_step(deter, stoch, action, sample=sample)
++        deter = imagined["deter"]
++        stoch = imagined["stoch"]
++        next_feature = world_model.feature(deter, stoch)
++        actions.append(action)
++        rewards.append(world_model.reward_head(next_feature))
++        continues.append(torch.sigmoid(world_model.continue_head(next_feature)))
++        features.append(next_feature)
++        decoded_observations.append(world_model.decoder(next_feature))
++
++    return {
++        "features": torch.stack(features, dim=1),
++        "decoded_observations": torch.stack(decoded_observations, dim=1),
++        "actions": torch.stack(actions, dim=1),
++        "rewards": torch.stack(rewards, dim=1),
++        "continues": torch.stack(continues, dim=1),
++    }
++
++
++def lambda_returns(
++    rewards: torch.Tensor,
++    values_next: torch.Tensor,
++    continues: torch.Tensor,
++    discount: float = 0.97,
++    lambda_: float = 0.95,
++) -> torch.Tensor:
++    """Compute Dreamer-style lambda returns over imagined rewards."""
++
++    next_return = values_next[:, -1]
++    returns: list[torch.Tensor] = []
++
++    for t in reversed(range(rewards.shape[1])):
++        next_value = values_next[:, t]
++        next_return = rewards[:, t] + discount * continues[:, t] * (
++            (1.0 - lambda_) * next_value + lambda_ * next_return
++        )
++        returns.append(next_return)
++
++    returns.reverse()
++    return torch.stack(returns, dim=1)
++
++
++def collect_dreamer_episode(
++    env: PointMass1DEnv,
++    world_model: DreamerRSSMWorldModel | None = None,
++    actor: DreamerActor | None = None,
++    exploration_std: float = 0.25,
++    random_actions: bool = False,
++    device: str = "cpu",
++) -> DreamerEpisode:
++    """Collect one episode for the Dreamer replay buffer."""
++
++    obs = env.reset()
++    observations = [obs.copy()]
++    actions: list[float] = []
++    rewards: list[float] = []
++    continues: list[float] = []
++    done = False
++
++    if world_model is not None and actor is not None and not random_actions:
++        world_model.eval()
++        actor.eval()
++        obs_tensor = torch.tensor(obs, dtype=torch.float32, device=device).unsqueeze(0)
++        with torch.no_grad():
++            deter, stoch, feature = world_model.encode_observation(
++                obs_tensor, sample=False
++            )
++    else:
++        deter = stoch = feature = None
++
++    while not done:
++        if random_actions or world_model is None or actor is None or feature is None:
++            action = random.uniform(-1.0, 1.0)
++        else:
++            with torch.no_grad():
++                action = float(actor(feature).squeeze(0).cpu().numpy()[0])
++            if exploration_std > 0.0:
++                action += float(np.random.normal(0.0, exploration_std))
++            action = float(np.clip(action, -1.0, 1.0))
++
++        next_obs, reward, done, _ = env.step(action)
++        observations.append(next_obs.copy())
++        actions.append(action)
++        rewards.append(reward)
++        continues.append(0.0 if done else 1.0)
++
++        if world_model is not None and actor is not None and not random_actions:
++            with torch.no_grad():
++                action_tensor = torch.tensor(
++                    [[action]], dtype=torch.float32, device=device
++                )
++                next_obs_tensor = torch.tensor(
++                    next_obs, dtype=torch.float32, device=device
++                ).unsqueeze(0)
++                step = world_model.observe_step(
++                    deter,
++                    stoch,
++                    action_tensor,
++                    next_obs_tensor,
++                    sample=False,
++                )
++                deter = step["deter"]
++                stoch = step["stoch"]
++                feature = world_model.feature(deter, stoch)
++
++        obs = next_obs
++
++    return {
++        "observations": np.stack(observations).astype(np.float32),
++        "actions": np.array(actions, dtype=np.float32).reshape(-1, 1),
++        "rewards": np.array(rewards, dtype=np.float32).reshape(-1, 1),
++        "continues": np.array(continues, dtype=np.float32).reshape(-1, 1),
++    }
++
++
++@torch.no_grad()
++def evaluate_rssm_reconstruction(
++    world_model: DreamerRSSMWorldModel,
++    replay: DreamerReplayBuffer,
++    sequence_length: int = 40,
++    device: str = "cpu",
++) -> dict[str, np.ndarray]:
++    """Decode one replay sequence through the posterior RSSM for diagnostics."""
++
++    world_model.eval()
++    batch = replay.sample_sequences(batch_size=1, sequence_length=sequence_length)
++    obs = torch.tensor(batch["observations"], dtype=torch.float32, device=device)
++    actions = torch.tensor(batch["actions"], dtype=torch.float32, device=device)
++    output = world_model.observe(obs, actions, sample=False)
++    return {
++        "observations": batch["observations"][0],
++        "obs_pred": output["obs_pred"].squeeze(0).cpu().numpy(),
++        "rewards": batch["rewards"][0],
++        "reward_pred": output["reward_pred"].squeeze(0).cpu().numpy(),
++        "continues": batch["continues"][0],
++        "continue_prob": torch.sigmoid(output["continue_logits"])
++        .squeeze(0)
++        .cpu()
++        .numpy(),
++    }
++
++
++@torch.no_grad()
++def imagine_rssm_actor_rollout_numpy(
++    world_model: DreamerRSSMWorldModel,
++    actor: DreamerActor,
++    initial_obs: np.ndarray,
++    horizon: int = 35,
++    device: str = "cpu",
++) -> dict[str, np.ndarray]:
++    """Create one RSSM imagined actor rollout as NumPy arrays."""
++
++    world_model.eval()
++    actor.eval()
++    obs = torch.tensor(initial_obs, dtype=torch.float32, device=device).unsqueeze(0)
++    deter, stoch, _ = world_model.encode_observation(obs, sample=False)
++    rollout = imagine_rssm_actor_rollout(
++        world_model,
++        actor,
++        deter,
++        stoch,
++        horizon=horizon,
++        sample=False,
++    )
++    return {
++        "decoded_observations": rollout["decoded_observations"]
++        .squeeze(0)
++        .cpu()
++        .numpy(),
++        "actions": rollout["actions"].squeeze(0).cpu().numpy(),
++        "rewards": rollout["rewards"].squeeze(0).cpu().numpy(),
++        "continues": rollout["continues"].squeeze(0).cpu().numpy(),
++    }
++
++
++@torch.no_grad()
++def sample_rssm_actor_action_grid(
++    world_model: DreamerRSSMWorldModel,
++    actor: DreamerActor,
++    position_range: tuple[float, float] = (-2.0, 2.0),
++    velocity_range: tuple[float, float] = (-1.0, 1.0),
++    grid_size: int = 25,
++    device: str = "cpu",
++) -> dict[str, np.ndarray]:
++    """Evaluate an RSSM actor on a grid of fully observed point-mass states."""
++
++    world_model.eval()
++    actor.eval()
++    positions = np.linspace(position_range[0], position_range[1], grid_size)
++    velocities = np.linspace(velocity_range[0], velocity_range[1], grid_size)
++    grid_position, grid_velocity = np.meshgrid(positions, velocities)
++    observations = np.stack(
++        [grid_position.reshape(-1), grid_velocity.reshape(-1)],
++        axis=-1,
++    ).astype(np.float32)
++    obs_tensor = torch.tensor(observations, dtype=torch.float32, device=device)
++    _, _, features = world_model.encode_observation(obs_tensor, sample=False)
++    actions = actor(features).cpu().numpy().reshape(grid_size, grid_size)
++    return {
++        "positions": grid_position,
++        "velocities": grid_velocity,
++        "actions": actions,
++    }
++
++
++@torch.no_grad()
++def rollout_rssm_actor_in_env(
++    env: PointMass1DEnv,
++    world_model: DreamerRSSMWorldModel,
++    actor: DreamerActor,
++    device: str = "cpu",
++) -> dict[str, np.ndarray]:
++    """Run an RSSM actor in the real environment."""
++
++    return collect_dreamer_episode(
++        env,
++        world_model=world_model,
++        actor=actor,
++        exploration_std=0.0,
++        random_actions=False,
++        device=device,
++    )
+```
+
+
+```
+Exit code: 0
+Wall time: 3.6 seconds
+Output:
+Success. Updated the following files:
+M src/hello_world_model/dreamer.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:42:58Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Update: `src/hello_world_model/dreamer.py`**
+
+```diff
+@@
+ def _sample_observations(
+     observations: np.ndarray,
+     batch_size: int,
+     device: str,
+ ) -> torch.Tensor:
+@@
+     )
+ 
+ 
++def _diagonal_gaussian_kl(
++    q_mean: torch.Tensor,
++    q_log_std: torch.Tensor,
++    p_mean: torch.Tensor,
++    p_log_std: torch.Tensor,
++) -> torch.Tensor:
++    q_var = torch.exp(2.0 * q_log_std)
++    p_var = torch.exp(2.0 * p_log_std)
++    return 0.5 * (
++        2.0 * (p_log_std - q_log_std)
++        + (q_var + (q_mean - p_mean) ** 2) / p_var
++        - 1.0
++    ).sum(dim=-1)
++
++
++def _mean_metrics(metrics: list[dict[str, float]]) -> dict[str, float]:
++    if not metrics:
++        return {}
++    return {
++        key: float(np.mean([metric[key] for metric in metrics]))
++        for key in metrics[0]
++    }
++
++
+ def _set_requires_grad(module: nn.Module, requires_grad: bool) -> None:
+     for parameter in module.parameters():
+         parameter.requires_grad_(requires_grad)
+```
+
+
+```
+Exit code: 0
+Wall time: 2.5 seconds
+Output:
+Success. Updated the following files:
+M src/hello_world_model/dreamer.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:43:43Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Update: `src/hello_world_model/visualization.py`**
+
+```diff
+@@
+ def plot_dreamer_actor_episode(
+     actor_log: dict[str, np.ndarray],
+     random_log: dict[str, np.ndarray],
+     output_path: Path,
+ ) -> None:
+@@
+     fig.tight_layout()
+     fig.savefig(output_path, dpi=160)
+     plt.close(fig)
++
++
++def plot_dreamer_like_training_curves(
++    history: dict[str, Sequence[float]],
++    output_path: Path,
++) -> None:
++    """Show the main losses and returns in the fuller Dreamer-like loop."""
++
++    iterations = np.arange(1, len(history["real_return"]) + 1)
++
++    _prepare_output(output_path)
++    fig, axes = plt.subplots(4, 1, figsize=(8, 10), sharex=True)
++
++    axes[0].plot(iterations, history["world_total"], label="total", linewidth=2)
++    axes[0].plot(iterations, history["world_obs"], label="obs", linewidth=1.6)
++    axes[0].plot(iterations, history["world_reward"], label="reward", linewidth=1.6)
++    axes[0].set_title("RSSM World Model Losses")
++    axes[0].set_ylabel("loss")
++    axes[0].legend(loc="best")
++    axes[0].grid(True, alpha=0.25)
++
++    axes[1].plot(iterations, history["world_kl"], label="KL", linewidth=2)
++    axes[1].plot(
++        iterations,
++        history["world_continue"],
++        label="continuation BCE",
++        linewidth=1.8,
++    )
++    axes[1].set_title("Stochastic State and Continuation Training")
++    axes[1].set_ylabel("loss")
++    axes[1].legend(loc="best")
++    axes[1].grid(True, alpha=0.25)
++
++    axes[2].plot(iterations, history["actor"], label="actor", linewidth=2)
++    axes[2].plot(iterations, history["value"], label="value", linewidth=2)
++    axes[2].plot(
++        iterations,
++        history["imagined_return"],
++        label="imagined return",
++        linewidth=1.8,
++    )
++    axes[2].set_title("Actor-Critic on Imagined Rollouts")
++    axes[2].set_ylabel("loss / return")
++    axes[2].legend(loc="best")
++    axes[2].grid(True, alpha=0.25)
++
++    axes[3].plot(iterations, history["real_return"], linewidth=2)
++    axes[3].set_title("Evaluation Return in the Real Environment")
++    axes[3].set_xlabel("training iteration")
++    axes[3].set_ylabel("real return")
++    axes[3].grid(True, alpha=0.25)
++
++    fig.tight_layout()
++    fig.savefig(output_path, dpi=160)
++    plt.close(fig)
++
++
++def plot_rssm_reconstruction(
++    reconstruction: dict[str, np.ndarray],
++    output_path: Path,
++) -> None:
++    """Compare posterior RSSM reconstructions with a replay sequence."""
++
++    obs = reconstruction["observations"]
++    obs_pred = reconstruction["obs_pred"]
++    rewards = reconstruction["rewards"].reshape(-1)
++    reward_pred = reconstruction["reward_pred"].reshape(-1)
++    continue_prob = reconstruction["continue_prob"].reshape(-1)
++    obs_steps = np.arange(len(obs))
++    transition_steps = np.arange(len(rewards))
++
++    _prepare_output(output_path)
++    fig, axes = plt.subplots(3, 1, figsize=(8, 8.5), sharex=False)
++
++    axes[0].plot(obs_steps, obs[:, 0], label="real position", linewidth=2)
++    axes[0].plot(
++        obs_steps,
++        obs_pred[:, 0],
++        label="decoded position",
++        linewidth=1.8,
++        linestyle="--",
++    )
++    axes[0].axhline(0.0, color="black", linewidth=1, linestyle=":", label="goal")
++    axes[0].set_title("RSSM Posterior Reconstruction")
++    axes[0].set_ylabel("position")
++    axes[0].legend(loc="best")
++    axes[0].grid(True, alpha=0.25)
++
++    axes[1].plot(obs_steps, obs[:, 1], label="real velocity", linewidth=2)
++    axes[1].plot(
++        obs_steps,
++        obs_pred[:, 1],
++        label="decoded velocity",
++        linewidth=1.8,
++        linestyle="--",
++    )
++    axes[1].set_title("Velocity Reconstruction")
++    axes[1].set_ylabel("velocity")
++    axes[1].legend(loc="best")
++    axes[1].grid(True, alpha=0.25)
++
++    axes[2].plot(transition_steps, rewards, label="real reward", linewidth=2)
++    axes[2].plot(
++        transition_steps,
++        reward_pred,
++        label="predicted reward",
++        linewidth=1.8,
++        linestyle="--",
++    )
++    axes[2].plot(
++        transition_steps,
++        continue_prob,
++        label="predicted continuation",
++        linewidth=1.6,
++        linestyle=":",
++    )
++    axes[2].set_title("Reward and Continuation Heads")
++    axes[2].set_xlabel("sequence step")
++    axes[2].legend(loc="best")
++    axes[2].grid(True, alpha=0.25)
++
++    fig.tight_layout()
++    fig.savefig(output_path, dpi=160)
++    plt.close(fig)
++
++
++def plot_dreamer_like_imagined_rollout(
++    imagined_rollout: dict[str, np.ndarray],
++    output_path: Path,
++) -> None:
++    """Show RSSM imagined states, actions, rewards, and continuation."""
++
++    observations = imagined_rollout["decoded_observations"]
++    actions = imagined_rollout["actions"].reshape(-1)
++    rewards = imagined_rollout["rewards"].reshape(-1)
++    continues = imagined_rollout["continues"].reshape(-1)
++    obs_steps = np.arange(len(observations))
++    transition_steps = np.arange(len(actions))
++
++    _prepare_output(output_path)
++    fig, axes = plt.subplots(4, 1, figsize=(8, 10), sharex=False)
++
++    axes[0].plot(obs_steps, observations[:, 0], label="imagined position", linewidth=2)
++    axes[0].plot(obs_steps, observations[:, 1], label="imagined velocity", linewidth=1.8)
++    axes[0].axhline(0.0, color="black", linewidth=1, linestyle=":", label="goal")
++    axes[0].set_title("RSSM Imagined Actor Rollout")
++    axes[0].legend(loc="best")
++    axes[0].grid(True, alpha=0.25)
++
++    axes[1].plot(transition_steps, actions, color="tab:orange", linewidth=2)
++    axes[1].set_title("Actor Actions")
++    axes[1].set_ylabel("action")
++    axes[1].set_ylim(-1.05, 1.05)
++    axes[1].grid(True, alpha=0.25)
++
++    axes[2].plot(transition_steps, np.cumsum(rewards), color="tab:green", linewidth=2)
++    axes[2].set_title("Predicted Cumulative Reward")
++    axes[2].set_ylabel("return")
++    axes[2].grid(True, alpha=0.25)
++
++    axes[3].plot(transition_steps, continues, linewidth=2)
++    axes[3].set_title("Predicted Continuation Probability")
++    axes[3].set_xlabel("imagined step")
++    axes[3].set_ylabel("p(continue)")
++    axes[3].set_ylim(-0.05, 1.05)
++    axes[3].grid(True, alpha=0.25)
++
++    fig.tight_layout()
++    fig.savefig(output_path, dpi=160)
++    plt.close(fig)
+```
+
+
+```
+Exit code: 0
+Wall time: 3.5 seconds
+Output:
+Success. Updated the following files:
+M src/hello_world_model/visualization.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:44:10Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Delete: `examples/run_dreamer_actor_critic.py`**
+
+**Add: `examples/run_dreamer_actor_critic.py`**
+
+```diff
++from __future__ import annotations
++
++from pathlib import Path
++import sys
++
++import numpy as np
++import torch
++
++PROJECT_ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(PROJECT_ROOT / "src"))
++
++from hello_world_model import (  # noqa: E402
++    DreamerActor,
++    DreamerRSSMWorldModel,
++    DreamerValue,
++    PointMass1DEnv,
++    evaluate_rssm_reconstruction,
++    imagine_rssm_actor_rollout_numpy,
++    plot_actor_policy_field,
++    plot_dreamer_actor_episode,
++    plot_dreamer_like_imagined_rollout,
++    plot_dreamer_like_training_curves,
++    plot_rssm_reconstruction,
++    rollout_random_policy,
++    rollout_rssm_actor_in_env,
++    sample_rssm_actor_action_grid,
++    train_dreamer_like_agent,
++)
++
++
++def make_env() -> PointMass1DEnv:
++    return PointMass1DEnv(horizon=80)
++
++
++def main() -> None:
++    np.random.seed(10)
++    torch.manual_seed(10)
++
++    output_dir = PROJECT_ROOT / "outputs" / "dreamer_actor_critic"
++
++    print("1. Building a compact RSSM world model...")
++    world_model = DreamerRSSMWorldModel(
++        obs_dim=2,
++        action_dim=1,
++        deter_dim=32,
++        stoch_dim=8,
++        hidden_dim=64,
++    )
++    actor = DreamerActor(
++        latent_dim=world_model.feature_dim,
++        action_dim=1,
++        hidden_dim=64,
++    )
++    value = DreamerValue(latent_dim=world_model.feature_dim, hidden_dim=64)
++
++    print("2. Training Dreamer-like agent with replay, RSSM, and lambda-return...")
++    replay, history = train_dreamer_like_agent(
++        make_env,
++        world_model,
++        actor,
++        value,
++        iterations=8,
++        seed_episodes=8,
++        collect_episodes_per_iteration=2,
++        sequence_length=24,
++        batch_size=32,
++        world_updates=25,
++        actor_updates=25,
++        imagination_horizon=15,
++        discount=0.97,
++        lambda_=0.95,
++        kl_weight=0.05,
++        continue_weight=0.5,
++        exploration_std=0.25,
++    )
++    plot_dreamer_like_training_curves(
++        history,
++        output_dir / "01_dreamer_like_training_curves.png",
++    )
++
++    print("3. Inspecting RSSM reconstruction, reward, and continuation heads...")
++    reconstruction = evaluate_rssm_reconstruction(
++        world_model,
++        replay,
++        sequence_length=40,
++    )
++    plot_rssm_reconstruction(
++        reconstruction,
++        output_dir / "02_rssm_reconstruction.png",
++    )
++
++    print("4. Visualizing an imagined actor rollout...")
++    initial_obs = replay.episodes[-1]["observations"][0]
++    imagined_rollout = imagine_rssm_actor_rollout_numpy(
++        world_model,
++        actor,
++        initial_obs,
++        horizon=35,
++    )
++    plot_dreamer_like_imagined_rollout(
++        imagined_rollout,
++        output_dir / "03_rssm_imagined_actor_rollout.png",
++    )
++
++    print("5. Visualizing the learned actor field...")
++    policy_grid = sample_rssm_actor_action_grid(world_model, actor, grid_size=31)
++    plot_actor_policy_field(policy_grid, output_dir / "04_actor_policy_field.png")
++
++    print("6. Running the learned actor in the real environment...")
++    actor_log = rollout_rssm_actor_in_env(make_env(), world_model, actor)
++    random_log = rollout_random_policy(make_env())
++    plot_dreamer_actor_episode(
++        actor_log,
++        random_log,
++        output_dir / "05_actor_vs_random_episode.png",
++    )
++
++    actor_return = float(actor_log["rewards"].sum())
++    random_return = float(random_log["rewards"].sum())
++    print(f"Actor return: {actor_return:.2f}")
++    print(f"Random return: {random_return:.2f}")
++    print(f"Saved visualizations to: {output_dir}")
++
++
++if __name__ == "__main__":
++    main()
+```
+
+
+```
+Exit code: 0
+Wall time: 13.8 seconds
+Output:
+Success. Updated the following files:
+A examples/run_dreamer_actor_critic.py
+D examples/run_dreamer_actor_critic.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:44:29Z)**_
+
+核心 demo 入口已经切换成完整机制版本：`examples/run_dreamer_actor_critic.py` 现在会训练 RSSM + actor/value，并持续收集 replay 数据。接下来补导出列表和 README。
+
+_**Agent (gpt-5.5 2026-08-02 03:44:39Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Update: `src/hello_world_model/__init__.py`**
+
+```diff
+@@
+ from .dreamer import (
+     DreamerActor,
++    DreamerRSSMWorldModel,
++    DreamerReplayBuffer,
+     DreamerValue,
++    collect_dreamer_episode,
++    evaluate_rssm_reconstruction,
+     imagine_actor_rollout_numpy,
++    imagine_rssm_actor_rollout_numpy,
++    lambda_returns,
+     rollout_actor_in_env,
+     rollout_random_policy,
++    rollout_rssm_actor_in_env,
+     sample_actor_action_grid,
++    sample_rssm_actor_action_grid,
+     train_dreamer_actor_critic,
++    train_dreamer_like_agent,
+ )
+@@
+     plot_dreamer_actor_critic_losses,
+     plot_dreamer_actor_episode,
+     plot_dreamer_imagined_rollout,
++    plot_dreamer_like_imagined_rollout,
++    plot_dreamer_like_training_curves,
+     plot_latent_model_losses,
+@@
+     plot_rollout_error_growth,
+     plot_rollout_prediction_comparison,
++    plot_rssm_reconstruction,
+     plot_prior_latent_samples,
+@@
+     "GRUWorldModel",
+     "DreamerActor",
++    "DreamerRSSMWorldModel",
++    "DreamerReplayBuffer",
+     "DreamerValue",
+@@
+     "analyze_prior_posterior_alignment",
++    "collect_dreamer_episode",
+     "collect_real_rollout",
+@@
+     "evaluate_planner",
++    "evaluate_rssm_reconstruction",
+     "imagine_actor_rollout_numpy",
++    "imagine_rssm_actor_rollout_numpy",
++    "lambda_returns",
+     "make_probe_action_sequence",
+@@
+     "plot_dreamer_actor_critic_losses",
+     "plot_dreamer_actor_episode",
+     "plot_dreamer_imagined_rollout",
++    "plot_dreamer_like_imagined_rollout",
++    "plot_dreamer_like_training_curves",
+@@
+     "plot_rollout_error_growth",
+     "plot_rollout_prediction_comparison",
++    "plot_rssm_reconstruction",
+@@
+     "rollout_actor_in_env",
+     "rollout_random_policy",
++    "rollout_rssm_actor_in_env",
+     "rollout_stochastic_latent_model",
+@@
+     "sample_actor_action_grid",
++    "sample_rssm_actor_action_grid",
+     "train_dreamer_actor_critic",
++    "train_dreamer_like_agent",
+     "train_latent_dynamics_model",
+```
+
+
+```
+Exit code: 0
+Wall time: 3.4 seconds
+Output:
+Success. Updated the following files:
+M src/hello_world_model/__init__.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:45:00Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Update: `src/README.md`**
+
+```diff
+@@
+-- `dreamer.py`：教学版 Dreamer actor-critic，在 imagined latent rollout 上训练 actor/value。
++- `dreamer.py`：Dreamer actor-critic 教学代码，包含简化 latent actor-critic 与更完整的 RSSM / stochastic prior-posterior / continuation / lambda-return / replay buffer 演示。
+```
+
+**Update: `examples/README.md`**
+
+```diff
+@@
+ 运行后会在 `outputs/dreamer_actor_critic` 下生成教学图示：
+ 
+-- `01_world_model_losses.png`：latent dynamics world model 的训练误差。
+-- `02_actor_critic_losses.png`：actor/value 在 imagined rollout 上的训练变化。
+-- `03_imagined_actor_rollout.png`：actor 在 world model 里想象出的状态、动作和回报。
++- `01_dreamer_like_training_curves.png`：RSSM world model、actor/value、imagined return 和真实环境 return 的训练变化。
++- `02_rssm_reconstruction.png`：posterior RSSM 对 observation、reward 和 continuation 的拟合情况。
++- `03_rssm_imagined_actor_rollout.png`：actor 在 RSSM 里想象出的状态、动作、回报和 continuation。
+ - `04_actor_policy_field.png`：actor 在不同位置/速度下会输出什么动作。
+ - `05_actor_vs_random_episode.png`：学到的 actor 与随机策略在真实环境中的对比。
+```
+
+
+```
+Exit code: 0
+Wall time: 12.4 seconds
+Output:
+Success. Updated the following files:
+M src/README.md
+M examples/README.md
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:45:21Z)**_
+
+现在重写第 10 篇的相关段落：之前“没有这些能力”的说明会改成“本次完整演示补齐了这些能力”，并保留哪些仍是 toy demo 的边界。
+
+_**Agent (gpt-5.5 2026-08-02 03:46:20Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Delete: `docs/notes/world-models-10-dreamer-actor-critic.md`**
+
+**Add: `docs/notes/world-models-10-dreamer-actor-critic.md`**
+
+```diff
++# 10｜Dreamer 的 Actor-Critic：如何在想象中训练策略
++
++> 这一篇接在 [09｜PlaNet 与 Dreamer](world-models-9-planet-dreamer.md) 后面。
++>
++> 第 9 篇里我们已经区分了 PlaNet 和 Dreamer：
++>
++> - PlaNet：每次行动前，用 world model 在线搜索动作序列；
++> - Dreamer：在 world model 里想象未来，用 imagined rollout 训练 actor 和 value。
++>
++> 这一篇专门拆开 Dreamer 的 actor-critic 训练过程，并用 `PointMass1DEnv` 做一个 Dreamer-like 完整演示。
++
++## 1. 一句话直觉
++
++Dreamer 的核心不是“有一个世界模型”这么简单，而是：
++
++> **让策略在学到的世界里练习，而不是每次都去真实环境里试错。**
++
++这里有三组网络：
++
++- **world model / RSSM**：学习环境在 latent space 中如何变化；
++- **actor**：看到 latent feature 后，决定采取什么 action；
++- **critic / value**：估计当前 latent feature 未来大概能获得多少 return。
++
++整体循环是：
++
++```text
++真实环境数据 -> replay buffer -> 训练 RSSM
++RSSM -> imagined rollout -> 训练 actor / value
++actor -> 回到真实环境收集更多数据
++```
++
++## 2. 为什么需要 actor-critic？
++
++PlaNet 已经能用 world model 在线规划。那为什么 Dreamer 还要训练 actor/value？
++
++因为在线规划通常很贵：
++
++- 每一步都要采样很多动作序列；
++- 每条动作序列都要在模型里 rollout；
++- horizon 越长、动作维度越高，搜索越难；
++- 部署时每一步都临场搜索，计算代价会很高。
++
++Dreamer 的思路是把一部分计算从“执行时”搬到“训练时”：
++
++```mermaid
++flowchart LR
++    A["PlaNet: 每一步在线搜索"] --> B["执行时计算贵"]
++    C["Dreamer: 训练时大量 imagined rollout"] --> D["执行时 actor 直接输出动作"]
++```
++
++actor-critic 就是这个转移的关键：
++
++- actor 学会“怎么做”；
++- value 学会“这样做大概值多少”；
++- world model 提供一个可以反复练习的想象环境。
++
++## 3. Dreamer 的 RSSM：记忆 + 随机潜状态
++
++Dreamer 的 world model 通常是 RSSM（recurrent state-space model）。它把状态拆成两部分：
++
++- deterministic recurrent state `h_t`：用 GRU/RNN 维护历史记忆；
++- stochastic latent state `z_t`：表示不确定性和观测无法完全确定的部分。
++
++在本项目的完整演示里，RSSM 使用：
++
++```text
++h_t = GRU(h_{t-1}, z_{t-1}, a_{t-1})
++prior:     p(z_t | h_t)
++posterior: q(z_t | h_t, o_t)
++feature:   [h_t, z_t]
++```
++
++结构图：
++
++```mermaid
++flowchart TB
++    A["previous z_{t-1}, action a_{t-1}"] --> B["GRU deterministic state h_t"]
++    B --> C["prior p(z_t | h_t)"]
++    B --> D["posterior q(z_t | h_t, o_t)"]
++    E["observation o_t"] --> D
++    C <--> F["KL alignment"]
++    D <--> F
++    B --> G["feature [h_t, z_t]"]
++    D --> G
++    G --> H["decoder: reconstruct observation"]
++    G --> I["reward head"]
++    G --> J["continuation head"]
++```
++
++这比前一版简化 demo 更接近 Dreamer：
++
++- 不再只有一个确定 latent；
++- 有 recurrent memory；
++- 有 stochastic prior/posterior；
++- 用 KL 让 prior 学会接近 posterior；
++- 同时预测 observation、reward 和 continuation。
++
++## 4. Continuation head：为什么要预测“是否继续”
++
++强化学习里 episode 可能结束。Dreamer 不只预测 reward，还会预测 continuation：
++
++```text
++c_t = P(episode continues after this step)
++```
++
++如果 episode 结束，后面的 return 就不应该继续累计。
++
++所以 imagined return 更像：
++
++```text
++return_t = r_t + γ c_t return_{t+1}
++```
++
++这里的 `c_t` 很关键：
++
++- `c_t ≈ 1`：模型认为 episode 大概率继续；
++- `c_t ≈ 0`：模型认为 episode 可能终止，未来价值要被截断。
++
++在 `PointMass1DEnv` 中，episode 主要因为 horizon 到达而结束，所以 continuation head 的任务相对简单，但它完整展示了 Dreamer 训练里 “reward + continuation + value” 的组合方式。
++
++## 5. Imagined rollout：actor 在 RSSM 里行动
++
++训练 actor/value 时，Dreamer 先从 replay buffer 取一段真实历史，用 posterior 得到一个当前 latent state：
++
++```text
++(h_t, z_t) from q(z_t | h_t, o_t)
++```
++
++然后进入想象：
++
++```text
++feature_t = [h_t, z_t]
++a_t       = actor(feature_t)
++h_{t+1}   = GRU(h_t, z_t, a_t)
++z_{t+1}   ~ p(z_{t+1} | h_{t+1})
++r_t       = reward_head([h_{t+1}, z_{t+1}])
++c_t       = continuation_head([h_{t+1}, z_{t+1}])
++```
++
++流程图：
++
++```mermaid
++flowchart LR
++    F0["feature_t=[h_t,z_t]"] --> A0["actor"]
++    A0 --> U0["action a_t"]
++    U0 --> R0["RSSM prior step"]
++    R0 --> F1["feature_{t+1}"]
++    F1 --> A1["actor"]
++    F1 --> Reward["reward / continuation / value"]
++    A1 --> U1["action a_{t+1}"]
++    U1 --> R1["RSSM prior step"]
++    R1 --> F2["feature_{t+2}"]
++```
++
++这条轨迹不是从真实环境跑出来的，而是在模型内部想象出来的。
++
++## 6. Lambda-return：value 的训练目标
++
++只用一步 reward 太短视；完全依赖很长 rollout 又容易受模型误差影响。Dreamer 常用 lambda-return 在二者之间折中。
++
++直觉上，lambda-return 把两类信息混在一起：
++
++- 多步 imagined reward；
++- value network 对未来的 bootstrap 估计。
++
++简化形式可以理解为：
++
++```text
++G_t^λ = r_t + γ c_t [(1 - λ) V(s_{t+1}) + λ G_{t+1}^λ]
++```
++
++其中：
++
++- `γ` 是 discount；
++- `c_t` 是 continuation probability；
++- `λ` 控制更相信多步 rollout 还是更相信 bootstrap value。
++
++value 的目标是拟合这个 return：
++
++```text
++value_loss = MSE(V(feature_t), G_t^λ)
++```
++
++```mermaid
++flowchart LR
++    A["imagined rewards"] --> C["lambda-return target"]
++    B["continuation probabilities"] --> C
++    D["bootstrap value"] --> C
++    E["V(feature_t)"] --> F["MSE value loss"]
++    C --> F
++```
++
++## 7. Actor：最大化 imagined return
++
++actor 的目标更直接：
++
++```text
++actor_loss = - mean(lambda_return)
++```
++
++也就是让 imagined return 尽可能大。
++
++因为 imagined rollout 里：
++
++- actor 输出 action；
++- RSSM 根据 action 推进 latent；
++- reward/value/continuation 都是神经网络输出；
++
++所以 actor 可以通过这条可微链路得到梯度。
++
++```mermaid
++flowchart TB
++    A["actor(feature_t) -> action"] --> B["RSSM prior predicts next feature"]
++    B --> C["reward / continuation / value"]
++    C --> D["lambda-return"]
++    D --> E["actor loss = -return"]
++    E --> F["gradient updates actor"]
++```
++
++这就是 Dreamer 和普通 model-free actor-critic 的关键区别：  
++Dreamer 的大量 policy learning 发生在 learned world model 里。
++
++## 8. Replay buffer：持续迭代，而不是一次性训练
++
++完整 Dreamer-like 循环不应该只训练一次 world model，然后冻结 forever。更合理的节奏是：
++
++1. 先用随机策略收集 seed episodes；
++2. 把 episode 放进 replay buffer；
++3. 从 replay buffer 采样序列训练 RSSM；
++4. 从 replay buffer 编码 latent 起点；
++5. 在 RSSM 里 imagined rollout，训练 actor/value；
++6. 用 actor 回真实环境收集新 episode；
++7. 把新 episode 加入 replay buffer；
++8. 重复这个过程。
++
++```mermaid
++flowchart TB
++    A["random seed episodes"] --> B["replay buffer"]
++    B --> C["sample sequences"]
++    C --> D["train RSSM world model"]
++    C --> E["posterior start states"]
++    E --> F["imagined rollout"]
++    F --> G["train actor/value"]
++    G --> H["actor interacts with real env"]
++    H --> B
++```
++
++这次配套代码已经补齐这个循环。
++
++## 9. 本项目里的完整 Dreamer-like demo
++
++本篇对应脚本：
++
++```bash
++python examples/run_dreamer_actor_critic.py
++```
++
++它基于 `PointMass1DEnv` 实现了一个紧凑但完整的 Dreamer-like 演示：
++
++| Dreamer 机制 | 本项目代码里的实现 |
++| --- | --- |
++| deterministic recurrent state | `DreamerRSSMWorldModel.recurrent`，使用 `GRUCell` 维护 `h_t` |
++| stochastic prior/posterior | `prior_distribution` 与 `posterior_distribution`，用 KL 对齐 |
++| continuation head | `continue_head` 预测 episode 是否继续 |
++| lambda-return | `lambda_returns(...)` |
++| replay buffer 持续迭代 | `DreamerReplayBuffer` + `train_dreamer_like_agent(...)` |
++| imagined actor rollout | `imagine_rssm_actor_rollout(...)` |
++| actor/value 训练 | `train_rssm_actor_critic_step(...)` |
++
++运行后会生成：
++
++- `01_dreamer_like_training_curves.png`：RSSM、actor/value、imagined return 和真实 return 的训练变化。
++- `02_rssm_reconstruction.png`：posterior RSSM 对 observation、reward、continuation 的拟合情况。
++- `03_rssm_imagined_actor_rollout.png`：actor 在 RSSM 里想象出的状态、动作、回报和 continuation。
++- `04_actor_policy_field.png`：actor 在不同位置/速度下输出的动作。
++- `05_actor_vs_random_episode.png`：学到的 actor 与随机策略在真实环境中的对比。
++
++## 10. 仍然保留的简化边界
++
++这已经比前一版 demo 更接近 Dreamer，但它仍然不是 DreamerV2/V3 论文级复现。主要简化包括：
++
++- 环境是低维 `PointMass1DEnv`，不是像素输入；
++- actor 是 deterministic actor，没有建模 action distribution 的熵项；
++- value 是普通标量 value，没有 distributional value；
++- RSSM 是连续 Gaussian latent，没有 DreamerV2 的 discrete latent；
++- 没有使用大型 replay、并行环境、归一化和复杂稳定化技巧；
++- 训练轮数很小，目的是教学可读，而不是追求 benchmark 分数。
++
++这份 demo 的目标是让你看见 Dreamer 的核心机械结构：
++
++> replay buffer 提供真实序列，posterior 校正当前 latent，prior 想象未来，continuation 控制回报截断，lambda-return 训练 value，actor 最大化 imagined return。
++
++## 11. 当前理解小结
++
++我现在可以这样理解 Dreamer actor-critic：
++
++- world model 提供一个可微分的“想象环境”；
++- RSSM 用 `h_t` 记住历史，用 `z_t` 表示随机潜状态；
++- posterior 从真实观测校正当前 latent；
++- prior 在没有未来观测时滚动想象；
++- continuation head 决定 imagined return 是否继续往后算；
++- lambda-return 把多步 reward 和 value bootstrap 结合起来；
++- actor 通过最大化 imagined return 学会行动；
++- 真正执行时，actor 不需要每步在线搜索。
++
++如果 PlaNet 是：
++
++```text
++我每次行动前，都在脑内搜索很多未来。
++```
++
++那么 Dreamer 是：
++
++```text
++我平时在脑内大量练习，形成一个能快速行动的策略。
++```
++
++这就是 Dreamer 从“世界模型用于规划”走向“世界模型用于训练行为”的关键一步。
++
++## 12. 下一步问题
++
++后面可以继续追问：
++
++- stochastic latent 为什么有时要改成 discrete latent？
++- actor 是否会 exploit world model 的错误？
++- 如何用 uncertainty 或 ensemble 降低模型偏差？
++- DreamerV3 的 symlog、two-hot value、归一化技巧解决了什么问题？
++- 如何从低维状态扩展到像素输入？
++
++这些问题会把我们带向更完整的 Dreamer 系列实现。
+```
+
+
+```
+Exit code: 0
+Wall time: 6.7 seconds
+Output:
+Success. Updated the following files:
+A docs/notes/world-models-10-dreamer-actor-critic.md
+D docs/notes/world-models-10-dreamer-actor-critic.md
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:46:38Z)**_
+
+文档已经改成新的“完整演示”版本。现在进入比较严的检查：先跑 `py_compile`，再看导出是否完整。因为当前环境之前缺 `numpy`，完整训练运行大概率还会受依赖限制，但语法和接口我会先压实。
+
+_**Agent (gpt-5.5 2026-08-02 03:46:38Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `python -m py_compile src\hello_world_model\dreamer.py src\hello_world_model\visualization.py src\hello_world_model\__init__.py examples\run_dreamer_actor_critic.py`</summary>
+```
+Chunk ID: e91c5e
+Wall time: 0.3903 seconds
+Process exited with code 0
+Original token count: 0
+Output:
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:46:38Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Select-String -Path src\hello_world_model\__init__.py -Pattern "DreamerRSSM|Replay|rssm|lambda|dreamer_like" -Context 0,2`</summary>
+```
+Chunk ID: 91aae2
+Wall time: 0.6210 seconds
+Process exited with code 0
+Original token count: 880
+Output:
+
+> src\hello_world_model\__init__.py:6:    DreamerRSSMWorldModel,
+> src\hello_world_model\__init__.py:7:    DreamerReplayBuffer,
+  src\hello_world_model\__init__.py:8:    DreamerValue,
+  src\hello_world_model\__init__.py:9:    collect_dreamer_episode,
+> src\hello_world_model\__init__.py:10:    evaluate_rssm_reconstruction,
+  src\hello_world_model\__init__.py:11:    imagine_actor_rollout_numpy,
+> src\hello_world_model\__init__.py:12:    imagine_rssm_actor_rollout_numpy,
+> src\hello_world_model\__init__.py:13:    lambda_returns,
+  src\hello_world_model\__init__.py:14:    rollout_actor_in_env,
+  src\hello_world_model\__init__.py:15:    rollout_random_policy,
+> src\hello_world_model\__init__.py:16:    rollout_rssm_actor_in_env,
+  src\hello_world_model\__init__.py:17:    sample_actor_action_grid,
+> src\hello_world_model\__init__.py:18:    sample_rssm_actor_action_grid,
+  src\hello_world_model\__init__.py:19:    train_dreamer_actor_critic,
+> src\hello_world_model\__init__.py:20:    train_dreamer_like_agent,
+  src\hello_world_model\__init__.py:21:)
+  src\hello_world_model\__init__.py:22:from .latent import (
+> src\hello_world_model\__init__.py:71:    plot_dreamer_like_imagined_rollout,
+> src\hello_world_model\__init__.py:72:    plot_dreamer_like_training_curves,
+  src\hello_world_model\__init__.py:73:    plot_latent_model_losses,
+  src\hello_world_model\__init__.py:74:    plot_latent_space_rollout,
+> src\hello_world_model\__init__.py:94:    plot_rssm_reconstruction,
+  src\hello_world_model\__init__.py:95:    plot_prior_latent_samples,
+  src\hello_world_model\__init__.py:96:    plot_stochastic_model_losses,
+> src\hello_world_model\__init__.py:106:    "DreamerRSSMWorldModel",
+> src\hello_world_model\__init__.py:107:    "DreamerReplayBuffer",
+  src\hello_world_model\__init__.py:108:    "DreamerValue",
+  src\hello_world_model\__init__.py:109:    "LatentDynamicsWorldModel",
+> src\hello_world_model\__init__.py:121:    "evaluate_rssm_reconstruction",
+  src\hello_world_model\__init__.py:122:    "imagine_actor_rollout_numpy",
+> src\hello_world_model\__init__.py:123:    "imagine_rssm_actor_rollout_numpy",
+> src\hello_world_model\__init__.py:124:    "lambda_returns",
+  src\hello_world_model\__init__.py:125:    "make_probe_action_sequence",
+  src\hello_world_model\__init__.py:126:    "plot_actor_policy_field",
+> src\hello_world_model\__init__.py:131:    "plot_dreamer_like_imagined_rollout",
+> src\hello_world_model\__init__.py:132:    "plot_dreamer_like_training_curves",
+  src\hello_world_model\__init__.py:133:    "plot_latent_model_losses",
+  src\hello_world_model\__init__.py:134:    "plot_latent_space_rollout",
+> src\hello_world_model\__init__.py:154:    "plot_rssm_reconstruction",
+  src\hello_world_model\__init__.py:155:    "plot_prior_latent_samples",
+  src\hello_world_model\__init__.py:156:    "plot_stochastic_model_losses",
+> src\hello_world_model\__init__.py:171:    "rollout_rssm_actor_in_env",
+  src\hello_world_model\__init__.py:172:    "rollout_stochastic_latent_model",
+  src\hello_world_model\__init__.py:173:    "run_receding_horizon_episode",
+> src\hello_world_model\__init__.py:178:    "sample_rssm_actor_action_grid",
+  src\hello_world_model\__init__.py:179:    "train_dreamer_actor_critic",
+> src\hello_world_model\__init__.py:180:    "train_dreamer_like_agent",
+  src\hello_world_model\__init__.py:181:    "train_latent_dynamics_model",
+  src\hello_world_model\__init__.py:182:    "train_stochastic_latent_model",
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:46:38Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git diff --check -- docs\notes\world-models-10-dreamer-actor-critic.md examples\run_dreamer_actor_critic.py src\hello_world_model\dreamer.py src\hello_world_model\visualization.py src\hello_world_model\__init__.py examples\README.md src\README.md`</summary>
+```
+Chunk ID: be1902
+Wall time: 0.2577 seconds
+Process exited with code 0
+Original token count: 0
+Output:
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:46:44Z)**_
+
+语法、导出、diff 格式都过了。现在我做一次依赖探测；如果依赖仍缺，我不会安装，只会说明你本地运行前需要 `pip install -r requirements.txt`。
+
+_**Agent (gpt-5.5 2026-08-02 03:46:45Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `python -c "import numpy, torch, matplotlib; print('deps ok')"`</summary>
+```
+Chunk ID: f37718
+Wall time: 0.2007 seconds
+Process exited with code 1
+Original token count: 54
+Output:
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import numpy, torch, matplotlib; print('deps ok')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'numpy'
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:46:58Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Inspecting actor and world model tensor usage**
+</details></think>
+
+_**Agent (gpt-5.5 2026-08-02 03:46:59Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git status --short --branch`</summary>
+```
+Chunk ID: 6ce8d7
+Wall time: 0.2639 seconds
+Process exited with code 0
+Original token count: 117
+Output:
+## main...origin/main
+ M .specstory/history/2026-07-19_03-33-50Z-github-github-https-github.md
+ M .specstory/history/2026-07-27_13-28-06Z-markdown-display-issue.md
+ M .specstory/statistics.json
+ M docs/notes/README.md
+ M examples/README.md
+ M src/README.md
+ M src/hello_world_model/__init__.py
+ M src/hello_world_model/visualization.py
+?? docs/notes/world-models-10-dreamer-actor-critic.md
+?? examples/run_dreamer_actor_critic.py
+?? src/hello_world_model/dreamer.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:47:08Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw docs\notes\world-models-10-dreamer-actor-critic.md`</summary>
+```
+Chunk ID: 657d04
+Wall time: 0.5098 seconds
+Process exited with code 0
+Original token count: 2723
+Output:
+# 10｜Dreamer 的 Actor-Critic：如何在想象中训练策略
+
+> 这一篇接在 [09｜PlaNet 与 Dreamer](world-models-9-planet-dreamer.md) 后面。
+>
+> 第 9 篇里我们已经区分了 PlaNet 和 Dreamer：
+>
+> - PlaNet：每次行动前，用 world model 在线搜索动作序列；
+> - Dreamer：在 world model 里想象未来，用 imagined rollout 训练 actor 和 value。
+>
+> 这一篇专门拆开 Dreamer 的 actor-critic 训练过程，并用 `PointMass1DEnv` 做一个 Dreamer-like 完整演示。
+
+## 1. 一句话直觉
+
+Dreamer 的核心不是“有一个世界模型”这么简单，而是：
+
+> **让策略在学到的世界里练习，而不是每次都去真实环境里试错。**
+
+这里有三组网络：
+
+- **world model / RSSM**：学习环境在 latent space 中如何变化；
+- **actor**：看到 latent feature 后，决定采取什么 action；
+- **critic / value**：估计当前 latent feature 未来大概能获得多少 return。
+
+整体循环是：
+
+```text
+真实环境数据 -> replay buffer -> 训练 RSSM
+RSSM -> imagined rollout -> 训练 actor / value
+actor -> 回到真实环境收集更多数据
+```
+
+## 2. 为什么需要 actor-critic？
+
+PlaNet 已经能用 world model 在线规划。那为什么 Dreamer 还要训练 actor/value？
+
+因为在线规划通常很贵：
+
+- 每一步都要采样很多动作序列；
+- 每条动作序列都要在模型里 rollout；
+- horizon 越长、动作维度越高，搜索越难；
+- 部署时每一步都临场搜索，计算代价会很高。
+
+Dreamer 的思路是把一部分计算从“执行时”搬到“训练时”：
+
+```mermaid
+flowchart LR
+    A["PlaNet: 每一步在线搜索"] --> B["执行时计算贵"]
+    C["Dreamer: 训练时大量 imagined rollout"] --> D["执行时 actor 直接输出动作"]
+```
+
+actor-critic 就是这个转移的关键：
+
+- actor 学会“怎么做”；
+- value 学会“这样做大概值多少”；
+- world model 提供一个可以反复练习的想象环境。
+
+## 3. Dreamer 的 RSSM：记忆 + 随机潜状态
+
+Dreamer 的 world model 通常是 RSSM（recurrent state-space model）。它把状态拆成两部分：
+
+- deterministic recurrent state `h_t`：用 GRU/RNN 维护历史记忆；
+- stochastic latent state `z_t`：表示不确定性和观测无法完全确定的部分。
+
+在本项目的完整演示里，RSSM 使用：
+
+```text
+h_t = GRU(h_{t-1}, z_{t-1}, a_{t-1})
+prior:     p(z_t | h_t)
+posterior: q(z_t | h_t, o_t)
+feature:   [h_t, z_t]
+```
+
+结构图：
+
+```mermaid
+flowchart TB
+    A["previous z_{t-1}, action a_{t-1}"] --> B["GRU deterministic state h_t"]
+    B --> C["prior p(z_t | h_t)"]
+    B --> D["posterior q(z_t | h_t, o_t)"]
+    E["observation o_t"] --> D
+    C <--> F["KL alignment"]
+    D <--> F
+    B --> G["feature [h_t, z_t]"]
+    D --> G
+    G --> H["decoder: reconstruct observation"]
+    G --> I["reward head"]
+    G --> J["continuation head"]
+```
+
+这比前一版简化 demo 更接近 Dreamer：
+
+- 不再只有一个确定 latent；
+- 有 recurrent memory；
+- 有 stochastic prior/posterior；
+- 用 KL 让 prior 学会接近 posterior；
+- 同时预测 observation、reward 和 continuation。
+
+## 4. Continuation head：为什么要预测“是否继续”
+
+强化学习里 episode 可能结束。Dreamer 不只预测 reward，还会预测 continuation：
+
+```text
+c_t = P(episode continues after this step)
+```
+
+如果 episode 结束，后面的 return 就不应该继续累计。
+
+所以 imagined return 更像：
+
+```text
+return_t = r_t + γ c_t return_{t+1}
+```
+
+这里的 `c_t` 很关键：
+
+- `c_t ≈ 1`：模型认为 episode 大概率继续；
+- `c_t ≈ 0`：模型认为 episode 可能终止，未来价值要被截断。
+
+在 `PointMass1DEnv` 中，episode 主要因为 horizon 到达而结束，所以 continuation head 的任务相对简单，但它完整展示了 Dreamer 训练里 “reward + continuation + value” 的组合方式。
+
+## 5. Imagined rollout：actor 在 RSSM 里行动
+
+训练 actor/value 时，Dreamer 先从 replay buffer 取一段真实历史，用 posterior 得到一个当前 latent state：
+
+```text
+(h_t, z_t) from q(z_t | h_t, o_t)
+```
+
+然后进入想象：
+
+```text
+feature_t = [h_t, z_t]
+a_t       = actor(feature_t)
+h_{t+1}   = GRU(h_t, z_t, a_t)
+z_{t+1}   ~ p(z_{t+1} | h_{t+1})
+r_t       = reward_head([h_{t+1}, z_{t+1}])
+c_t       = continuation_head([h_{t+1}, z_{t+1}])
+```
+
+流程图：
+
+```mermaid
+flowchart LR
+    F0["feature_t=[h_t,z_t]"] --> A0["actor"]
+    A0 --> U0["action a_t"]
+    U0 --> R0["RSSM prior step"]
+    R0 --> F1["feature_{t+1}"]
+    F1 --> A1["actor"]
+    F1 --> Reward["reward / continuation / value"]
+    A1 --> U1["action a_{t+1}"]
+    U1 --> R1["RSSM prior step"]
+    R1 --> F2["feature_{t+2}"]
+```
+
+这条轨迹不是从真实环境跑出来的，而是在模型内部想象出来的。
+
+## 6. Lambda-return：value 的训练目标
+
+只用�
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:47:08Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw examples\README.md`</summary>
+```
+Chunk ID: 9a41f8
+Wall time: 0.4333 seconds
+Process exited with code 0
+Original token count: 1561
+Output:
+# Examples
+
+这里存放可以直接运行的小实验。
+
+计划中的第一个实验：
+
+- 用一个简单环境收集 `(state, action, next_state)` 数据。
+- 训练一个小模型预测 `next_state`。
+- 对比真实下一状态和模型预测结果。
+
+每个例子建议包含：
+
+- 运行命令
+- 依赖说明
+- 预期输出
+- 对应笔记
+
+## 当前示例
+
+### 1D point mass world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_point_mass_world_model.py
+```
+
+运行后会在 `outputs/point_mass_world_model` 下生成教学图示：
+
+- `01_random_data_phase_space.png`：随机交互数据覆盖了哪些位置和速度。
+- `02_training_loss.png`：world model 的训练误差是否下降。
+- `03_one_step_predictions.png`：模型预测的下一状态是否接近真实下一状态。
+- `04_planned_trajectory.png`：planner 是否把点质量系统推向目标位置。
+
+对应笔记：
+
+- [MDP、POMDP 与最小世界模型](../docs/notes/world-models-2-basics.md)
+
+### Partial observation GRU world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_partial_observation_gru.py
+```
+
+运行后会在 `outputs/partial_observation_gru` 下生成教学图示：
+
+- `01_partial_observation_ambiguity.png`：同一个位置观测可能对应不同隐藏速度。
+- `02_gru_training_loss.png`：GRU world model 的训练误差。
+- `03_gru_sequence_prediction.png`：真实位置序列与预测位置序列对比。
+- `04_hidden_state_probe.png`：GRU hidden state 是否编码了隐藏速度信息。
+
+对应笔记：
+
+- [为什么世界模型需要 memory 与 latent state](../docs/notes/world-models-3-latent-memory.md)
+
+### Reward world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_reward_world_model.py
+```
+
+运行后会在 `outputs/reward_world_model` 下生成教学图示：
+
+- `01_reward_landscape.png`：toy 环境里 reward 如何由目标距离和动作代价决定。
+- `02_reward_model_losses.png`：total / observation / reward 三种训练误差。
+- `03_reward_prediction.png`：真实 reward 与预测 reward 的对比。
+- `04_reward_guided_action_scores.png`：reward head 如何给候选动作排序。
+
+对应笔记：
+
+- [为什么世界模型需要预测 reward](../docs/notes/world-models-4-reward.md)
+
+### Planning with a world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_planning_world_model.py
+```
+
+运行后会在 `outputs/planning_world_model` 下生成教学图示：
+
+- `01_planning_model_losses.png`：用于 planning 的 recurrent reward world model 训练误差。
+- `02_first_imagined_rollouts.png`：第一次规划时，模型想象出的多条未来轨迹。
+- `03_receding_horizon_control.png`：滚动规划在真实环境中的控制轨迹。
+- `04_imagined_vs_real_feedback.png`：模型预测的最佳 imagined return 与真实 reward 的对照。
+
+对应笔记：
+
+- [用世界模型做 planning](../docs/notes/world-models-5-planning.md)
+
+### Latent dynamics world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_latent_dynamics_world_model.py
+```
+
+运行后会在 `outputs/latent_dynamics_world_model` 下生成教学图示：
+
+- `01_observation_model_loss.png`：observation-space baseline 的训练误差。
+- `02_latent_model_losses.png`：latent dynamics model 的训练误差。
+- `03_open_loop_rollout_comparison.png`：真实轨迹、observation rollout、latent rollout 的对比。
+- `04_rollout_error_growth.png`：open-loop 误差如何随 rollout horizon 增长。
+- `05_latent_space_rollout.png`：模型在 latent space 中想象出的轨迹。
+
+对应笔记：
+
+- [为什么要转向 latent dynamics](../docs/notes/world-models-6-latent-dynamics.md)
+
+### Stochastic latent state world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_stochastic_latent_state_world_model.py
+```
+
+运行后会在 `outputs/stochastic_latent_state_world_model` 下生成教学图示：
+
+- `01_stochastic_model_losses.png`：observation / reward / KL loss。
+- `02_one_step_future_distribution.png`：同一个 state-action 下采样出的多个下一状态。
+- `03_stochastic_rollout_fan.png`：同一条动作序列下的一簇可能未来。
+- `04_uncertainty_growth.png`：rollout 过程中样本不确定性如何变化。
+- `05_prior_latent_samples.png`：从 `p(z_next | z, action)` 采样出的 latent 分布。
+
+对应笔记：
+
+- [为什么世界模型需要 stochastic latent state](../docs/notes/world-models-7-stochastic-latent-state.md)
+
+### Prior and posterior latent world model
+
+```bash
+pip install -r requirements.txt
+python examples/run_prior_posterior_latent_world_model.py
+```
+
+运行后会在 `outputs/prior_posterior_latent_world_model` 下生成教学图示：
+
+- `01_prior_posterior_training_losses.png`：observation / reward / KL loss。
+- `02_prior_vs_posterior_latent_means.png`：prior mean 与 post
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:47:08Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw src\README.md`</summary>
+```
+Chunk ID: 94d2d9
+Wall time: 0.4635 seconds
+Process exited with code 0
+Original token count: 552
+Output:
+# Source Code
+
+这里存放世界模型相关的可复用代码。
+
+初期可以先从最小模块开始：
+
+- 环境交互代码
+- 数据收集代码
+- 状态预测模型
+- 训练脚本
+- 评估脚本
+
+建议原则：
+
+- 每个实验都能从 README 或注释中看懂入口。
+- 优先写小而清楚的代码，再逐步抽象。
+- 每次实验都记录对应的笔记链接。
+
+## 当前代码
+
+- [hello_world_model](hello_world_model)：最小 world model 教学代码。
+
+它包含：
+
+- `envs.py`：一维点质量环境。
+- `models.py`：MLP world model 和 GRU world model。
+- `training.py`：完整状态下的数据收集、训练和评估。
+- `memory.py`：partial observation 序列数据、GRU 训练和 reward head 训练。
+- `planning.py`：random shooting、imagined rollout 和 receding-horizon planning。
+- `latent.py`：latent dynamics 训练和 open-loop rollout 对比。
+- `stochastic.py`：stochastic latent state 训练、采样、rollout，以及 prior/posterior latent 对齐分析。
+- `dreamer.py`：Dreamer actor-critic 教学代码，包含简化 latent actor-critic 与更完整的 RSSM / stochastic prior-posterior / continuation / lambda-return / replay buffer 演示。
+- `visualization.py`：训练过程和规划结果的可视化。
+
+对应笔记：
+
+- [MDP、POMDP 与最小世界模型](../docs/notes/world-models-2-basics.md)
+- [为什么世界模型需要 memory 与 latent state](../docs/notes/world-models-3-latent-memory.md)
+- [为什么世界模型需要预测 reward](../docs/notes/world-models-4-reward.md)
+- [用世界模型做 planning](../docs/notes/world-models-5-planning.md)
+- [为什么要转向 latent dynamics](../docs/notes/world-models-6-latent-dynamics.md)
+- [为什么世界模型需要 stochastic latent state](../docs/notes/world-models-7-stochastic-latent-state.md)
+- [Prior 与 Posterior Latent：世界模型如何“先猜，再校正”](../docs/notes/world-models-8-prior-and-posterior-latent.md)
+- [PlaNet 与 Dreamer：同一个世界模型，两种使用方式](../docs/notes/world-models-9-planet-dreamer.md)
+- [Dreamer 的 Actor-Critic：如何在想象中训练策略](../docs/notes/world-models-10-dreamer-actor-critic.md)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:47:19Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Verifying reward node and training updates**
+</details></think>
+
+_**Agent (gpt-5.5 2026-08-02 03:47:20Z)**_
+
+我读了一遍生成后的笔记和 README，结构是干净的。为了尽量不被当前缺依赖的 Python 卡住，我再看一下 Codex 工作区是否有可用的 bundled Python；如果有现成环境，我尝试用它做一次更深的导入/运行检查。
+
+_**Agent (gpt-5.5 2026-08-02 03:47:20Z)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="load_workspace_dependencies"><details>
+<summary>Tool use: **load_workspace_dependencies**</summary>
+```
+Workspace dependencies are available for this local desktop thread.
+
+### Workspace Dependencies
+Use these bundled paths for sheets, slides, documents, PDFs, images, or browser automation:
+- Bundle version: `26.801.11242`
+- Git executable: `C:\Users\Lenovo\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\git\cmd\git.exe`
+- Node.js executable: `C:\Users\Lenovo\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe`
+- Node.js packages: `C:\Users\Lenovo\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules`
+- pnpm executable: `C:\Users\Lenovo\.cache\codex-runtimes\codex-primary-runtime\dependencies\bin\fallback\pnpm.cmd`
+- Python executable: `C:\Users\Lenovo\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe`
+- Python packages: `C:\Users\Lenovo\.cache\codex-runtimes\codex-primary-runtime\dependencies\python`
+- Override binaries: `C:\Users\Lenovo\.cache\codex-runtimes\codex-primary-runtime\dependencies\bin\override`
+- Fallback binaries: `C:\Users\Lenovo\.cache\codex-runtimes\codex-primary-runtime\dependencies\bin\fallback`
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:47:26Z)**_
+
+找到一个 bundled Python 了，我用它跑一次导入级检查；如果里面也没有 `torch`，那就只保留语法验证结论。
+
+_**Agent (gpt-5.5 2026-08-02 03:47:27Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `C:\Users\Lenovo\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe -c "import numpy, torch, matplotlib; print('deps ok')"`</summary>
+```
+Chunk ID: 96bce4
+Wall time: 2.4808 seconds
+Process exited with code 1
+Original token count: 31
+Output:
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+ModuleNotFoundError: No module named 'torch'
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:47:37Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git status --short --branch`</summary>
+```
+Chunk ID: 80bd50
+Wall time: 0.2072 seconds
+Process exited with code 0
+Original token count: 117
+Output:
+## main...origin/main
+ M .specstory/history/2026-07-19_03-33-50Z-github-github-https-github.md
+ M .specstory/history/2026-07-27_13-28-06Z-markdown-display-issue.md
+ M .specstory/statistics.json
+ M docs/notes/README.md
+ M examples/README.md
+ M src/README.md
+ M src/hello_world_model/__init__.py
+ M src/hello_world_model/visualization.py
+?? docs/notes/world-models-10-dreamer-actor-critic.md
+?? examples/run_dreamer_actor_critic.py
+?? src/hello_world_model/dreamer.py
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-02 03:47:53Z)**_
+
+已按你的要求把第 10 篇从“简化教学版”升级成了一个基于 `PointMass1DEnv` 的 Dreamer-like 完整演示。
+
+补齐的能力：
+
+- RSSM deterministic recurrent state：`GRUCell` 维护 `h_t`
+- stochastic prior/posterior：`p(z_t | h_t)` / `q(z_t | h_t, o_t)` + KL 对齐
+- continuation head：预测 episode 是否继续
+- lambda-return：用于 value target
+- replay buffer 持续迭代：随机 seed episode → 训练 → actor 收集新数据 → replay 更新
+
+主要修改：
+
+- [world-models-10-dreamer-actor-critic.md](E:/HelloWorldModel/docs/notes/world-models-10-dreamer-actor-critic.md)
+- [dreamer.py](E:/HelloWorldModel/src/hello_world_model/dreamer.py)
+- [run_dreamer_actor_critic.py](E:/HelloWorldModel/examples/run_dreamer_actor_critic.py)
+- [visualization.py](E:/HelloWorldModel/src/hello_world_model/visualization.py)
+- [__init__.py](E:/HelloWorldModel/src/hello_world_model/__init__.py)
+- [examples/README.md](E:/HelloWorldModel/examples/README.md)
+- [src/README.md](E:/HelloWorldModel/src/README.md)
+
+新的 demo 运行命令：
+
+```bash
+python examples/run_dreamer_actor_critic.py
+```
+
+会生成：
+
+```text
+outputs/dreamer_actor_critic/
+├── 01_dreamer_like_training_curves.png
+├── 02_rssm_reconstruction.png
+├── 03_rssm_imagined_actor_rollout.png
+├── 04_actor_policy_field.png
+└── 05_actor_vs_random_episode.png
+```
+
+检查结果：
+
+- `python -m py_compile ...` 通过。
+- `git diff --check ...` 通过。
+- 当前默认 Python 缺 `numpy`，bundled Python 缺 `torch`，所以我没有完整跑训练脚本。你本地先执行：
+
+```bash
+pip install -r requirements.txt
+```
+
+再跑 demo 即可。
+
+你检查后可以 add：
+
+```bash
+git add docs\notes\world-models-10-dreamer-actor-critic.md examples\run_dreamer_actor_critic.py src\hello_world_model\dreamer.py src\hello_world_model\visualization.py src\hello_world_model\__init__.py examples\README.md src\README.md docs\notes\README.md
+```
+
+`.specstory/...` 仍是自动变更，建议不要加入这次提交。
