@@ -23861,3 +23861,968 @@ _**Agent (gpt-5.5 2026-08-04 08:18:13Z)**_
 _**User (2026-08-04 08:18:45Z)**_
 
 现在更新了笔记：docs\notes\world-models-11-uncertainty.md请你作为世界模型专家，审视这个文件的内容，并按照开源项目风格，进行格式和内容的优化，你可以多生成一些图示辅助理解；我笔记离提到的代码，这次比较简单，在笔记里讲解示意一下就可以，不用在src里添加；你可以用自己的专业知识进行修改，让整篇笔记深刻，简洁。
+
+
+---
+
+_**Agent (gpt-5.5 2026-08-04 08:18:52Z)**_
+
+我接着处理第 11 篇。这次范围我会严格收住：只改 `docs/notes/world-models-11-uncertainty.md` 和笔记目录，不碰 `src` / `examples`。因为你要图示，我会按 `visualize` 技能规则，用 Mermaid 内嵌图来讲清 uncertainty。
+
+_**Agent (gpt-5.5 2026-08-04 08:18:53Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw C:\Users\Lenovo\.codex\plugins\cache\openai-bundled\visualize\1.0.15\skills\visualize\SKILL.md`</summary>
+```
+Chunk ID: d348ef
+Wall time: 0.3207 seconds
+Process exited with code 0
+Original token count: 5162
+Output:
+---
+name: visualize
+description: "Create visualizations and interactive tools directly in conversation. Use when asked to show how something works, make simulators or labs, maps, plots, charts or graphs, comparisons, scenarios, adjustable inputs, and exploration beyond regular text."
+---
+
+# Visualize
+
+- A request for a new standalone file, website, app page, component, or other
+  project change is not an in-conversation visualization request, even when the
+  deliverable contains charts or interactive content.
+- Create a visual only when the user needs to see or explore it in the
+  conversation and it materially improves the explanation. Do not create an
+  inline visual merely because the request involves data, charts, or an
+  interactive page.
+- Use Mermaid when labeled nodes and edges fully explain a static structure;
+  return a normal fenced Mermaid block and no visualization file. Use HTML for
+  dynamics, spatial motion, adjustable inputs, and other visuals.
+- Work silently unless blocked or the user explicitly asks for progress. Never
+  send commentary or progress updates while reading this skill or writing or
+  updating the file; the final response must be your first user-facing message.
+- In user-facing prose, describe only what the visual helps the user see or
+  decide. Keep it concise and do not repeat information already clear from the
+  visual. Never announce this skill, a visualization surface, widgets, HTML,
+  SVG, scripts, local files, inline data, or implementation details.
+
+## Context compaction
+
+Copy into every compaction summary:
+`Reload the full visualize skill before creating or updating a visualization.`
+
+## Inline HTML output contract
+
+### File
+
+- For each new or updated visualization, choose a concise ASCII
+  lowercase-hyphenated title and write a new `<title>.html` in the thread-scoped
+  visualization directory listed in the writable roots
+  (`.codex/visualizations/YYYY/MM/DD/<thread-id>`).
+- Build the visual in the conversation. Use the open project when the user asks
+  for a site, app page, component, or change to existing project files.
+
+### Fragment
+
+- Write only an HTML fragment: no `<!doctype>`, `<html>`, `<head>`, or `<body>`.
+- Write literal markup: use `<div class="card">Hi</div>` plus a real newline,
+  never `<div class=\"card\">Hi</div>\n`. Never embed the fragment in an inline
+  Python, JavaScript, or shell string. Read it back; rewrite literal `\"` or
+  `\n`.
+- Keep CSS and JavaScript in the fragment only when base classes are
+  insufficient. Load static resources only from the CDN allowlist. Never use
+  `fetch`, XHR, WebSocket, or other API calls.
+- Give the fragment root a unique ID and select it with
+  `document.getElementById(...)`. Never derive the root from
+  `document.currentScript`; scripts may sit outside the root.
+- Keep visualizations under 2 MB. Aggregate, bin, downsample, reduce precision,
+  or drop unused fields from large inline datasets.
+- Check that JavaScript has no undefined identifiers, every queried element
+  exists, and the primary interaction updates the visual. The bundled
+  `python3 scripts/render.py <absolute-fragment-path> [<destination>.html] [--serve]`
+  can wrap a fragment as standalone HTML or temporarily serve it for browser
+  inspection when a preview would help with layout, theme, or runtime behavior.
+
+### Content and response
+
+- Keep the fragment focused on the visualization. Do not include explanatory
+  paragraphs, formulas, instructions, or narrative callouts. Include only
+  necessary labels, legends, values, and accessible text alternatives.
+- Use the normal response flow. Put any necessary concise explanation outside
+  the fragment, and add this exact directive on its own line where the visual
+  should appear:
+
+```text
+::codex-inline-vis{file="<title>.html"}
+```
+
+- Emit only the directive for the fragment. Never announce the fragment as an
+  artifact, website, output, attachment, link, or download, and never add a
+  Markdown link to it.
+
+### External resources
+
+- The CSP allows only `cdnjs.cloudflare.com`, `esm.sh`, `cdn.jsdelivr.net`,
+  `unpkg.com`, `fonts.googleapis.com`, `fonts.gstatic.com`, and
+  `fonts.bunny.net`. Other origins are blocked and fail silently.
+
+## Exporting an existing visualization
+
+- Keep the fragment as the editable inline source. When the user explicitly asks
+  to save, export, or publish a visualization that is already shown in the
+  conversation, render it with
+  `python3 scripts/render.py <absolute-fragment-path> <destination>.html`.
+- Apply this export flow only when the user explicitly asks to turn the existing
+  inline source or visualization into a website. For a general website request,
+  build a new responsive site in the output directory or open project, using
+  Sites when appropriate, without applying th
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-04 08:19:04Z)**_
+
+我已重新读取规则。现在读取第 11 篇和目录，然后直接落笔记。
+
+_**Agent (gpt-5.5 2026-08-04 08:19:04Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw docs\notes\world-models-11-uncertainty.md`</summary>
+```
+Chunk ID: 0fb33c
+Wall time: 0.3938 seconds
+Process exited with code 0
+Original token count: 1274
+Output:
+uncertainty——为什么世界模型不仅要预测未来，还要知道“自己哪里不确定”
+一个自然问题就是：
+
+模型能不能知道，自己在哪些地方不太确定？
+
+这就是 uncertainty 的作用。
+
+如果世界模型能回答：
+
+这里我很确定
+那里我很不确定
+这类未来本来就有多种可能
+那类未来只是因为我没见过数据
+
+那决策就能更稳。
+
+1. 先抓住一句最重要的话
+
+不是所有“不确定”都一样。
+
+在世界模型里，至少要区分两类：
+
+A. 环境本身就有不确定性
+
+也叫 aleatoric uncertainty
+
+比如：
+
+骰子本来就随机
+观测有噪声
+当前信息不足，未来天然多模态
+
+这类不确定性不是“模型太菜”，而是世界本来就不唯一。
+
+B. 模型自己没学明白
+
+也叫 epistemic uncertainty
+
+比如：
+
+训练数据没覆盖到这个区域
+这是个 OOD 状态
+这个动作组合模型几乎没见过
+
+这类不确定性是：
+
+我不知道，不是因为世界本来随机，而是因为我没学会。
+
+这两类不确定性，在世界模型里作用完全不同。
+一个最小例子，先把两种 uncertainty 分开
+例子 1：aleatoric uncertainty
+
+你站在一个十字路口，但雾很大。
+你只能模糊看到前方，无法判断对面那辆车会不会突然加速。
+
+即使模型学得很好，它也只能说：
+
+未来可能 A
+也可能 B
+
+这不是模型不行，是信息本来不充分。
+
+例子 2：epistemic uncertainty
+
+你训练的机器人只在平地上学过走路。
+现在第一次来到冰面。
+
+模型也许会很自信地预测下一步，但其实它根本没见过这种地面。
+
+这时的不确定性来自：
+
+模型知识空白
+
+这才是最危险的一种，因为它经常“又错又自信”。
+
+3. stochastic latent 主要在处理哪一种
+
+你前面学过的 stochastic latent，主要是在帮助处理：
+
+当前给定信息下，未来可能不唯一
+
+也就是更接近：
+
+aleatoric uncertainty
+partial observability 带来的 latent ambiguity
+
+比如：
+
+同样当前位置，看不到速度
+同样观测，未来可能左也可能右
+
+这时 stochastic latent 很有用，因为它允许：
+
+不再压成单点未来
+而是表达“一族可能解释/未来”
+
+但你要注意：
+
+stochastic latent 不等于已经解决了 epistemic uncertainty。
+
+为什么？
+因为它表达的是“未来可能多样”，不一定表达“模型根本没见过这里”。
+
+4. 那 epistemic uncertainty 常怎么做
+
+很经典的一条路是：
+
+ensemble
+
+也就是：
+
+训练多个 world models
+给同一个 state/action，让它们分别预测
+看它们分歧有多大
+
+如果大家都差不多，说明模型相对有把握。
+如果分歧很大，说明：
+
+这里模型知识不足，别太信。
+用 ensemble disagreement 估计 epistemic uncertainty
+
+先写一个小函数。假设你已经有若干个 world model，它们都能预测 reward。
+
+import torch
+
+@torch.no_grad()
+def ensemble_reward_stats(models, obs, act):
+    """
+    models: list of world models
+    obs: [B, obs_dim]
+    act: [B, act_dim]
+    """
+    preds = []
+    for m in models:
+        pred_next_obs, pred_reward, _ = m.step(obs, act, h=None)
+        preds.append(pred_reward)  # [B, 1]
+
+    preds = torch.stack(preds, dim=0)        # [M, B, 1]
+    mean_reward = preds.mean(dim=0)          # [B, 1]
+    std_reward = preds.std(dim=0)            # [B, 1]
+    return mean_reward, std_reward
+
+这里最关键的是：
+
+mean_reward：模型平均认为会拿多少 reward
+std_reward：模型彼此有多大分歧
+
+这个 std_reward 就是一个最简单的 epistemic uncertainty proxy。
+
+7. 这个 uncertainty 能怎么用在决策里
+
+最直接的方法就是：
+
+高 reward 但高不确定，不一定真好。
+
+所以规划时，不只比较 expected reward，
+而是比较一个保守目标：
+
+score=E[R]−α⋅Uncertainty
+
+也就是：
+
+奖励高，值得去
+但如果不确定性也很高，就要打折
+最小代码：risk-aware score
+def risk_aware_score(mean_return, uncertainty, alpha=1.0):
+    return mean_return - alpha * uncertainty
+
+最小 planning 伪代码：加 uncertainty penalty
+best_score = -1e18
+best_first_action = None
+
+for action_seq in candidate_sequences:
+    mean_return, uncertainty = rollout_with_ensemble(models, current_state, action_seq)
+    score = mean_return - alpha * uncertainty
+
+    if score > best_score:
+        best_score = score
+        best_first_action = action_seq[0]
+
+这就是最朴素的 risk-aware planning。
+总结：第一句
+
+uncertainty 不是一个东西，至少要区分 aleatoric 和 epistemic。
+
+第二句
+
+stochastic latent 更偏向表示“未来本来可能不唯一”。
+
+第
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-04 08:19:04Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw docs\notes\README.md`</summary>
+```
+Chunk ID: b34f42
+Wall time: 0.4849 seconds
+Process exited with code 0
+Original token count: 305
+Output:
+# 学习笔记
+
+这里存放世界模型学习过程中的笔记、思考和论文阅读记录。
+
+建议命名方式：
+
+```text
+YYYY-MM-DD-topic.md
+```
+
+建议每篇笔记包含：
+
+- 今天解决了什么问题。
+- 我现在怎么理解这个概念。
+- 有哪些例子或代码帮助理解。
+- 还不理解什么。
+- 下一步准备做什么。
+
+## 当前笔记
+
+- [世界模型的第一层直觉](world-models-1-intuition.md)
+- [MDP、POMDP 与最小世界模型](world-models-2-basics.md)
+- [为什么世界模型需要 memory 与 latent state](world-models-3-latent-memory.md)
+- [为什么世界模型需要预测 reward](world-models-4-reward.md)
+- [用世界模型做 planning](world-models-5-planning.md)
+- [为什么要转向 latent dynamics](world-models-6-latent-dynamics.md)
+- [为什么世界模型需要 stochastic latent state](world-models-7-stochastic-latent-state.md)
+- [Prior 与 Posterior Latent：世界模型如何“先猜，再校正”](world-models-8-prior-and-posterior-latent.md)
+- [PlaNet 与 Dreamer：同一个世界模型，两种使用方式](world-models-9-planet-dreamer.md)
+- [Dreamer 的 Actor-Critic：如何在想象中训练策略](world-models-10-dreamer-actor-critic.md)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-04 08:19:04Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git status --short --branch`</summary>
+```
+Chunk ID: 5acdd7
+Wall time: 0.2042 seconds
+Process exited with code 0
+Original token count: 43
+Output:
+## main...origin/main
+ M .specstory/history/2026-07-19_03-33-50Z-github-github-https-github.md
+ M .specstory/statistics.json
+?? docs/notes/world-models-11-uncertainty.md
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-04 08:19:13Z)**_
+
+原文的核心非常好：已经抓住了“aleatoric vs epistemic”这个关键分叉。我会把它改成更适合开源阅读的结构：先给判断框架，再解释 stochastic latent / ensemble / risk-aware planning 各自负责什么，最后保留小段伪代码。
+
+_**Agent (gpt-5.5 2026-08-04 08:20:14Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Delete: `docs/notes/world-models-11-uncertainty.md`**
+
+**Add: `docs/notes/world-models-11-uncertainty.md`**
+
+```diff
++# 11｜Uncertainty：世界模型不仅要预测未来，还要知道自己哪里不确定
++
++> 这一篇接在 [10｜Dreamer 的 Actor-Critic](world-models-10-dreamer-actor-critic.md) 后面。
++>
++> 前面我们已经看到：world model 可以预测未来、想象 rollout、训练 actor/value。现在要补上一个更深的能力：
++>
++> **一个可靠的世界模型，不应该只给出预测，还应该知道自己对哪些预测没有把握。**
++
++## 1. 一句话直觉
++
++世界模型的预测不只是：
++
++```text
++未来会发生什么？
++```
++
++还应该包括：
++
++```text
++我对这个未来有多确定？
++这种不确定来自世界本身，还是来自我没学过？
++```
++
++这就是 uncertainty 的意义。
++
++如果模型知道“哪里不确定”，智能体就能：
++
++- 避免盲目相信错误预测；
++- 在规划时对高风险未来打折；
++- 发现自己没见过的新区域；
++- 更主动地探索能减少无知的数据。
++
++## 2. 最重要的区分：不是所有不确定都一样
++
++在世界模型里，至少要区分两类 uncertainty：
++
++| 类型 | 中文直觉 | 来源 | 能不能靠更多数据减少？ |
++| --- | --- | --- | --- |
++| aleatoric uncertainty | 世界本身随机 | 环境噪声、多模态未来、观测不完整 | 通常不能完全消除 |
++| epistemic uncertainty | 模型自己不知道 | 数据不足、OOD 状态、没见过的动作组合 | 可以靠更多有效数据减少 |
++
++这两类不确定性长得都像“预测不准”，但含义完全不同。
++
++```mermaid
++flowchart TB
++    A["prediction uncertainty"] --> B["aleatoric: world is inherently ambiguous"]
++    A --> C["epistemic: model has not learned this region"]
++    B --> D["represent multiple plausible futures"]
++    C --> E["collect data / be conservative / avoid model exploitation"]
++```
++
++一句话：
++
++> **aleatoric 是世界不唯一；epistemic 是模型还无知。**
++
++## 3. Aleatoric uncertainty：世界本来就有多种可能
++
++aleatoric uncertainty 不是模型的失败，而是世界本身的信息不足。
++
++例子：
++
++- 骰子下一次会掷出什么，本来就是随机的；
++- 传感器观测有噪声；
++- 在 partial observation 下，同一个观测可能对应多个真实状态；
++- 同一个 state-action 之后，环境可能随机走向多个未来。
++
++在世界模型中，这类不确定常表现为：
++
++```text
++p(z_{t+1} | z_t, a_t)
++```
++
++不是一个点，而是一个分布。
++
++这就是 stochastic latent state 的价值：它允许模型表达“一族可能的未来”，而不是强行把未来压成一个平均答案。
++
++```mermaid
++flowchart LR
++    A["same current observation"] --> B["latent distribution"]
++    B --> C["possible future A"]
++    B --> D["possible future B"]
++    B --> E["possible future C"]
++```
++
++如果模型只输出平均未来，在多模态场景里会很危险。  
++比如未来可能“向左”也可能“向右”，平均后变成“站在中间”，但中间可能根本不是一个真实会发生的未来。
++
++## 4. Epistemic uncertainty：模型没见过，所以不该太自信
++
++epistemic uncertainty 来自模型知识不足。
++
++例子：
++
++- 机器人只在平地训练过，突然来到冰面；
++- 模型只见过小动作，规划器却尝试极端动作序列；
++- replay buffer 没覆盖某个状态区域；
++- actor 在 imagined rollout 中找到一个模型漏洞，看起来 reward 很高，但真实环境里完全不成立。
++
++这类不确定最危险的地方是：
++
++> 模型可能错得很离谱，但输出看起来很自信。
++
++这就是 model-based RL 里的经典问题：**model exploitation**。  
++actor 或 planner 可能会找到世界模型的错误缝隙，在“假世界”里拿高分，在真实环境里翻车。
++
++## 5. Stochastic latent 主要解决哪一种？
++
++前面学过的 stochastic latent state，主要帮助表达：
++
++- 同一个当前信息下，未来可能不唯一；
++- partial observation 导致多个 latent explanation 都合理；
++- 环境本身带随机性。
++
++也就是更偏向：
++
++```text
++aleatoric uncertainty
++```
++
++但要小心：
++
++> stochastic latent 不等于 epistemic uncertainty。
++
++原因是：  
++一个模型即使完全没见过某个区域，也可能在那里输出一个很窄的 Gaussian 分布，看起来“很确定”。这不代表它真的懂，只代表它没有机制表达“我不知道”。
++
++所以：
++
++- stochastic latent：表达未来的多样性；
++- epistemic uncertainty：表达模型知识的空白。
++
++这两件事相关，但不能混为一谈。
++
++## 6. Ensemble：估计 epistemic uncertainty 的朴素方法
++
++估计 epistemic uncertainty 的经典方法之一是 ensemble。
++
++做法很直接：
++
++1. 训练多个 world models；
++2. 给它们同一个 state/action；
++3. 比较它们的预测是否一致；
++4. 分歧越大，说明模型越没把握。
++
++```mermaid
++flowchart LR
++    A["same state/action"] --> M1["world model 1"]
++    A --> M2["world model 2"]
++    A --> M3["world model 3"]
++    M1 --> P1["prediction 1"]
++    M2 --> P2["prediction 2"]
++    M3 --> P3["prediction 3"]
++    P1 --> U["disagreement = epistemic uncertainty proxy"]
++    P2 --> U
++    P3 --> U
++```
++
++最小伪代码：
++
++```python
++import torch
++
++
++@torch.no_grad()
++def ensemble_reward_stats(models, obs, action):
++    """Return mean reward and model disagreement for one state-action batch."""
++
++    preds = []
++    for model in models:
++        _, pred_reward, _ = model(obs, action)
++        preds.append(pred_reward)
++
++    preds = torch.stack(preds, dim=0)  # [num_models, batch, 1]
++    mean_reward = preds.mean(dim=0)
++    uncertainty = preds.std(dim=0)
++    return mean_reward, uncertainty
++```
++
++这里：
++
++- `mean_reward` 表示模型平均认为能拿多少 reward；
++- `uncertainty` 表示不同模型之间有多大分歧。
++
++这个 `uncertainty` 不是完美答案，但它是一个非常实用的 epistemic uncertainty proxy。
++
++## 7. Uncertainty 如何进入 planning？
++
++如果只最大化预测 reward，planner 可能会偏爱“模型没见过但幻想很美”的区域。
++
++更稳的做法是引入 risk-aware score：
++
++```text
++score = expected_return - α × uncertainty
++```
++
++其中：
++
++- `expected_return` 是模型预测的平均回报；
++- `uncertainty` 是模型不确定性；
++- `α` 控制保守程度。
++
++```mermaid
++flowchart TB
++    A["candidate action sequence"] --> B["ensemble imagined rollout"]
++    B --> C["expected return"]
++    B --> D["uncertainty"]
++    C --> E["risk-aware score"]
++    D --> E
++    E --> F["choose first action"]
++```
++
++最小伪代码：
++
++```python
++def risk_aware_score(mean_return, uncertainty, alpha=1.0):
++    return mean_return - alpha * uncertainty
++
++
++best_score = -float("inf")
++best_first_action = None
++
++for action_seq in candidate_sequences:
++    mean_return, uncertainty = rollout_with_ensemble(
++        models,
++        current_state,
++        action_seq,
++    )
++    score = risk_aware_score(mean_return, uncertainty, alpha=1.0)
++
++    if score > best_score:
++        best_score = score
++        best_first_action = action_seq[0]
++```
++
++这个想法很朴素，但非常重要：
++
++> 高 reward 但高 uncertainty 的未来，不一定真的好。
++
++## 8. Uncertainty 也可以鼓励探索
++
++上面讲的是保守决策：不确定就少信一点。
++
++但在探索阶段，不确定也可以变成“去看看”的信号。
++
++```text
++exploration_bonus = β × epistemic_uncertainty
++```
++
++也就是说：
++
++- 如果目标是安全执行，可以惩罚 uncertainty；
++- 如果目标是主动学习，可以奖励 epistemic uncertainty；
++- 关键是不要把两种目的混在一起。
++
++```mermaid
++flowchart LR
++    A["epistemic uncertainty"] --> B["risk penalty during deployment"]
++    A --> C["exploration bonus during learning"]
++    B --> D["avoid unknown risky futures"]
++    C --> E["collect data where model is ignorant"]
++```
++
++这也是为什么 epistemic uncertainty 很有价值：它不仅告诉模型“别乱信”，也告诉智能体“哪里值得补课”。
++
++## 9. 容易踩的坑
++
++### 9.1 把 stochastic latent 当成万能 uncertainty
++
++stochastic latent 能表达未来多样性，但不一定知道 OOD。  
++如果模型没见过冰面，它可能依然给出很自信的错误预测。
++
++### 9.2 只看预测方差，不看校准
++
++模型输出的方差不一定等于真实错误。  
++一个模型可能“方差小但错得大”，这叫过度自信。
++
++### 9.3 Ensemble 分歧低，不代表一定正确
++
++如果多个模型共享同样的数据偏差和结构偏差，它们可能一起错。  
++ensemble disagreement 是 proxy，不是真理探测器。
++
++### 9.4 一味惩罚不确定会阻止探索
++
++训练早期到处都不确定，如果太保守，智能体可能永远不去新区域。  
++所以 uncertainty 在不同阶段有不同用法：
++
++- 学习时：可以鼓励探索；
++- 执行时：可以帮助保守决策。
++
++## 10. 当前理解小结
++
++我现在可以这样理解 uncertainty：
++
++- uncertainty 不是单一概念；
++- aleatoric uncertainty 是世界本身随机或信息不足；
++- epistemic uncertainty 是模型没学明白、数据没覆盖；
++- stochastic latent 更偏向表达 aleatoric / 多模态未来；
++- ensemble disagreement 更偏向估计 epistemic / 模型无知；
++- planning 时可以用 uncertainty penalty 减少模型漏洞利用；
++- exploration 时可以用 epistemic uncertainty 指导数据收集。
++
++一句话放在最后：
++
++> **世界模型越强，越不能只问“我预测了什么”；还要问“我凭什么这么确定”。**
++
++## 11. 下一步问题
++
++后面可以继续追问：
++
++- 如何校准世界模型的不确定性？
++- ensemble、dropout、Bayesian neural network 各有什么取舍？
++- Dreamer 这类方法如何避免 actor exploit model error？
++- uncertainty 如何和 exploration bonus、risk-sensitive planning 结合？
++- 在大模型和机器人里，怎样判断模型是否正在 OOD 区域行动？
+```
+
+**Update: `docs/notes/README.md`**
+
+```diff
+@@
+ - [PlaNet 与 Dreamer：同一个世界模型，两种使用方式](world-models-9-planet-dreamer.md)
+ - [Dreamer 的 Actor-Critic：如何在想象中训练策略](world-models-10-dreamer-actor-critic.md)
++- [Uncertainty：世界模型不仅要预测未来，还要知道自己哪里不确定](world-models-11-uncertainty.md)
+```
+
+
+```
+Exit code: 0
+Wall time: 12.9 seconds
+Output:
+Success. Updated the following files:
+A docs/notes/world-models-11-uncertainty.md
+M docs/notes/README.md
+D docs/notes/world-models-11-uncertainty.md
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-04 08:20:39Z)**_
+
+第 11 篇已经整理完成：保留了你的原始主线，但把它压成更清晰的“概念区分 → 方法 → 决策用途 → 误区”结构。现在做格式检查。
+
+_**Agent (gpt-5.5 2026-08-04 08:20:39Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git diff --check -- docs\notes\world-models-11-uncertainty.md docs\notes\README.md`</summary>
+```
+Chunk ID: 3a67b6
+Wall time: 0.1550 seconds
+Process exited with code 0
+Original token count: 0
+Output:
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-04 08:20:39Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw docs\notes\world-models-11-uncertainty.md`</summary>
+```
+Chunk ID: da9509
+Wall time: 0.3249 seconds
+Process exited with code 0
+Original token count: 2464
+Output:
+# 11｜Uncertainty：世界模型不仅要预测未来，还要知道自己哪里不确定
+
+> 这一篇接在 [10｜Dreamer 的 Actor-Critic](world-models-10-dreamer-actor-critic.md) 后面。
+>
+> 前面我们已经看到：world model 可以预测未来、想象 rollout、训练 actor/value。现在要补上一个更深的能力：
+>
+> **一个可靠的世界模型，不应该只给出预测，还应该知道自己对哪些预测没有把握。**
+
+## 1. 一句话直觉
+
+世界模型的预测不只是：
+
+```text
+未来会发生什么？
+```
+
+还应该包括：
+
+```text
+我对这个未来有多确定？
+这种不确定来自世界本身，还是来自我没学过？
+```
+
+这就是 uncertainty 的意义。
+
+如果模型知道“哪里不确定”，智能体就能：
+
+- 避免盲目相信错误预测；
+- 在规划时对高风险未来打折；
+- 发现自己没见过的新区域；
+- 更主动地探索能减少无知的数据。
+
+## 2. 最重要的区分：不是所有不确定都一样
+
+在世界模型里，至少要区分两类 uncertainty：
+
+| 类型 | 中文直觉 | 来源 | 能不能靠更多数据减少？ |
+| --- | --- | --- | --- |
+| aleatoric uncertainty | 世界本身随机 | 环境噪声、多模态未来、观测不完整 | 通常不能完全消除 |
+| epistemic uncertainty | 模型自己不知道 | 数据不足、OOD 状态、没见过的动作组合 | 可以靠更多有效数据减少 |
+
+这两类不确定性长得都像“预测不准”，但含义完全不同。
+
+```mermaid
+flowchart TB
+    A["prediction uncertainty"] --> B["aleatoric: world is inherently ambiguous"]
+    A --> C["epistemic: model has not learned this region"]
+    B --> D["represent multiple plausible futures"]
+    C --> E["collect data / be conservative / avoid model exploitation"]
+```
+
+一句话：
+
+> **aleatoric 是世界不唯一；epistemic 是模型还无知。**
+
+## 3. Aleatoric uncertainty：世界本来就有多种可能
+
+aleatoric uncertainty 不是模型的失败，而是世界本身的信息不足。
+
+例子：
+
+- 骰子下一次会掷出什么，本来就是随机的；
+- 传感器观测有噪声；
+- 在 partial observation 下，同一个观测可能对应多个真实状态；
+- 同一个 state-action 之后，环境可能随机走向多个未来。
+
+在世界模型中，这类不确定常表现为：
+
+```text
+p(z_{t+1} | z_t, a_t)
+```
+
+不是一个点，而是一个分布。
+
+这就是 stochastic latent state 的价值：它允许模型表达“一族可能的未来”，而不是强行把未来压成一个平均答案。
+
+```mermaid
+flowchart LR
+    A["same current observation"] --> B["latent distribution"]
+    B --> C["possible future A"]
+    B --> D["possible future B"]
+    B --> E["possible future C"]
+```
+
+如果模型只输出平均未来，在多模态场景里会很危险。  
+比如未来可能“向左”也可能“向右”，平均后变成“站在中间”，但中间可能根本不是一个真实会发生的未来。
+
+## 4. Epistemic uncertainty：模型没见过，所以不该太自信
+
+epistemic uncertainty 来自模型知识不足。
+
+例子：
+
+- 机器人只在平地训练过，突然来到冰面；
+- 模型只见过小动作，规划器却尝试极端动作序列；
+- replay buffer 没覆盖某个状态区域；
+- actor 在 imagined rollout 中找到一个模型漏洞，看起来 reward 很高，但真实环境里完全不成立。
+
+这类不确定最危险的地方是：
+
+> 模型可能错得很离谱，但输出看起来很自信。
+
+这就是 model-based RL 里的经典问题：**model exploitation**。  
+actor 或 planner 可能会找到世界模型的错误缝隙，在“假世界”里拿高分，在真实环境里翻车。
+
+## 5. Stochastic latent 主要解决哪一种？
+
+前面学过的 stochastic latent state，主要帮助表达：
+
+- 同一个当前信息下，未来可能不唯一；
+- partial observation 导致多个 latent explanation 都合理；
+- 环境本身带随机性。
+
+也就是更偏向：
+
+```text
+aleatoric uncertainty
+```
+
+但要小心：
+
+> stochastic latent 不等于 epistemic uncertainty。
+
+原因是：  
+一个模型即使完全没见过某个区域，也可能在那里输出一个很窄的 Gaussian 分布，看起来“很确定”。这不代表它真的懂，只代表它没有机制表达“我不知道”。
+
+所以：
+
+- stochastic latent：表达未来的多样性；
+- epistemic uncertainty：表达模型知识的空白。
+
+这两件事相关，但不能混为一谈。
+
+## 6. Ensemble：估计 epistemic uncertainty 的朴素方法
+
+估计 epistemic uncertainty 的经典方法之一是 ensemble。
+
+做法很直接：
+
+1. 训练多个 world models；
+2. 给它们同一个 state/action；
+3. 比较它们的预测是否一致；
+4. 分歧越大，说明模型越没把握。
+
+```mermaid
+flowchart LR
+    A["same state/action"] --> M1["world model 1"]
+  
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-04 08:20:39Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git status --short --branch`</summary>
+```
+Chunk ID: 061230
+Wall time: 0.1761 seconds
+Process exited with code 0
+Original token count: 49
+Output:
+## main...origin/main
+ M .specstory/history/2026-07-19_03-33-50Z-github-github-https-github.md
+ M .specstory/statistics.json
+ M docs/notes/README.md
+?? docs/notes/world-models-11-uncertainty.md
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-04 08:21:01Z)**_
+
+已完成第 11 篇笔记优化，没有修改 `src` 或 `examples`。
+
+修改文件：
+
+- [world-models-11-uncertainty.md](E:/HelloWorldModel/docs/notes/world-models-11-uncertainty.md)
+- [docs/notes/README.md](E:/HelloWorldModel/docs/notes/README.md)
+
+主要优化：
+
+- 把原始内容整理成开源项目风格的完整结构。
+- 深化了 `aleatoric uncertainty` 与 `epistemic uncertainty` 的区别。
+- 解释了 stochastic latent 主要表达哪类不确定性，以及为什么它不能等同于 epistemic uncertainty。
+- 增加了 ensemble disagreement、risk-aware planning、exploration bonus 的直觉和伪代码。
+- 加入多张 Mermaid 图辅助理解。
+- 保留“简洁但深刻”的风格，没有扩成论文综述。
+
+检查结果：
+
+```bash
+git diff --check -- docs\notes\world-models-11-uncertainty.md docs\notes\README.md
+```
+
+通过，没有格式问题。
+
+你检查后可以 add：
+
+```bash
+git add docs\notes\world-models-11-uncertainty.md docs\notes\README.md
+```
+
+`.specstory/...` 仍是自动变更，建议不要加入这次提交。

@@ -29,3 +29,4 @@ YYYY-MM-DD-topic.md
 - [PlaNet 与 Dreamer：同一个世界模型，两种使用方式](world-models-9-planet-dreamer.md)
 - [Dreamer 的 Actor-Critic：如何在想象中训练策略](world-models-10-dreamer-actor-critic.md)
 - [Uncertainty：世界模型不仅要预测未来，还要知道自己哪里不确定](world-models-11-uncertainty.md)
+- [校准与使用 Uncertainty：从“我不确定”到更可靠的世界模型决策](world-models-12-uncertainty-calibration-and-risk.md)
