@@ -28,3 +28,4 @@ YYYY-MM-DD-topic.md
 - [Prior 与 Posterior Latent：世界模型如何“先猜，再校正”](world-models-8-prior-and-posterior-latent.md)
 - [PlaNet 与 Dreamer：同一个世界模型，两种使用方式](world-models-9-planet-dreamer.md)
 - [Dreamer 的 Actor-Critic：如何在想象中训练策略](world-models-10-dreamer-actor-critic.md)
+- [Uncertainty：世界模型不仅要预测未来，还要知道自己哪里不确定](world-models-11-uncertainty.md)
