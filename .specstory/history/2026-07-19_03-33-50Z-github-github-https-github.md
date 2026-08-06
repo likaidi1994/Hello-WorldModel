@@ -24826,3 +24826,2017 @@ git add docs\notes\world-models-11-uncertainty.md docs\notes\README.md
 ```
 
 `.specstory/...` 仍是自动变更，建议不要加入这次提交。
+
+---
+
+_**User (2026-08-04 11:37:57Z)**_
+
+你在上篇笔记的结尾提到：
+11. 下一步问题
+后面可以继续追问：
+如何校准世界模型的不确定性？
+ensemble、dropout、Bayesian neural network 各有什么取舍？
+Dreamer 这类方法如何避免 actor exploit model error？
+uncertainty 如何和 exploration bonus、risk-sensitive planning 结合？
+在大模型和机器人里，怎样判断模型是否正在 OOD 区域行动？ 请你作为世界模型专家，按照之前的开源风格生成第12篇笔记，探讨，解答上述问题；
+
+
+---
+
+_**Agent (gpt-5.5 2026-08-04 11:38:08Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Planning 12th note creation with optional diagrams**
+</details></think>
+
+_**Agent (gpt-5.5 2026-08-04 11:38:10Z)**_
+
+我来生成第 12 篇。它会承接第 11 篇的“下一步问题”，专门回答：不确定性校准、ensemble/dropout/BNN 取舍、避免 actor 利用模型漏洞、exploration/risk planning、以及机器人/大模型中的 OOD 判断。范围仍然只放在 `docs/notes`，不加代码。
+
+_**Agent (gpt-5.5 2026-08-04 11:38:13Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw C:\Users\Lenovo\.codex\plugins\cache\openai-bundled\visualize\1.0.15\skills\visualize\SKILL.md`</summary>
+```
+Chunk ID: 1c10d0
+Wall time: 0.5034 seconds
+Process exited with code 0
+Original token count: 5162
+Output:
+---
+name: visualize
+description: "Create visualizations and interactive tools directly in conversation. Use when asked to show how something works, make simulators or labs, maps, plots, charts or graphs, comparisons, scenarios, adjustable inputs, and exploration beyond regular text."
+---
+
+# Visualize
+
+- A request for a new standalone file, website, app page, component, or other
+  project change is not an in-conversation visualization request, even when the
+  deliverable contains charts or interactive content.
+- Create a visual only when the user needs to see or explore it in the
+  conversation and it materially improves the explanation. Do not create an
+  inline visual merely because the request involves data, charts, or an
+  interactive page.
+- Use Mermaid when labeled nodes and edges fully explain a static structure;
+  return a normal fenced Mermaid block and no visualization file. Use HTML for
+  dynamics, spatial motion, adjustable inputs, and other visuals.
+- Work silently unless blocked or the user explicitly asks for progress. Never
+  send commentary or progress updates while reading this skill or writing or
+  updating the file; the final response must be your first user-facing message.
+- In user-facing prose, describe only what the visual helps the user see or
+  decide. Keep it concise and do not repeat information already clear from the
+  visual. Never announce this skill, a visualization surface, widgets, HTML,
+  SVG, scripts, local files, inline data, or implementation details.
+
+## Context compaction
+
+Copy into every compaction summary:
+`Reload the full visualize skill before creating or updating a visualization.`
+
+## Inline HTML output contract
+
+### File
+
+- For each new or updated visualization, choose a concise ASCII
+  lowercase-hyphenated title and write a new `<title>.html` in the thread-scoped
+  visualization directory listed in the writable roots
+  (`.codex/visualizations/YYYY/MM/DD/<thread-id>`).
+- Build the visual in the conversation. Use the open project when the user asks
+  for a site, app page, component, or change to existing project files.
+
+### Fragment
+
+- Write only an HTML fragment: no `<!doctype>`, `<html>`, `<head>`, or `<body>`.
+- Write literal markup: use `<div class="card">Hi</div>` plus a real newline,
+  never `<div class=\"card\">Hi</div>\n`. Never embed the fragment in an inline
+  Python, JavaScript, or shell string. Read it back; rewrite literal `\"` or
+  `\n`.
+- Keep CSS and JavaScript in the fragment only when base classes are
+  insufficient. Load static resources only from the CDN allowlist. Never use
+  `fetch`, XHR, WebSocket, or other API calls.
+- Give the fragment root a unique ID and select it with
+  `document.getElementById(...)`. Never derive the root from
+  `document.currentScript`; scripts may sit outside the root.
+- Keep visualizations under 2 MB. Aggregate, bin, downsample, reduce precision,
+  or drop unused fields from large inline datasets.
+- Check that JavaScript has no undefined identifiers, every queried element
+  exists, and the primary interaction updates the visual. The bundled
+  `python3 scripts/render.py <absolute-fragment-path> [<destination>.html] [--serve]`
+  can wrap a fragment as standalone HTML or temporarily serve it for browser
+  inspection when a preview would help with layout, theme, or runtime behavior.
+
+### Content and response
+
+- Keep the fragment focused on the visualization. Do not include explanatory
+  paragraphs, formulas, instructions, or narrative callouts. Include only
+  necessary labels, legends, values, and accessible text alternatives.
+- Use the normal response flow. Put any necessary concise explanation outside
+  the fragment, and add this exact directive on its own line where the visual
+  should appear:
+
+```text
+::codex-inline-vis{file="<title>.html"}
+```
+
+- Emit only the directive for the fragment. Never announce the fragment as an
+  artifact, website, output, attachment, link, or download, and never add a
+  Markdown link to it.
+
+### External resources
+
+- The CSP allows only `cdnjs.cloudflare.com`, `esm.sh`, `cdn.jsdelivr.net`,
+  `unpkg.com`, `fonts.googleapis.com`, `fonts.gstatic.com`, and
+  `fonts.bunny.net`. Other origins are blocked and fail silently.
+
+## Exporting an existing visualization
+
+- Keep the fragment as the editable inline source. When the user explicitly asks
+  to save, export, or publish a visualization that is already shown in the
+  conversation, render it with
+  `python3 scripts/render.py <absolute-fragment-path> <destination>.html`.
+- Apply this export flow only when the user explicitly asks to turn the existing
+  inline source or visualization into a website. For a general website request,
+  build a new responsive site in the output directory or open project, using
+  Sites when appropriate, without applying th
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-04 11:38:22Z)**_
+
+我会用 Mermaid 做少量结构图，不生成额外图片文件；第 12 篇主要是“回答问题 + 建立判断框架”。现在看一下目录状态和是否已有第 12 篇文件。
+
+_**Agent (gpt-5.5 2026-08-04 11:38:23Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `rg --files docs\notes`</summary>
+```
+Chunk ID: 766df7
+Wall time: 0.2232 seconds
+Process exited with code 0
+Original token count: 126
+Output:
+docs\notes\world-models-9-planet-dreamer.md
+docs\notes\world-models-8-prior-and-posterior-latent.md
+docs\notes\world-models-7-stochastic-latent-state.md
+docs\notes\world-models-6-latent-dynamics.md
+docs\notes\world-models-5-planning.md
+docs\notes\world-models-4-reward.md
+docs\notes\world-models-3-latent-memory.md
+docs\notes\world-models-2-basics.md
+docs\notes\world-models-11-uncertainty.md
+docs\notes\world-models-10-dreamer-actor-critic.md
+docs\notes\world-models-1-intuition.md
+docs\notes\README.md
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-04 11:38:23Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw docs\notes\README.md`</summary>
+```
+Chunk ID: 0ad478
+Wall time: 0.4455 seconds
+Process exited with code 0
+Original token count: 335
+Output:
+# 学习笔记
+
+这里存放世界模型学习过程中的笔记、思考和论文阅读记录。
+
+建议命名方式：
+
+```text
+YYYY-MM-DD-topic.md
+```
+
+建议每篇笔记包含：
+
+- 今天解决了什么问题。
+- 我现在怎么理解这个概念。
+- 有哪些例子或代码帮助理解。
+- 还不理解什么。
+- 下一步准备做什么。
+
+## 当前笔记
+
+- [世界模型的第一层直觉](world-models-1-intuition.md)
+- [MDP、POMDP 与最小世界模型](world-models-2-basics.md)
+- [为什么世界模型需要 memory 与 latent state](world-models-3-latent-memory.md)
+- [为什么世界模型需要预测 reward](world-models-4-reward.md)
+- [用世界模型做 planning](world-models-5-planning.md)
+- [为什么要转向 latent dynamics](world-models-6-latent-dynamics.md)
+- [为什么世界模型需要 stochastic latent state](world-models-7-stochastic-latent-state.md)
+- [Prior 与 Posterior Latent：世界模型如何“先猜，再校正”](world-models-8-prior-and-posterior-latent.md)
+- [PlaNet 与 Dreamer：同一个世界模型，两种使用方式](world-models-9-planet-dreamer.md)
+- [Dreamer 的 Actor-Critic：如何在想象中训练策略](world-models-10-dreamer-actor-critic.md)
+- [Uncertainty：世界模型不仅要预测未来，还要知道自己哪里不确定](world-models-11-uncertainty.md)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-04 11:38:23Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git status --short --branch`</summary>
+```
+Chunk ID: fcb24f
+Wall time: 0.2569 seconds
+Process exited with code 0
+Original token count: 32
+Output:
+## main...origin/main
+ M .specstory/history/2026-07-19_03-33-50Z-github-github-https-github.md
+ M .specstory/statistics.json
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-04 11:38:31Z)**_
+
+当前没有第 12 篇文件，我会新建 `docs/notes/world-models-12-uncertainty-calibration-and-risk.md`，并把它加入笔记目录。
+
+_**Agent (gpt-5.5 2026-08-04 11:39:32Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Add: `docs/notes/world-models-12-uncertainty-calibration-and-risk.md`**
+
+```diff
++# 12｜校准与使用 Uncertainty：从“我不确定”到更可靠的世界模型决策
++
++> 这一篇接在 [11｜Uncertainty](world-models-11-uncertainty.md) 后面。
++>
++> 第 11 篇解决的是“uncertainty 是什么”。这一篇继续追问：
++>
++> - 如何校准世界模型的不确定性？
++> - ensemble、dropout、Bayesian neural network 各有什么取舍？
++> - Dreamer 这类方法如何避免 actor exploit model error？
++> - uncertainty 如何和 exploration bonus、risk-sensitive planning 结合？
++> - 在大模型和机器人里，怎样判断模型是否正在 OOD 区域行动？
++
++## 1. 一句话直觉
++
++uncertainty 的目标不是让模型“显得谨慎”，而是让模型的犹豫有意义。
++
++一个好的 uncertainty 应该满足：
++
++```text
++模型说自己很确定时，真的应该大概率正确；
++模型说自己不确定时，那里通常应该更容易出错、更缺数据、或更危险。
++```
++
++所以，我们真正关心的是：
++
++> **uncertainty 是否 calibrated，是否能改变决策。**
++
++如果 uncertainty 只是一个漂亮的数字，却不能帮助探索、规划或避免事故，那它就只是装饰品。
++
++## 2. 什么叫“校准” uncertainty？
++
++校准（calibration）可以理解成：模型的信心和真实错误率匹配。
++
++如果模型说：
++
++```text
++我对这些预测有 90% 把握
++```
++
++那么在大量类似样本上，它最好真的大约 90% 正确。
++
++对世界模型来说，校准不只看分类概率，还要看连续预测：
++
++- 预测的状态分布是否覆盖真实下一状态；
++- 预测的 reward uncertainty 是否对应真实 reward error；
++- ensemble disagreement 高的地方，真实 rollout 是否更容易偏离；
++- OOD 状态是否比 in-distribution 状态有更高 uncertainty。
++
++```mermaid
++flowchart LR
++    A["model confidence / uncertainty"] --> B["compare with real prediction error"]
++    B --> C{"well calibrated?"}
++    C --> D["yes: uncertainty can guide decisions"]
++    C --> E["no: uncertainty may be misleading"]
++```
++
++一句话：
++
++> **校准不是让 uncertainty 越大越好，而是让它和真实风险对得上。**
++
++## 3. 如何检查世界模型 uncertainty 是否可靠？
++
++可以从三个层面检查。
++
++### 3.1 预测区间覆盖率
++
++如果模型预测：
++
++```text
++next_state 落在 90% interval 里
++```
++
++那么真实 next_state 应该大约 90% 落进去。
++
++如果只有 50% 落进去，说明模型过度自信。  
++如果 99% 都落进去，说明模型太保守，uncertainty 可能过大。
++
++### 3.2 uncertainty-error correlation
++
++把样本按 uncertainty 从低到高排序，看真实 prediction error 是否也整体升高。
++
++```mermaid
++flowchart TB
++    A["collect transitions"] --> B["model predicts mean and uncertainty"]
++    B --> C["compute real prediction error"]
++    C --> D["sort by uncertainty"]
++    D --> E["check: higher uncertainty -> higher error?"]
++```
++
++这不要求每个样本都严格单调，但整体趋势应该存在。
++
++### 3.3 OOD sensitivity
++
++给模型两类输入：
++
++- 训练分布内的 state/action；
++- 明显分布外的 state/action。
++
++如果模型对 OOD 输入仍然非常自信，这个 uncertainty 机制就不适合直接用于安全决策。
++
++## 4. Ensemble、Dropout、Bayesian Neural Network 的取舍
++
++这三类方法都可以估计 epistemic uncertainty，但工程取舍不同。
++
++| 方法 | 核心想法 | 优点 | 缺点 | 适合什么时候 |
++| --- | --- | --- | --- | --- |
++| Ensemble | 训练多个模型，看预测分歧 | 简单、强基线、常好用 | 训练和推理成本高 | model-based RL、机器人、安全规划 |
++| MC Dropout | 推理时打开 dropout，多次采样 | 成本较低，容易加到现有网络 | uncertainty 质量不稳定，依赖实现细节 | 快速实验、资源有限 |
++| Bayesian NN | 显式建模权重分布 | 概念最正统 | 实现复杂、训练难、规模化不易 | 小模型、研究场景 |
++
++它们的关系可以这样看：
++
++```mermaid
++flowchart LR
++    A["epistemic uncertainty"] --> B["Ensemble: disagreement across models"]
++    A --> C["MC Dropout: disagreement across stochastic passes"]
++    A --> D["Bayesian NN: posterior over weights"]
++    B --> E["strong practical baseline"]
++    C --> F["cheap approximate baseline"]
++    D --> G["principled but harder"]
++```
++
++我的实践判断是：
++
++> 如果你要先做一个靠谱的 world model uncertainty baseline，优先从 ensemble 开始。
++
++原因很朴素：ensemble 不优雅，但经常稳。  
++它也更容易和 planning、risk penalty、OOD detection 连接起来。
++
++## 5. Dreamer 如何避免 actor exploit model error？
++
++Dreamer 的 actor 是在 world model 里训练的，所以它可能学会钻模型漏洞。
++
++典型问题是：
++
++```text
++world model 幻想某个动作序列 reward 很高
++actor 学会反复选择这类动作
++真实环境里这个动作其实很差
++```
++
++这就是 actor exploit model error。
++
++```mermaid
++flowchart TB
++    A["world model has blind spot"] --> B["imagined rollout gives fake high reward"]
++    B --> C["actor learns to exploit fake reward"]
++    C --> D["real environment performance collapses"]
++```
++
++常见缓解思路有几类。
++
++### 5.1 缩短 imagination horizon
++
++想象得越远，模型误差越容易累积。  
++短 horizon 更保守，但可能牺牲长程规划能力。
++
++### 5.2 更频繁地用真实数据更新 world model
++
++actor 如果找到模型漏洞，就把它带回真实环境验证。  
++真实环境数据进入 replay buffer 后，world model 有机会修正这个漏洞。
++
++### 5.3 对高 uncertainty 的 imagined return 打折
++
++如果某条 imagined trajectory 经过高 uncertainty 区域，就降低它的 score：
++
++```text
++safe_return = imagined_return - α × model_uncertainty
++```
++
++### 5.4 使用 ensemble 或 disagreement 约束 actor
++
++如果多个 world models 对未来预测分歧很大，就不应该让 actor 过度相信这条轨迹。
++
++### 5.5 保持数据覆盖
++
++只用当前 actor 收集数据，可能会越来越窄。  
++适度探索、噪声策略、多样化 replay，都能减少模型只懂一小块世界的风险。
++
++一句话：
++
++> **Dreamer 的核心风险不是“不会想象”，而是“太相信自己想象出来的假世界”。**
++
++## 6. Uncertainty 如何进入 exploration bonus？
++
++探索时，epistemic uncertainty 可以变成奖励：
++
++```text
++reward_for_learning = task_reward + β × epistemic_uncertainty
++```
++
++意思是：
++
++- task reward 鼓励完成任务；
++- uncertainty bonus 鼓励去模型还不懂的地方；
++- 采到新数据后，epistemic uncertainty 应该下降。
++
++```mermaid
++flowchart LR
++    A["high epistemic uncertainty"] --> B["exploration bonus"]
++    B --> C["agent visits unknown region"]
++    C --> D["collect new data"]
++    D --> E["world model improves"]
++    E --> F["uncertainty decreases"]
++```
++
++这里要注意：探索奖励应该主要来自 epistemic uncertainty，而不是 aleatoric uncertainty。
++
++为什么？
++
++- epistemic 高：模型没学过，去探索有信息价值；
++- aleatoric 高：世界本来随机，反复探索也未必减少随机性。
++
++如果把 aleatoric uncertainty 当探索奖励，智能体可能沉迷于噪声源。  
++比如它发现一个随机闪烁的灯，每次都很不确定，于是一直盯着灯看，但并没有学到真正有用的控制知识。
++
++## 7. Uncertainty 如何进入 risk-sensitive planning？
++
++执行任务时，uncertainty 的作用常常反过来：不是奖励，而是惩罚。
++
++最朴素的风险敏感目标是：
++
++```text
++score = expected_return - α × uncertainty
++```
++
++更一般地，可以根据任务选择不同风险偏好：
++
++| 场景 | 目标 |
++| --- | --- |
++| 训练探索 | 鼓励 epistemic uncertainty |
++| 安全部署 | 惩罚高 uncertainty |
++| 高风险机器人控制 | 保守选择低 uncertainty action |
++| 科学实验设计 | 选择最能减少 epistemic uncertainty 的实验 |
++
++一个清晰的分离原则：
++
++```text
++learning mode:  uncertainty can be attractive
++deployment mode: uncertainty should be respected
++```
++
++```mermaid
++flowchart TB
++    A["uncertainty estimate"] --> B{"current mode?"}
++    B --> C["learning / exploration"]
++    B --> D["deployment / safety"]
++    C --> E["bonus: go learn unknown regions"]
++    D --> F["penalty: avoid unreliable predictions"]
++```
++
++## 8. 大模型和机器人里，如何判断 OOD？
++
++OOD（out-of-distribution）不是一个单点标签，而是一种“当前输入和训练经验不匹配”的状态。
++
++在机器人和大模型里，常见 OOD 信号包括：
++
++### 8.1 表征距离异常
++
++当前 observation 的 embedding 距离 replay buffer / training data 很远。
++
++```text
++distance(embedding(current_obs), nearest_training_embeddings) is high
++```
++
++这说明模型可能进入了没见过的区域。
++
++### 8.2 Ensemble disagreement 高
++
++多个 dynamics / reward / value models 对同一未来预测分歧变大。
++
++这通常是 model-based RL 里最直接的 OOD proxy。
++
++### 8.3 预测误差突然升高
++
++如果在线交互中发现：
++
++```text
++predicted next_obs 和 real next_obs 差距突然变大
++```
++
++说明模型正在经历 distribution shift。
++
++### 8.4 规划结果异常乐观
++
++如果 imagined return 很高，但同时：
++
++- uncertainty 很高；
++- action 很极端；
++- trajectory 离训练数据很远；
++- 多模型预测分歧大；
++
++那很可能是 actor/planner exploit model error。
++
++```mermaid
++flowchart TB
++    A["current state/action"] --> B["embedding distance"]
++    A --> C["ensemble disagreement"]
++    A --> D["online prediction error"]
++    A --> E["over-optimistic imagined return"]
++    B --> F["OOD warning"]
++    C --> F
++    D --> F
++    E --> F
++```
++
++## 9. 一个实用的安全决策框架
++
++可以把 uncertainty 用成一个三层系统：
++
++```mermaid
++flowchart TB
++    A["world model prediction"] --> B["uncertainty estimation"]
++    B --> C["calibration check"]
++    C --> D{"decision mode"}
++    D --> E["explore: add uncertainty bonus"]
++    D --> F["plan: subtract uncertainty penalty"]
++    D --> G["safety: trigger fallback / ask for data"]
++```
++
++对应到实现上：
++
++1. 先让模型预测 future / reward / value；
++2. 再估计 aleatoric 和 epistemic uncertainty；
++3. 用真实 rollout 或 held-out 数据检查 calibration；
++4. 如果是训练期，用 epistemic uncertainty 指导探索；
++5. 如果是部署期，对高 uncertainty 动作保守处理；
++6. 如果 uncertainty 或 OOD 信号超过阈值，触发 fallback。
++
++fallback 可以很简单：
++
++- 降低速度；
++- 缩短 planning horizon；
++- 回到保守 controller；
++- 请求人类接管；
++- 收集数据后再更新模型。
++
++这在机器人里尤其重要。  
++模型越强，越需要知道何时不该继续自信行动。
++
++## 10. 当前理解小结
++
++我现在可以这样理解 uncertainty 的完整链条：
++
++- uncertainty 不只是预测方差，而是决策信号；
++- calibration 让 uncertainty 和真实错误率对齐；
++- ensemble 是实践中很强的 epistemic uncertainty baseline；
++- dropout 便宜但不一定稳定；
++- Bayesian neural network 更原则化，但工程复杂；
++- Dreamer 的 actor 可能 exploit model error，所以需要真实数据闭环和 uncertainty 约束；
++- exploration 时可以奖励 epistemic uncertainty；
++- deployment 时应该惩罚或尊重 uncertainty；
++- OOD 判断可以结合 embedding distance、ensemble disagreement、online prediction error 和异常乐观的 imagined return。
++
++一句话放在最后：
++
++> **真正成熟的世界模型，不只是会想象未来；它还知道哪些未来不能轻信。**
++
++## 11. 下一步问题
++
++后面可以继续进入更大的问题：
++
++- 世界模型如何从低维 toy env 走向像素输入？
++- representation learning 如何影响 dynamics learning？
++- DreamerV2/V3 为什么使用离散 latent 和 symlog？
++- 世界模型和大语言模型里的“世界知识”有什么关系？
++- 机器人里的 foundation world model 应该如何评估？
+```
+
+**Update: `docs/notes/README.md`**
+
+```diff
+@@
+ - [Dreamer 的 Actor-Critic：如何在想象中训练策略](world-models-10-dreamer-actor-critic.md)
+ - [Uncertainty：世界模型不仅要预测未来，还要知道自己哪里不确定](world-models-11-uncertainty.md)
++- [校准与使用 Uncertainty：从“我不确定”到更可靠的世界模型决策](world-models-12-uncertainty-calibration-and-risk.md)
+```
+
+
+```
+Exit code: 0
+Wall time: 5.8 seconds
+Output:
+Success. Updated the following files:
+A docs/notes/world-models-12-uncertainty-calibration-and-risk.md
+M docs/notes/README.md
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-04 11:39:45Z)**_
+
+第 12 篇已生成并加入目录。我现在做 Markdown diff 检查，主要看尾随空格和目录链接。
+
+_**Agent (gpt-5.5 2026-08-04 11:39:45Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git diff --check -- docs\notes\world-models-12-uncertainty-calibration-and-risk.md docs\notes\README.md`</summary>
+```
+Chunk ID: e3215a
+Wall time: 0.2840 seconds
+Process exited with code 0
+Original token count: 0
+Output:
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-04 11:39:45Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw docs\notes\world-models-12-uncertainty-calibration-and-risk.md`</summary>
+```
+Chunk ID: e42882
+Wall time: 0.4640 seconds
+Process exited with code 0
+Original token count: 2980
+Output:
+# 12｜校准与使用 Uncertainty：从“我不确定”到更可靠的世界模型决策
+
+> 这一篇接在 [11｜Uncertainty](world-models-11-uncertainty.md) 后面。
+>
+> 第 11 篇解决的是“uncertainty 是什么”。这一篇继续追问：
+>
+> - 如何校准世界模型的不确定性？
+> - ensemble、dropout、Bayesian neural network 各有什么取舍？
+> - Dreamer 这类方法如何避免 actor exploit model error？
+> - uncertainty 如何和 exploration bonus、risk-sensitive planning 结合？
+> - 在大模型和机器人里，怎样判断模型是否正在 OOD 区域行动？
+
+## 1. 一句话直觉
+
+uncertainty 的目标不是让模型“显得谨慎”，而是让模型的犹豫有意义。
+
+一个好的 uncertainty 应该满足：
+
+```text
+模型说自己很确定时，真的应该大概率正确；
+模型说自己不确定时，那里通常应该更容易出错、更缺数据、或更危险。
+```
+
+所以，我们真正关心的是：
+
+> **uncertainty 是否 calibrated，是否能改变决策。**
+
+如果 uncertainty 只是一个漂亮的数字，却不能帮助探索、规划或避免事故，那它就只是装饰品。
+
+## 2. 什么叫“校准” uncertainty？
+
+校准（calibration）可以理解成：模型的信心和真实错误率匹配。
+
+如果模型说：
+
+```text
+我对这些预测有 90% 把握
+```
+
+那么在大量类似样本上，它最好真的大约 90% 正确。
+
+对世界模型来说，校准不只看分类概率，还要看连续预测：
+
+- 预测的状态分布是否覆盖真实下一状态；
+- 预测的 reward uncertainty 是否对应真实 reward error；
+- ensemble disagreement 高的地方，真实 rollout 是否更容易偏离；
+- OOD 状态是否比 in-distribution 状态有更高 uncertainty。
+
+```mermaid
+flowchart LR
+    A["model confidence / uncertainty"] --> B["compare with real prediction error"]
+    B --> C{"well calibrated?"}
+    C --> D["yes: uncertainty can guide decisions"]
+    C --> E["no: uncertainty may be misleading"]
+```
+
+一句话：
+
+> **校准不是让 uncertainty 越大越好，而是让它和真实风险对得上。**
+
+## 3. 如何检查世界模型 uncertainty 是否可靠？
+
+可以从三个层面检查。
+
+### 3.1 预测区间覆盖率
+
+如果模型预测：
+
+```text
+next_state 落在 90% interval 里
+```
+
+那么真实 next_state 应该大约 90% 落进去。
+
+如果只有 50% 落进去，说明模型过度自信。  
+如果 99% 都落进去，说明模型太保守，uncertainty 可能过大。
+
+### 3.2 uncertainty-error correlation
+
+把样本按 uncertainty 从低到高排序，看真实 prediction error 是否也整体升高。
+
+```mermaid
+flowchart TB
+    A["collect transitions"] --> B["model predicts mean and uncertainty"]
+    B --> C["compute real prediction error"]
+    C --> D["sort by uncertainty"]
+    D --> E["check: higher uncertainty -> higher error?"]
+```
+
+这不要求每个样本都严格单调，但整体趋势应该存在。
+
+### 3.3 OOD sensitivity
+
+给模型两类输入：
+
+- 训练分布内的 state/action；
+- 明显分布外的 state/action。
+
+如果模型对 OOD 输入仍然非常自信，这个 uncertainty 机制就不适合直接用于安全决策。
+
+## 4. Ensemble、Dropout、Bayesian Neural Network 的取舍
+
+这三类方法都可以估计 epistemic uncertainty，但工程取舍不同。
+
+| 方法 | 核心想法 | 优点 | 缺点 | 适合什么时候 |
+| --- | --- | --- | --- | --- |
+| Ensemble | 训练多个模型，看预测分歧 | 简单、强基线、常好用 | 训练和推理成本高 | model-based RL、机器人、安全规划 |
+| MC Dropout | 推理时打开 dropout，多次采样 | 成本较低，容易加到现有网络 | uncertainty 质量不稳定，依赖实现细节 | 快速实验、资源有限 |
+| Bayesian NN | 显式建模权重分布 | 概念最正统 | 实现复杂、训练难、规模化不易 | 小模型、研究场景 |
+
+它们的关系可以这样看：
+
+```mermaid
+flowchart LR
+    A["epistemic uncertainty"] --> B["Ensemble: disagreement across models"]
+    A --> C["MC Dropout: disagreement across stochastic passes"]
+    A --> D["Bayesian NN: posterior over weights"]
+    B --> E["strong practical baseline"]
+    C --> F["cheap approximate baseline"]
+    D --> G["principled but harder"]
+```
+
+我的实践判断是：
+
+> 如果你要先做一个靠谱的 world model uncertainty baseline，优先从 ensemble 开始。
+
+原因很朴素：ensemble 不优雅，但经常稳。  
+它也更容易和 planning、risk penalty、OOD detection 连接起来。
+
+## 5. Dreamer 如何避免 actor exploit model error？
+
+Dreamer 的 actor 是在 world model 里训练的，所以它可能学会钻模型漏洞。
+
+典型问题是：
+
+```text
+world model 幻想某个动作序列 reward 很高
+actor 学会反复选择这类动作
+真实环境里这个动作其实很差
+```
+
+这就是 actor exploit mode
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-04 11:39:45Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git status --short --branch`</summary>
+```
+Chunk ID: e7b4fa
+Wall time: 0.2366 seconds
+Process exited with code 0
+Original token count: 54
+Output:
+## main...origin/main
+ M .specstory/history/2026-07-19_03-33-50Z-github-github-https-github.md
+ M .specstory/statistics.json
+ M docs/notes/README.md
+?? docs/notes/world-models-12-uncertainty-calibration-and-risk.md
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-04 11:39:59Z)**_
+
+已生成第 12 篇笔记，并更新目录。没有修改 `src` 或 `examples`。
+
+新增文件：
+
+- [world-models-12-uncertainty-calibration-and-risk.md](E:/HelloWorldModel/docs/notes/world-models-12-uncertainty-calibration-and-risk.md)
+
+修改文件：
+
+- [docs/notes/README.md](E:/HelloWorldModel/docs/notes/README.md)
+
+这篇主要回答了你从第 11 篇延伸出的几个问题：
+
+- 如何校准世界模型的不确定性；
+- ensemble、MC dropout、Bayesian neural network 的取舍；
+- Dreamer 如何避免 actor exploit model error；
+- uncertainty 如何分别用于 exploration bonus 和 risk-sensitive planning；
+- 大模型/机器人中如何判断 OOD；
+- 最后给出一个安全决策框架。
+
+检查结果：
+
+```bash
+git diff --check -- docs\notes\world-models-12-uncertainty-calibration-and-risk.md docs\notes\README.md
+```
+
+通过，没有格式问题。
+
+你检查后可以 add：
+
+```bash
+git add docs\notes\world-models-12-uncertainty-calibration-and-risk.md docs\notes\README.md
+```
+
+`.specstory/...` 仍是自动变更，建议不要加入本次提交。
+
+---
+
+_**User (2026-08-05 04:45:55Z)**_
+
+现在更新了笔记：docs\notes\world-models-13-object-centric-physics-aware.md请你作为世界模型专家，审视这个文件的内容，并按照开源项目风格，进行格式和内容的优化，你可以生成一些形象的图示辅助理解；我笔记离提到的代码，这次比较简单，在笔记里讲解示意一下就可以，不用在src里添加；你可以用自己的专业知识进行修改，让整篇笔记深刻，简洁。
+
+
+_**User (2026-08-05 04:54:45Z)**_
+
+现在更新了笔记：docs\notes\world-models-13-object-centric-physics-aware.md请你作为世界模型专家，审视这个文件的内容，并按照开源项目风格，进行格式和内容的优化，你可以生成一些形象的图示辅助理解；我笔记离提到的代码，这次比较简单，在笔记里讲解示意一下就可以，不用在src里添加；你可以用自己的专业知识进行修改，让整篇笔记深刻，简洁。
+
+
+---
+
+_**Agent (gpt-5.5 2026-08-05 04:54:54Z)**_
+
+我来处理第 13 篇。这篇主题很漂亮：object-centric 和 physics-aware 是世界模型从“黑箱预测”走向“可组合、可泛化、可干预”的关键一步。我会只改笔记和目录，不加 `src` 代码；图示用 Mermaid 嵌在 Markdown 里。先读可视化规则和你当前文件内容。
+
+_**Agent (gpt-5.5 2026-08-05 04:54:55Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw C:\Users\Lenovo\.codex\plugins\cache\openai-bundled\visualize\1.0.15\skills\visualize\SKILL.md`</summary>
+```
+Chunk ID: 4e8c8c
+Wall time: 0.8986 seconds
+Process exited with code 0
+Original token count: 5162
+Output:
+---
+name: visualize
+description: "Create visualizations and interactive tools directly in conversation. Use when asked to show how something works, make simulators or labs, maps, plots, charts or graphs, comparisons, scenarios, adjustable inputs, and exploration beyond regular text."
+---
+
+# Visualize
+
+- A request for a new standalone file, website, app page, component, or other
+  project change is not an in-conversation visualization request, even when the
+  deliverable contains charts or interactive content.
+- Create a visual only when the user needs to see or explore it in the
+  conversation and it materially improves the explanation. Do not create an
+  inline visual merely because the request involves data, charts, or an
+  interactive page.
+- Use Mermaid when labeled nodes and edges fully explain a static structure;
+  return a normal fenced Mermaid block and no visualization file. Use HTML for
+  dynamics, spatial motion, adjustable inputs, and other visuals.
+- Work silently unless blocked or the user explicitly asks for progress. Never
+  send commentary or progress updates while reading this skill or writing or
+  updating the file; the final response must be your first user-facing message.
+- In user-facing prose, describe only what the visual helps the user see or
+  decide. Keep it concise and do not repeat information already clear from the
+  visual. Never announce this skill, a visualization surface, widgets, HTML,
+  SVG, scripts, local files, inline data, or implementation details.
+
+## Context compaction
+
+Copy into every compaction summary:
+`Reload the full visualize skill before creating or updating a visualization.`
+
+## Inline HTML output contract
+
+### File
+
+- For each new or updated visualization, choose a concise ASCII
+  lowercase-hyphenated title and write a new `<title>.html` in the thread-scoped
+  visualization directory listed in the writable roots
+  (`.codex/visualizations/YYYY/MM/DD/<thread-id>`).
+- Build the visual in the conversation. Use the open project when the user asks
+  for a site, app page, component, or change to existing project files.
+
+### Fragment
+
+- Write only an HTML fragment: no `<!doctype>`, `<html>`, `<head>`, or `<body>`.
+- Write literal markup: use `<div class="card">Hi</div>` plus a real newline,
+  never `<div class=\"card\">Hi</div>\n`. Never embed the fragment in an inline
+  Python, JavaScript, or shell string. Read it back; rewrite literal `\"` or
+  `\n`.
+- Keep CSS and JavaScript in the fragment only when base classes are
+  insufficient. Load static resources only from the CDN allowlist. Never use
+  `fetch`, XHR, WebSocket, or other API calls.
+- Give the fragment root a unique ID and select it with
+  `document.getElementById(...)`. Never derive the root from
+  `document.currentScript`; scripts may sit outside the root.
+- Keep visualizations under 2 MB. Aggregate, bin, downsample, reduce precision,
+  or drop unused fields from large inline datasets.
+- Check that JavaScript has no undefined identifiers, every queried element
+  exists, and the primary interaction updates the visual. The bundled
+  `python3 scripts/render.py <absolute-fragment-path> [<destination>.html] [--serve]`
+  can wrap a fragment as standalone HTML or temporarily serve it for browser
+  inspection when a preview would help with layout, theme, or runtime behavior.
+
+### Content and response
+
+- Keep the fragment focused on the visualization. Do not include explanatory
+  paragraphs, formulas, instructions, or narrative callouts. Include only
+  necessary labels, legends, values, and accessible text alternatives.
+- Use the normal response flow. Put any necessary concise explanation outside
+  the fragment, and add this exact directive on its own line where the visual
+  should appear:
+
+```text
+::codex-inline-vis{file="<title>.html"}
+```
+
+- Emit only the directive for the fragment. Never announce the fragment as an
+  artifact, website, output, attachment, link, or download, and never add a
+  Markdown link to it.
+
+### External resources
+
+- The CSP allows only `cdnjs.cloudflare.com`, `esm.sh`, `cdn.jsdelivr.net`,
+  `unpkg.com`, `fonts.googleapis.com`, `fonts.gstatic.com`, and
+  `fonts.bunny.net`. Other origins are blocked and fail silently.
+
+## Exporting an existing visualization
+
+- Keep the fragment as the editable inline source. When the user explicitly asks
+  to save, export, or publish a visualization that is already shown in the
+  conversation, render it with
+  `python3 scripts/render.py <absolute-fragment-path> <destination>.html`.
+- Apply this export flow only when the user explicitly asks to turn the existing
+  inline source or visualization into a website. For a general website request,
+  build a new responsive site in the output directory or open project, using
+  Sites when appropriate, without applying th
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-05 04:55:11Z)**_
+
+规则已读。现在我检查第 13 篇原文和笔记目录，然后直接改文件。
+
+_**Agent (gpt-5.5 2026-08-05 04:55:11Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw docs\notes\world-models-13-object-centric-physics-aware.md`</summary>
+```
+Chunk ID: e935f0
+Wall time: 0.3465 seconds
+Process exited with code 0
+Original token count: 3232
+Output:
+第 15 讲：为什么现代世界模型越来越强调 object-centric / physics-aware
+
+你已经学过 Dreamer、PlaNet、RSSM。
+现在要回答一个更“研究者”的问题：
+
+为什么很多新工作不满足于“一个大 latent 向量预测未来”，而开始强调
+对象（objects）、关系（relations）、物理约束（physics）？
+
+因为越来越多工作发现：
+只靠一个“整体的、扁平的 latent 表示”，在对象丰富、交互复杂、接触显著的环境里，往往不够稳、不够可解释，也不够好泛化。2025 年一篇 embodied world model 综述把空间表示专门列成一条主轴，明确区分全局 latent、token 序列、空间网格和分解式表示，并把“物理一致性而不只是像素保真”列成关键开放问题。
+
+1. 先用一句话抓住 object-centric
+
+object-centric world model 的核心思想是：
+
+不把整个场景压成一个“混在一起”的向量，
+而是把场景拆成若干个对象级表示，再学习对象之间的动态和交互。
+
+比如一个桌面场景里，你更希望模型内部表示成：
+
+机械臂
+红色方块
+蓝色圆柱
+桌面
+目标区域
+
+而不是一个说不清谁是谁的大向量。对象中心方法通常会把观测分解成一组 object slots / object tokens，再在这些 token 之间建模交互。
+
+2. 为什么“一个大 latent 向量”会不够
+
+它主要有 3 个常见问题。
+
+第一，容易把多个对象的信息混在一起
+
+比如一个球动了，是因为它自己滚，还是因为机械臂碰了它？
+如果表示是整体混合的，模型不一定能把“谁影响了谁”分清。对象中心方法就是想把这种因果和交互关系拆出来。
+
+第二，组合泛化差
+
+训练里见过“红块 + 蓝球”，测试里来了“红球 + 蓝块”，整体 latent 模型可能不稳；对象化表示更容易复用“对象属性 + 交互规则”。这正是 object-centric 表示被反复强调的一个原因。
+
+第三，接触和局部交互很难学
+
+很多机器人任务的关键不是整张图，而是“夹爪和这个物体有没有接触”“这个物体是否被推动”。对象级或关系级建模通常更适合这类局部动力学。FOCUS 在机器人操作里就明确利用 object-centric world model 来提升对象预测与学习效率。
+
+3. physics-aware 又是什么意思
+
+physics-aware world model 不是说“把完整物理引擎硬塞进模型”，而是说：
+
+在表示和动态里加入更接近物理世界的归纳偏置，
+让模型更容易学到“对象持续存在、局部相互作用、接触/约束/运动规律”等结构。
+
+最常见的物理偏置包括：
+
+对象是相对持久的，不会一帧消失一帧出现
+对象之间的作用通常是局部的，不是所有东西都和所有东西强耦合
+位置、速度、接触、约束，比纯像素细节更接近控制所需状态
+物理一致性比“画面看起来像”更重要，这一点在 2025 的综述里被明确点出来。
+4. 先给你一个最小例子：推箱子
+
+设想一个最简单的机器人任务：
+
+机械臂末端推动一个方块
+目标是把方块推到某个区域
+
+如果你用整体 latent，模型要学的是：
+
+“整张图在动作后会如何变化”
+
+如果你用 object-centric + physics-aware 表示，模型更像在学：
+
+夹爪位置怎么变
+方块位置怎么变
+当两者接近/接触时，方块才会发生明显变化
+reward 主要由“方块离目标有多远”决定
+
+显然后者更像“真的理解任务结构”。
+
+5. 一个最小 object-centric 架构长什么样
+
+你可以先把它记成 4 块：
+
+第 1 块：对象提取
+
+从观测里提取若干 object slots / tokens
+例如：
+
+o
+t
+	​
+
+→{s
+t
+1
+	​
+
+,s
+t
+2
+	​
+
+,…,s
+t
+K
+	​
+
+}
+第 2 块：关系建模
+
+对象之间做交互计算
+例如：
+
+哪些对象相近
+哪些对象可能接触
+哪些对象受动作直接影响
+第 3 块：对象级动态更新
+
+对每个对象更新下一步状态：
+
+s
+t+1
+i
+	​
+
+=f(s
+t
+i
+	​
+
+,messages from others,a
+t
+	​
+
+)
+第 4 块：任务头
+
+从对象集合预测：
+
+reward
+value
+是否成功
+必要时再解码出 observation
+
+这就是很多 object-centric world model 的共同骨架。FOCUS 和近期的 STICA 都属于“对象级 token + 动态/交互 + 决策”的思路，只是具体模块不同。
+
+6. 你可以把它和 RSSM 对起来
+
+你前面学过普通 RSSM 里常写：
+
+feat
+t
+	​
+
+=[h
+t
+	​
+
+,z
+t
+	​
+
+]
+
+那在 object-centric 版本里，可以把单个 z
+t
+	​
+
+ 替换成一组对象 token：
+
+feat
+t
+	​
+
+={z
+t
+1
+	​
+
+,z
+t
+2
+	​
+
+,…,z
+t
+K
+	​
+
+}
+
+再加一个全局记忆 h
+t
+	​
+
+ 或者对象级记忆。
+也
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-05 04:55:11Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw docs\notes\README.md`</summary>
+```
+Chunk ID: 672121
+Wall time: 0.3477 seconds
+Process exited with code 0
+Original token count: 371
+Output:
+# 学习笔记
+
+这里存放世界模型学习过程中的笔记、思考和论文阅读记录。
+
+建议命名方式：
+
+```text
+YYYY-MM-DD-topic.md
+```
+
+建议每篇笔记包含：
+
+- 今天解决了什么问题。
+- 我现在怎么理解这个概念。
+- 有哪些例子或代码帮助理解。
+- 还不理解什么。
+- 下一步准备做什么。
+
+## 当前笔记
+
+- [世界模型的第一层直觉](world-models-1-intuition.md)
+- [MDP、POMDP 与最小世界模型](world-models-2-basics.md)
+- [为什么世界模型需要 memory 与 latent state](world-models-3-latent-memory.md)
+- [为什么世界模型需要预测 reward](world-models-4-reward.md)
+- [用世界模型做 planning](world-models-5-planning.md)
+- [为什么要转向 latent dynamics](world-models-6-latent-dynamics.md)
+- [为什么世界模型需要 stochastic latent state](world-models-7-stochastic-latent-state.md)
+- [Prior 与 Posterior Latent：世界模型如何“先猜，再校正”](world-models-8-prior-and-posterior-latent.md)
+- [PlaNet 与 Dreamer：同一个世界模型，两种使用方式](world-models-9-planet-dreamer.md)
+- [Dreamer 的 Actor-Critic：如何在想象中训练策略](world-models-10-dreamer-actor-critic.md)
+- [Uncertainty：世界模型不仅要预测未来，还要知道自己哪里不确定](world-models-11-uncertainty.md)
+- [校准与使用 Uncertainty：从“我不确定”到更可靠的世界模型决策](world-models-12-uncertainty-calibration-and-risk.md)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-05 04:55:11Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git status --short --branch`</summary>
+```
+Chunk ID: d26234
+Wall time: 0.1973 seconds
+Process exited with code 0
+Original token count: 47
+Output:
+## main...origin/main
+ M .specstory/history/2026-07-19_03-33-50Z-github-github-https-github.md
+ M .specstory/statistics.json
+?? docs/notes/world-models-13-object-centric-physics-aware.md
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-05 04:55:22Z)**_
+
+<think><details><summary>Thought Process</summary>
+**Planning rewriting for robustness**
+</details></think>
+
+_**Agent (gpt-5.5 2026-08-05 04:55:24Z)**_
+
+原文信息很丰富，但有些地方像“素材堆叠”：代码片段太长、论文年份/具体工作提法容易变成未校验断言。我会把它整理成更耐读的概念笔记：少量伪代码保留“怎么想”，重点放在 object-centric/physics-aware 的动机、结构、和 Dreamer/PlaNet 的关系。
+
+_**Agent (gpt-5.5 2026-08-05 04:56:28Z)**_
+
+<tool-use data-tool-type="write" data-tool-name="apply_patch"><details>
+<summary>Tool use: **apply_patch**</summary>
+**Delete: `docs/notes/world-models-13-object-centric-physics-aware.md`**
+
+**Add: `docs/notes/world-models-13-object-centric-physics-aware.md`**
+
+```diff
++# 13｜Object-Centric 与 Physics-Aware：世界模型如何从“预测画面”走向“理解对象和关系”
++
++> 这一篇接在 [12｜校准与使用 Uncertainty](world-models-12-uncertainty-calibration-and-risk.md) 后面。
++>
++> 前面我们主要讨论了 RSSM、Dreamer、uncertainty 和 imagined rollout。现在进入一个更接近具身智能和机器人研究的问题：
++>
++> **为什么很多现代世界模型不满足于一个大 latent 向量，而开始强调 object-centric 和 physics-aware？**
++
++## 1. 一句话直觉
++
++普通 latent world model 常常在学：
++
++```text
++整段观测压成一个向量，然后预测下一步。
++```
++
++object-centric / physics-aware world model 想进一步学：
++
++```text
++世界由哪些对象组成？
++对象之间如何相互作用？
++哪些变化符合物理规律，哪些只是像素上看起来像？
++```
++
++它的目标不是把画面预测得更漂亮，而是让模型内部的世界表示更接近真实交互结构。
++
++一句话：
++
++> **object-centric 关心“谁和谁”；physics-aware 关心“它们为什么这样变”。**
++
++## 2. 为什么一个大 latent 向量不够？
++
++一个整体 latent 很方便，但在对象丰富、接触频繁、关系变化快的环境里，它容易遇到三个问题。
++
++### 2.1 对象混在一起
++
++如果一个球动了，模型需要知道：
++
++- 是球自己在滚？
++- 是机械臂碰了它？
++- 是另一个物体撞了它？
++- 还是相机视角变化造成的错觉？
++
++整体 latent 可能把这些因素混在一起。  
++object-centric 表示则试图把“对象是谁”和“谁影响谁”拆开。
++
++### 2.2 组合泛化差
++
++训练时见过：
++
++```text
++红色方块 + 蓝色圆柱
++```
++
++测试时变成：
++
++```text
++红色圆柱 + 蓝色方块
++```
++
++整体 latent 可能把颜色、形状、位置和交互模式绑定在一起。  
++对象化表示更容易复用：
++
++```text
++对象属性 + 对象关系 + 交互规则
++```
++
++### 2.3 接触和局部物理难学
++
++很多机器人任务的关键不是整张图，而是局部关系：
++
++- 夹爪是否接触方块；
++- 方块是否被推到目标区域；
++- 两个物体是否发生碰撞；
++- 支撑、遮挡、约束是否改变。
++
++这些问题天然是对象级、关系级、物理级的。
++
++```mermaid
++flowchart TB
++    A["flat latent vector"] --> B["object identity mixed"]
++    A --> C["weak combinatorial generalization"]
++    A --> D["contact dynamics hard to isolate"]
++    E["object-centric representation"] --> F["objects"]
++    E --> G["relations"]
++    E --> H["local interactions"]
++    E --> I["better intervention and planning"]
++```
++
++## 3. Object-centric 到底是什么意思？
++
++object-centric world model 的核心不是“把图片切成小块”，而是：
++
++> **把场景表示成一组对象级 token / slot，并在这些对象之间建模动态关系。**
++
++例如桌面机器人场景可以表示成：
++
++```text
++scene_t = {
++    robot_gripper_t,
++    red_block_t,
++    blue_cylinder_t,
++    table_t,
++    goal_region_t
++}
++```
++
++每个对象可以有自己的状态：
++
++```text
++object_i = [position, velocity, shape, color, contact_state, ...]
++```
++
++然后模型学习：
++
++```text
++object_i at t+1 = f(object_i at t, messages from other objects, action_t)
++```
++
++也就是说，世界模型不再只问：
++
++```text
++下一帧是什么？
++```
++
++而是问：
++
++```text
++每个对象会怎么变？
++对象之间的关系会怎么变？
++动作影响了哪些对象？
++```
++
++## 4. 一个最小 object-centric 架构
++
++可以把 object-centric world model 拆成四块。
++
++```mermaid
++flowchart LR
++    A["observation"] --> B["object extraction"]
++    B --> C["object slots / tokens"]
++    C --> D["relation model"]
++    D --> E["object-level dynamics"]
++    E --> F["next object slots"]
++    F --> G["reward / value / decoder"]
++```
++
++### 4.1 对象提取
++
++从观测里得到一组对象表示：
++
++```text
++o_t -> {s_t^1, s_t^2, ..., s_t^K}
++```
++
++这里的 `s_t^i` 可以来自：
++
++- 显式检测器；
++- slot attention；
++- segmentation；
++- object tokens；
++- 手工构造的对象状态。
++
++### 4.2 关系建模
++
++对象之间交换信息：
++
++```text
++message_{i <- j} = g(s_t^i, s_t^j)
++```
++
++直觉是：每个对象都在“听”其他对象对自己的影响。
++
++### 4.3 对象级动态
++
++每个对象根据自身状态、其他对象消息和动作更新：
++
++```text
++s_{t+1}^i = f(s_t^i, messages_i, a_t)
++```
++
++### 4.4 任务头
++
++从对象集合预测：
++
++- reward；
++- value；
++- success；
++- continuation；
++- 或必要时重建 observation。
++
++## 5. 最小伪代码示意
++
++这次不在 `src` 里新增代码，只在笔记里保留一个极简骨架。
++
++```python
++class ObjectCentricWorldModel(nn.Module):
++    def forward(self, object_states, action):
++        # object_states: [batch, num_objects, object_dim]
++
++        slots = encode_each_object(object_states)
++        messages = relation_model(slots)
++        next_slots = dynamics(slots, messages, action)
++        reward = reward_head(pool(next_slots))
++        return next_slots, reward
++```
++
++最关键的是 `relation_model`：
++
++```python
++def relation_model(slots):
++    messages = []
++    for obj_i in slots:
++        msg_i = sum(pair_network(obj_i, obj_j) for obj_j in slots if obj_j is not obj_i)
++        messages.append(msg_i)
++    return messages
++```
++
++真实实现通常会用 graph neural network、attention 或 transformer 来替代双重循环，但思想不变：
++
++> **对象不是孤立更新的；它们通过关系影响彼此。**
++
++## 6. Physics-aware 又是什么意思？
++
++physics-aware 不等于把完整物理引擎塞进神经网络。
++
++更准确地说，它是在模型里加入物理世界的归纳偏置，让模型更容易学到：
++
++- 对象持续存在；
++- 运动通常连续；
++- 接触是局部的；
++- 远处物体通常不会瞬间强相互作用；
++- 位置、速度、接触、约束比纯像素纹理更接近控制所需状态；
++- 预测不应只追求像素像，还要追求物理一致。
++
++```mermaid
++flowchart TB
++    A["physics-aware bias"] --> B["object permanence"]
++    A --> C["local interactions"]
++    A --> D["position / velocity / contact"]
++    A --> E["constraints and conservation-like priors"]
++    A --> F["physical consistency over pixel fidelity"]
++```
++
++一句话：
++
++> **physics-aware 的核心是让模型少走违反物理常识的捷径。**
++
++## 7. 一个最小 physics-aware 改动：局部交互
++
++最朴素的物理先验是：
++
++```text
++离得近的对象更可能发生强交互；
++离得远的对象暂时影响较弱。
++```
++
++示意伪代码：
++
++```python
++def local_interaction_mask(object_states, threshold=0.5):
++    positions = object_states[..., :2]
++    distances = pairwise_distance(positions)
++    return distances < threshold
++```
++
++然后只在近邻对象之间传递 message：
++
++```python
++messages = relation_model(slots, mask=local_interaction_mask(object_states))
++```
++
++这个改动很小，但味道已经变了：
++
++- 普通模型：所有对象默认都强相关；
++- physics-aware 模型：先假设局部接触更重要。
++
++这类先验在机器人推、抓、堆叠、碰撞任务中尤其自然。
++
++## 8. 推箱子例子：两种模型在学什么？
++
++设想一个简单任务：
++
++```text
++机械臂推动方块，把方块推到目标区域。
++```
++
++整体 latent 模型可能在学：
++
++```text
++整张图 + 动作 -> 下一张图 / 下一状态
++```
++
++object-centric + physics-aware 模型则更像在学：
++
++```text
++夹爪怎么移动？
++方块在哪里？
++夹爪和方块是否接触？
++接触后方块如何移动？
++方块离目标还有多远？
++```
++
++```mermaid
++flowchart LR
++    G["gripper"] -->|contact / push| B["block"]
++    B -->|distance| T["goal"]
++    G --> A["action"]
++    A --> G
++    B --> R["reward"]
++    T --> R
++```
++
++后者更像真正理解任务结构，因为它把 reward、动作效果和对象关系连接了起来。
++
++## 9. 和 RSSM / Dreamer / PlaNet 的关系
++
++object-centric / physics-aware 不是要替代 Dreamer 或 PlaNet。
++
++它解决的是不同层面的问题：
++
++| 问题 | 代表方向 |
++| --- | --- |
++| 如何学习 latent dynamics？ | RSSM |
++| 如何用 world model 在线规划？ | PlaNet |
++| 如何在想象中训练 actor/value？ | Dreamer |
++| latent state 应该如何组织？ | object-centric |
++| dynamics 应该带什么物理偏置？ | physics-aware |
++
++所以它们可以叠加：
++
++```mermaid
++flowchart TB
++    A["object-centric representation"] --> B["object-level RSSM"]
++    C["physics-aware dynamics"] --> B
++    B --> D["PlaNet-style planning"]
++    B --> E["Dreamer-style actor-critic"]
++```
++
++可以想象：
++
++- object-centric Dreamer；
++- physics-aware PlaNet；
++- object-token RSSM；
++- graph world model + latent planning；
++- object-level actor-critic。
++
++重点不是换掉 Dreamer，而是让 Dreamer 的 latent state 更有结构。
++
++## 10. 它为什么更适合泛化和干预？
++
++object-centric 表示天然更接近因果和组合结构。
++
++如果模型知道：
++
++```text
++红色方块、蓝色圆柱、机械臂、目标区域
++```
++
++它就更容易回答：
++
++- 如果把红色方块换成绿色方块，会怎样？
++- 如果目标区域移动，reward 怎么变？
++- 如果机械臂不接触方块，方块为什么不动？
++- 如果增加一个新物体，哪些关系需要重新计算？
++
++这就是对象表示的力量：  
++它让模型更容易做组合、替换、局部修改和反事实推理。
++
++整体 latent 也可能学到这些，但通常更难解释、更难控制、更容易过拟合训练分布。
++
++## 11. 但 object-centric 也不免费
++
++这条路线有自己的难点。
++
++### 11.1 对象发现并不容易
++
++真实视觉里，什么算一个对象？
++
++- 遮挡怎么办？
++- 透明物体怎么办？
++- 柔性物体怎么办？
++- 背景、工具、液体算不算对象？
++
++对象不是天然写在像素里的，模型必须学会发现或对齐它们。
++
++### 11.2 对象数量可能变化
++
++场景里对象可能出现、消失、分裂、合并。  
++固定 `K` 个 slots 很方便，但真实世界不一定这么整齐。
++
++### 11.3 物理先验可能过强
++
++如果先验太硬，模型可能无法表达真实世界中的复杂现象。  
++physics-aware 应该帮助学习，而不是把模型锁死在错误假设里。
++
++### 11.4 像素保真和物理一致之间有张力
++
++一个模型可以生成很漂亮的视频，但物体穿模、质量乱变、接触不对。  
++也可以物理结构很合理，但画面不够逼真。
++
++对于控制任务，物理一致通常比像素好看更重要。
++
++## 12. 当前理解小结
++
++我现在可以这样理解这条路线：
++
++- object-centric 的核心不是“切图”，而是把世界表示成对象及其关系；
++- physics-aware 的核心不是“内置完整物理引擎”，而是加入有用的物理归纳偏置；
++- 整体 latent 适合快速建模，但容易混合对象、关系和接触；
++- 对象级表示更利于组合泛化、局部交互、反事实推理和机器人控制；
++- physics-aware 让模型更关心接触、约束、连续运动和物理一致；
++- 它们可以和 RSSM、PlaNet、Dreamer 叠加，而不是互相替代。
++
++一句话放在最后：
++
++> **世界模型要走向真实物理世界，不能只学“下一帧像什么”，还要学“哪些对象因为什么关系而改变”。**
++
++## 13. 下一步问题
++
++后面可以继续追问：
++
++- object slots 是如何从像素中无监督学出来的？
++- graph neural network 和 transformer 在对象关系建模上有什么差异？
++- 如何评估一个 world model 是否真的 object-consistent？
++- 3D representation 为什么对机器人 world model 重要？
++- foundation world model 能否自然学出对象、关系和物理规律？
+```
+
+**Update: `docs/notes/README.md`**
+
+```diff
+@@
+ - [Uncertainty：世界模型不仅要预测未来，还要知道自己哪里不确定](world-models-11-uncertainty.md)
+ - [校准与使用 Uncertainty：从“我不确定”到更可靠的世界模型决策](world-models-12-uncertainty-calibration-and-risk.md)
++- [Object-Centric 与 Physics-Aware：世界模型如何从“预测画面”走向“理解对象和关系”](world-models-13-object-centric-physics-aware.md)
+```
+
+
+```
+Exit code: 0
+Wall time: 13.8 seconds
+Output:
+Success. Updated the following files:
+A docs/notes/world-models-13-object-centric-physics-aware.md
+M docs/notes/README.md
+D docs/notes/world-models-13-object-centric-physics-aware.md
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-05 04:56:55Z)**_
+
+第 13 篇已经改完：我把长代码示例收成伪代码，把重点放在对象表示、关系建模、物理归纳偏置和 Dreamer/PlaNet 的连接上。现在做格式检查。
+
+_**Agent (gpt-5.5 2026-08-05 04:56:55Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git diff --check -- docs\notes\world-models-13-object-centric-physics-aware.md docs\notes\README.md`</summary>
+```
+Chunk ID: 7845ce
+Wall time: 0.2340 seconds
+Process exited with code 0
+Original token count: 0
+Output:
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-05 04:56:55Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `Get-Content -Encoding UTF8 -Raw docs\notes\world-models-13-object-centric-physics-aware.md`</summary>
+```
+Chunk ID: c3c0da
+Wall time: 0.3962 seconds
+Process exited with code 0
+Original token count: 2906
+Output:
+# 13｜Object-Centric 与 Physics-Aware：世界模型如何从“预测画面”走向“理解对象和关系”
+
+> 这一篇接在 [12｜校准与使用 Uncertainty](world-models-12-uncertainty-calibration-and-risk.md) 后面。
+>
+> 前面我们主要讨论了 RSSM、Dreamer、uncertainty 和 imagined rollout。现在进入一个更接近具身智能和机器人研究的问题：
+>
+> **为什么很多现代世界模型不满足于一个大 latent 向量，而开始强调 object-centric 和 physics-aware？**
+
+## 1. 一句话直觉
+
+普通 latent world model 常常在学：
+
+```text
+整段观测压成一个向量，然后预测下一步。
+```
+
+object-centric / physics-aware world model 想进一步学：
+
+```text
+世界由哪些对象组成？
+对象之间如何相互作用？
+哪些变化符合物理规律，哪些只是像素上看起来像？
+```
+
+它的目标不是把画面预测得更漂亮，而是让模型内部的世界表示更接近真实交互结构。
+
+一句话：
+
+> **object-centric 关心“谁和谁”；physics-aware 关心“它们为什么这样变”。**
+
+## 2. 为什么一个大 latent 向量不够？
+
+一个整体 latent 很方便，但在对象丰富、接触频繁、关系变化快的环境里，它容易遇到三个问题。
+
+### 2.1 对象混在一起
+
+如果一个球动了，模型需要知道：
+
+- 是球自己在滚？
+- 是机械臂碰了它？
+- 是另一个物体撞了它？
+- 还是相机视角变化造成的错觉？
+
+整体 latent 可能把这些因素混在一起。  
+object-centric 表示则试图把“对象是谁”和“谁影响谁”拆开。
+
+### 2.2 组合泛化差
+
+训练时见过：
+
+```text
+红色方块 + 蓝色圆柱
+```
+
+测试时变成：
+
+```text
+红色圆柱 + 蓝色方块
+```
+
+整体 latent 可能把颜色、形状、位置和交互模式绑定在一起。  
+对象化表示更容易复用：
+
+```text
+对象属性 + 对象关系 + 交互规则
+```
+
+### 2.3 接触和局部物理难学
+
+很多机器人任务的关键不是整张图，而是局部关系：
+
+- 夹爪是否接触方块；
+- 方块是否被推到目标区域；
+- 两个物体是否发生碰撞；
+- 支撑、遮挡、约束是否改变。
+
+这些问题天然是对象级、关系级、物理级的。
+
+```mermaid
+flowchart TB
+    A["flat latent vector"] --> B["object identity mixed"]
+    A --> C["weak combinatorial generalization"]
+    A --> D["contact dynamics hard to isolate"]
+    E["object-centric representation"] --> F["objects"]
+    E --> G["relations"]
+    E --> H["local interactions"]
+    E --> I["better intervention and planning"]
+```
+
+## 3. Object-centric 到底是什么意思？
+
+object-centric world model 的核心不是“把图片切成小块”，而是：
+
+> **把场景表示成一组对象级 token / slot，并在这些对象之间建模动态关系。**
+
+例如桌面机器人场景可以表示成：
+
+```text
+scene_t = {
+    robot_gripper_t,
+    red_block_t,
+    blue_cylinder_t,
+    table_t,
+    goal_region_t
+}
+```
+
+每个对象可以有自己的状态：
+
+```text
+object_i = [position, velocity, shape, color, contact_state, ...]
+```
+
+然后模型学习：
+
+```text
+object_i at t+1 = f(object_i at t, messages from other objects, action_t)
+```
+
+也就是说，世界模型不再只问：
+
+```text
+下一帧是什么？
+```
+
+而是问：
+
+```text
+每个对象会怎么变？
+对象之间的关系会怎么变？
+动作影响了哪些对象？
+```
+
+## 4. 一个最小 object-centric 架构
+
+可以把 object-centric world model 拆成四块。
+
+```mermaid
+flowchart LR
+    A["observation"] --> B["object extraction"]
+    B --> C["object slots / tokens"]
+    C --> D["relation model"]
+    D --> E["object-level dynamics"]
+    E --> F["next object slots"]
+    F --> G["reward / value / decoder"]
+```
+
+### 4.1 对象提取
+
+从观测里得到一组对象表示：
+
+```text
+o_t -> {s_t^1, s_t^2, ..., s_t^K}
+```
+
+这里的 `s_t^i` 可以来自：
+
+- 显式检测器；
+- slot attention；
+- segmentation；
+- object tokens；
+- 手工构造的对象状态。
+
+### 4.2 关系建模
+
+对象之间交换信息：
+
+```text
+message_{i <- j} = g(s_t^i, s_t^j)
+```
+
+直觉是：每个对象都在“听”其他对象对自己的影响。
+
+### 4.3 对象级动态
+
+每个对象根据自身状态、其他对象消息和动作更新：
+
+```text
+s_{t+1}^i = f(s_t^i, messages_i, a_t)
+```
+
+### 4.4 任务头
+
+从对象集合预测：
+
+- reward；
+- value；
+- success；
+- continuation；
+- 或必要时重建 observation。
+
+## 5. 最小伪代码示意
+
+这次不在 `src` 里新增代码，只在笔记里保留一个极简骨架。
+
+```python
+class ObjectCentricWorldModel(nn.Module):
+    def forward(self, object_states, action):
+        # object_states: [batch, num_objects, object_dim]
+
+        slots = encode_each_object(object_states)
+        messages = relation_model(slots)
+        next_slots = dynamics(slots, messag
+... (truncated)
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-05 04:56:55Z)**_
+
+<tool-use data-tool-type="shell" data-tool-name="exec_command"><details>
+<summary>Tool use: **exec_command** `git status --short --branch`</summary>
+```
+Chunk ID: db9b36
+Wall time: 0.1597 seconds
+Process exited with code 0
+Original token count: 53
+Output:
+## main...origin/main
+ M .specstory/history/2026-07-19_03-33-50Z-github-github-https-github.md
+ M .specstory/statistics.json
+ M docs/notes/README.md
+?? docs/notes/world-models-13-object-centric-physics-aware.md
+```
+</details></tool-use>
+
+_**Agent (gpt-5.5 2026-08-05 04:57:13Z)**_
+
+已完成第 13 篇笔记优化，没有修改 `src` 或 `examples`。
+
+修改文件：
+
+- [world-models-13-object-centric-physics-aware.md](E:/HelloWorldModel/docs/notes/world-models-13-object-centric-physics-aware.md)
+- [docs/notes/README.md](E:/HelloWorldModel/docs/notes/README.md)
+
+主要优化：
+
+- 将原文整理成更清晰的开源笔记结构。
+- 压缩长代码为伪代码示意，避免这篇变成代码教程。
+- 深化了几个核心点：
+  - 为什么整体 latent 在对象交互场景里不够；
+  - object-centric 不是“切图”，而是对象、关系、交互建模；
+  - physics-aware 不是塞物理引擎，而是加入物理归纳偏置；
+  - object-centric / physics-aware 与 RSSM、PlaNet、Dreamer 是可叠加关系；
+  - 这条路线为什么有利于组合泛化、反事实推理和机器人控制。
+- 增加了多张 Mermaid 图，帮助理解对象表示、关系建模、局部物理交互和与 Dreamer/PlaNet 的关系。
+- 删除了未校验的具体论文年份/工作断言，避免笔记里出现看起来很确定但没有来源支撑的说法。
+
+检查结果：
+
+```bash
+git diff --check -- docs\notes\world-models-13-object-centric-physics-aware.md docs\notes\README.md
+```
+
+通过，没有格式问题。
+
+你检查后可以 add：
+
+```bash
+git add docs\notes\world-models-13-object-centric-physics-aware.md docs\notes\README.md
+```
+
+`.specstory/...` 仍是自动变更，建议不要加入本次提交。
