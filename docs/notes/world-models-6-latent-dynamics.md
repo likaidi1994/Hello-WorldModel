@@ -72,7 +72,7 @@ Observation 往往具备几个特点：
 
 Latent dynamics 的核心直觉是：不要直接在 observation space 里滚动未来，而是先把 observation 编码成更紧凑的 latent state，再在 latent space 中推进动态。
 
-其中 z_t 是模型学出来的内部表示。
+其中 $z_t$ 是模型学出来的内部表示。
 
 ```mermaid
 flowchart LR

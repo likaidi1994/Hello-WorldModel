@@ -113,15 +113,17 @@ scene_t = {
 
 每个对象可以有自己的状态：
 
-```text
-object_i = [position, velocity, shape, color, contact_state, ...]
-```
+$$
+\mathrm{object}_i = [\mathrm{position},\ \mathrm{velocity},\ \mathrm{shape},\
+\mathrm{color},\ \mathrm{contact\_state},\ \ldots]
+$$
 
 然后模型学习：
 
-```text
-object_i at t+1 = f(object_i at t, messages from other objects, action_t)
-```
+$$
+\mathrm{object}_i^{t+1} = f\!\left(\mathrm{object}_i^t,
+\mathrm{messages}_i^t, a_t\right)
+$$
 
 也就是说，世界模型不再只问：
 

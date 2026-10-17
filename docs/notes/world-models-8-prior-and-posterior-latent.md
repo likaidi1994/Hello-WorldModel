@@ -130,11 +130,9 @@ posterior 的作用不是直接用于未来 planning，而是用于训练：
 
 训练时，我们希望：
 
-```text
-
-prior prediction ≈ posterior inference
-
-```
+$$
+\text{prior prediction} \approx \text{posterior inference}
+$$
 
 常见做法是加入 KL divergence：
 
