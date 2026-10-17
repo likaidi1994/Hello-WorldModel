@@ -174,9 +174,9 @@ actor 如果找到模型漏洞，就把它带回真实环境验证。
 
 如果某条 imagined trajectory 经过高 uncertainty 区域，就降低它的 score：
 
-```text
-safe_return = imagined_return - α × model_uncertainty
-```
+$$
+\mathrm{safe\_return} = \mathrm{imagined\_return} - \alpha \times \mathrm{model\_uncertainty}
+$$
 
 
 
@@ -199,9 +199,9 @@ safe_return = imagined_return - α × model_uncertainty
 
 探索时，epistemic uncertainty 可以变成奖励：
 
-```text
-reward_for_learning = task_reward + β × epistemic_uncertainty
-```
+$$
+r_{\mathrm{learn}} = r_{\mathrm{task}} + \beta \times \mathrm{epistemic\_uncertainty}
+$$
 
 意思是：
 
@@ -236,9 +236,9 @@ flowchart LR
 
 最朴素的风险敏感目标是：
 
-```text
-score = expected_return - α × uncertainty
-```
+$$
+\mathrm{score} = \mathbb{E}[\mathrm{return}] - \alpha \times \mathrm{uncertainty}
+$$
 
 更一般地，可以根据任务选择不同风险偏好：
 

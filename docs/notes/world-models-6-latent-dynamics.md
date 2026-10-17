@@ -10,7 +10,9 @@
 
 也就是：
 
-o_t -> ô_{t+1} -> ô_{t+2}
+$$
+o_t \rightarrow \hat{o}_{t+1} \rightarrow \hat{o}_{t+2}
+$$
 
 这篇笔记要解释：为什么 observation space 里的 rollout 容易崩，以及为什么现代 world model 通常转向 latent dynamics。
 

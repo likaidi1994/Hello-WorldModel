@@ -65,11 +65,9 @@ flowchart LR
 
 prior 通常写作：
 
-```text
-
-p(z_{t+1} | z_t, a_t)
-
-```
+$$
+p(z_{t+1} \mid z_t, a_t)
+$$
 
 意思是：模型只根据当前潜状态 `z_t` 和动作 `a_t`，预测下一步潜状态 `z_{t+1}` 的概率分布。
 
@@ -107,19 +105,15 @@ flowchart LR
 
 posterior 通常写作：
 
-```text
-
-q(z_{t+1} | o_{t+1})
-
-```
+$$
+q(z_{t+1} \mid o_{t+1})
+$$
 
 或在更完整的 recurrent state-space model 里写作：
 
-```text
-
-q(z_{t+1} | h_{t+1}, o_{t+1})
-
-```
+$$
+q(z_{t+1} \mid h_{t+1}, o_{t+1})
+$$
 
 意思是：模型已经看到了真实下一观测 `o_{t+1}`，于是可以更准确地推断“刚才真正发生的潜状态”。
 
@@ -144,11 +138,9 @@ prior prediction ≈ posterior inference
 
 常见做法是加入 KL divergence：
 
-```text
-
-KL(q(z_{t+1} | o_{t+1}) || p(z_{t+1} | z_t, a_t))
-
-```
+$$
+\mathrm{KL}\big(q(z_{t+1} \mid o_{t+1}) \parallel p(z_{t+1} \mid z_t, a_t)\big)
+$$
 
 它衡量的是：posterior 这个“看见答案后的分布”，和 prior 这个“没看答案前的预测分布”差多远。
 
@@ -237,25 +229,23 @@ flowchart LR
 
 在这种结构里：
 
-```text
-
-prior:     p(z_t | h_t)
-
-posterior: q(z_t | h_t, o_t)
-
-```
+$$
+\begin{aligned}
+\text{prior: } &\ p(z_t \mid h_t) \\
+\text{posterior: } &\ q(z_t \mid h_t, o_t)
+\end{aligned}
+$$
 
 其中 `h_t` 是从过去动作和 latent 更新来的 deterministic memory。
 
 我们的代码为了保持最小化，没有完整实现 Dreamer 的 RSSM，而是用了更直观的一步版本：
 
-```text
-
-prior:     p(z_{t+1} | z_t, a_t)
-
-posterior: q(z_{t+1} | o_{t+1})
-
-```
+$$
+\begin{aligned}
+\text{prior: } &\ p(z_{t+1} \mid z_t, a_t) \\
+\text{posterior: } &\ q(z_{t+1} \mid o_{t+1})
+\end{aligned}
+$$
 
 这个版本足够展示 prior/posterior 的本质区别：**一个靠模型预测，一个靠观测校正。**
 

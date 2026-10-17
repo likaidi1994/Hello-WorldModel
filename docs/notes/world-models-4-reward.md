@@ -4,15 +4,14 @@
 
 $$
 (o_t, a_t, h_{t-1}) \rightarrow h_t \rightarrow o_{t+1}
-
 $$
 
 也就是说，模型能：
 
-- 看到当前观测 \(o_t\)。
-- 读入当前动作 \(a_t\)。
-- 更新内部记忆 \(h_t\)。
-- 预测下一步观测 \(o_{t+1}\)。
+- 看到当前观测 $o_t$。
+- 读入当前动作 $a_t$。
+- 更新内部记忆 $h_t$。
+- 预测下一步观测 $o_{t+1}$。
 
 但这还不够。控制任务不只关心“世界接下来会变成什么样”，还关心：
 
@@ -28,7 +27,6 @@ $$
 
 $$
 p(o_{t+1} \mid h_t, a_t)
-
 $$
 
 它学到的是环境变化规律。这个模型知道“接下来会看到什么”，但还不一定知道“这个未来对任务意味着什么”。
@@ -58,7 +56,6 @@ flowchart LR
 
 $$
 r_t = -\left((x_{t+1} - goal)^2 + 0.1a_t^2\right)
-
 $$
 
 它表达了两件事：
@@ -99,28 +96,24 @@ flowchart TD
 
 $$
 h_t \rightarrow \hat{o}_{t+1}
-
 $$
 
 这一篇把它扩展为：
 
 $$
 h_t \rightarrow (\hat{o}_{t+1}, \hat{r}_t)
-
 $$
 
 训练目标也从单一 observation loss 变成：
 
 $$
 L = L_{obs} + \lambda L_{reward}
-
 $$
 
-入门版本里先取 \(\lambda = 1\)：
+入门版本里先取 $\lambda = 1$：
 
 $$
 L = \text{MSE}(\hat{o}_{t+1}, o_{t+1}) + \text{MSE}(\hat{r}_t, r_t)
-
 $$
 
 完整代码已经整理到：
@@ -156,7 +149,6 @@ python examples/run_reward_world_model.py
 
 $$
 \sum_{t=0}^{H-1} \hat{r}_t
-
 $$
 
 最后选择预测回报最高的动作序列。

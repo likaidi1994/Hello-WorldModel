@@ -161,9 +161,9 @@ flowchart LR
 
 从观测里得到一组对象表示：
 
-```text
-o_t -> {s_t^1, s_t^2, ..., s_t^K}
-```
+$$
+o_t \rightarrow \{s_t^{1}, s_t^{2}, \ldots, s_t^{K}\}
+$$
 
 这里的 `s_t^i` 可以来自：
 
@@ -179,9 +179,9 @@ o_t -> {s_t^1, s_t^2, ..., s_t^K}
 
 对象之间交换信息：
 
-```text
-message_{i <- j} = g(s_t^i, s_t^j)
-```
+$$
+m_{i \leftarrow j} = g(s_t^{i}, s_t^{j})
+$$
 
 直觉是：每个对象都在“听”其他对象对自己的影响。
 
@@ -189,9 +189,9 @@ message_{i <- j} = g(s_t^i, s_t^j)
 
 每个对象根据自身状态、其他对象消息和动作更新：
 
-```text
-s_{t+1}^i = f(s_t^i, messages_i, a_t)
-```
+$$
+s_{t+1}^{i} = f(s_t^{i}, m_i, a_t)
+$$
 
 
 

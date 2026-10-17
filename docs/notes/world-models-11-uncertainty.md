@@ -72,9 +72,9 @@ aleatoric uncertainty 不是模型的失败，而是世界本身的信息不足�
 
 在世界模型中，这类不确定常表现为：
 
-```text
-p(z_{t+1} | z_t, a_t)
-```
+$$
+p(z_{t+1} \mid z_t, a_t)
+$$
 
 不是一个点，而是一个分布。
 
@@ -199,9 +199,9 @@ def ensemble_reward_stats(models, obs, action):
 
 更稳的做法是引入 risk-aware score：
 
-```text
-score = expected_return - α × uncertainty
-```
+$$
+\mathrm{score} = \mathbb{E}[\mathrm{return}] - \alpha \times \mathrm{uncertainty}
+$$
 
 其中：
 
@@ -256,9 +256,9 @@ for action_seq in candidate_sequences:
 
 但在探索阶段，不确定也可以变成“去看看”的信号。
 
-```text
-exploration_bonus = β × epistemic_uncertainty
-```
+$$
+\mathrm{exploration\_bonus} = \beta \times \mathrm{epistemic\_uncertainty}
+$$
 
 也就是说：
 
