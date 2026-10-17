@@ -69,12 +69,14 @@ Dreamer 的 world model 通常是 RSSM（recurrent state-space model）。它把
 
 在本项目的完整演示里，RSSM 使用：
 
-```text
-h_t = GRU(h_{t-1}, z_{t-1}, a_{t-1})
-prior:     p(z_t | h_t)
-posterior: q(z_t | h_t, o_t)
-feature:   [h_t, z_t]
-```
+$$
+\begin{aligned}
+h_t &= \mathrm{GRU}(h_{t-1}, z_{t-1}, a_{t-1}) \\
+\text{prior: } &\ p(z_t \mid h_t) \\
+\text{posterior: } &\ q(z_t \mid h_t, o_t) \\
+\text{feature: } &\ [h_t, z_t]
+\end{aligned}
+$$
 
 结构图：
 
@@ -109,17 +111,17 @@ flowchart TB
 
 强化学习里 episode 可能结束。Dreamer 不只预测 reward，还会预测 continuation：
 
-```text
-c_t = P(episode continues after this step)
-```
+$$
+c_t = P(\text{episode continues after this step})
+$$
 
 如果 episode 结束，后面的 return 就不应该继续累计。
 
 所以 imagined return 更像：
 
-```text
-return_t = r_t + γ c_t return_{t+1}
-```
+$$
+\mathrm{return}_t = r_t + \gamma c_t \,\mathrm{return}_{t+1}
+$$
 
 这里的 `c_t` 很关键：
 
@@ -132,20 +134,22 @@ return_t = r_t + γ c_t return_{t+1}
 
 训练 actor/value 时，Dreamer 先从 replay buffer 取一段真实历史，用 posterior 得到一个当前 latent state：
 
-```text
-(h_t, z_t) from q(z_t | h_t, o_t)
-```
+$$
+(h_t, z_t) \leftarrow q(z_t \mid h_t, o_t)
+$$
 
 然后进入想象：
 
-```text
-feature_t = [h_t, z_t]
-a_t       = actor(feature_t)
-h_{t+1}   = GRU(h_t, z_t, a_t)
-z_{t+1}   ~ p(z_{t+1} | h_{t+1})
-r_t       = reward_head([h_{t+1}, z_{t+1}])
-c_t       = continuation_head([h_{t+1}, z_{t+1}])
-```
+$$
+\begin{aligned}
+\mathrm{feature}_t &= [h_t, z_t] \\
+a_t &= \mathrm{actor}(\mathrm{feature}_t) \\
+h_{t+1} &= \mathrm{GRU}(h_t, z_t, a_t) \\
+z_{t+1} &\sim p(z_{t+1} \mid h_{t+1}) \\
+r_t &= \mathrm{reward\_head}([h_{t+1}, z_{t+1}]) \\
+c_t &= \mathrm{continuation\_head}([h_{t+1}, z_{t+1}])
+\end{aligned}
+$$
 
 流程图：
 
@@ -177,9 +181,9 @@ flowchart LR
 
 简化形式可以理解为：
 
-```text
-G_t^λ = r_t + γ c_t [(1 - λ) V(s_{t+1}) + λ G_{t+1}^λ]
-```
+$$
+G_t^{\lambda} = r_t + \gamma c_t \big[(1 - \lambda) V(s_{t+1}) + \lambda G_{t+1}^{\lambda}\big]
+$$
 
 其中：
 
@@ -189,9 +193,9 @@ G_t^λ = r_t + γ c_t [(1 - λ) V(s_{t+1}) + λ G_{t+1}^λ]
 
 value 的目标是拟合这个 return：
 
-```text
-value_loss = MSE(V(feature_t), G_t^λ)
-```
+$$
+\mathcal{L}_{\mathrm{value}} = \mathrm{MSE}\big(V(\mathrm{feature}_t), G_t^{\lambda}\big)
+$$
 
 ```mermaid
 flowchart LR
@@ -210,9 +214,9 @@ flowchart LR
 
 actor 的目标更直接：
 
-```text
-actor_loss = - mean(lambda_return)
-```
+$$
+\mathcal{L}_{\mathrm{actor}} = -\,\mathrm{mean}(G^{\lambda})
+$$
 
 也就是让 imagined return 尽可能大。
 

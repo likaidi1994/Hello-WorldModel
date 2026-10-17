@@ -10,7 +10,9 @@
 
 也就是：
 
-o_t -> ô_{t+1} -> ô_{t+2}
+$$
+o_t \rightarrow \hat{o}_{t+1} \rightarrow \hat{o}_{t+2}
+$$
 
 这篇笔记要解释：为什么 observation space 里的 rollout 容易崩，以及为什么现代 world model 通常转向 latent dynamics。
 
@@ -70,7 +72,7 @@ Observation 往往具备几个特点：
 
 Latent dynamics 的核心直觉是：不要直接在 observation space 里滚动未来，而是先把 observation 编码成更紧凑的 latent state，再在 latent space 中推进动态。
 
-其中 z_t 是模型学出来的内部表示。
+其中 $z_t$ 是模型学出来的内部表示。
 
 ```mermaid
 flowchart LR

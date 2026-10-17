@@ -51,7 +51,7 @@ flowchart LR
 
 如果你一次性把未来 10 步动作都执行完，后面的动作可能已经基于错误预测。更稳妥的做法是：
 
-1. 用模型想象未来 \(H\) 步。
+1. 用模型想象未来 $H$ 步。
 2. 选出预测累计 reward 最高的动作序列。
 3. 只执行这条序列的第一步。
 4. 回到真实环境重新观察。
@@ -80,14 +80,12 @@ sequenceDiagram
 
 $$
 (o_{1:t}, a_{1:t}) \rightarrow (\hat{o}_{2:t+1}, \hat{r}_{1:t})
-
 $$
 
 但 planning 时更需要一个单步接口：
 
 $$
 (o_t, a_t, h_{t-1}) \rightarrow (\hat{o}_{t+1}, \hat{r}_t, h_t)
-
 $$
 
 这个接口做三件事：
@@ -114,7 +112,6 @@ Planning 不能从空白状态开始。模型需要先根据真实历史形成�
 
 $$
 h_t = f(o_{1:t}, a_{1:t-1})
-
 $$
 
 也就是说，智能体在真实环境里走到当前这一步时，已经看过一段历史。我们先把这段历史喂给 recurrent world model，得到当前 hidden state，然后从这个 hidden state 开始想象未来。
@@ -127,21 +124,18 @@ $$
 
 $$
 a_t, a_{t+1}, \dots, a_{t+H-1}
-
 $$
 
 world model 会在内部做 imagined rollout：
 
 $$
 (\hat{o}_{t+1}, \hat{r}_t, h_{t+1}) = model.step(o_t, a_t, h_t)
-
 $$
 
 然后把预测出来的下一观测继续喂回模型：
 
 $$
 (\hat{o}_{t+2}, \hat{r}_{t+1}, h_{t+2}) = model.step(\hat{o}_{t+1}, a_{t+1}, h_{t+1})
-
 $$
 
 最关键的一点是：
@@ -165,7 +159,6 @@ flowchart LR
 
 $$
 J(a_{t:t+H-1}) = \sum_{k=0}^{H-1} \hat{r}_{t+k}
-
 $$
 
 ## 6. Random shooting：最简单的 planner
@@ -192,11 +185,11 @@ Random shooting 很粗糙，只是为了理解，因为它让 planning 的核心
 
 完整控制闭环是：
 
-1. 在真实环境中观察当前 \(o_t\)。
-2. 根据真实历史推断 hidden state \(h_t\)。
+1. 在真实环境中观察当前 $o_t$。
+2. 根据真实历史推断 hidden state $h_t$。
 3. 在世界模型中采样并评估很多条未来动作序列。
 4. 执行最好序列的第一步动作。
-5. 从真实环境得到 \(o_{t+1}, r_t\)。
+5. 从真实环境得到 $o_{t+1}, r_t$。
 6. 把真实 transition 加入历史，回到第 1 步。
 
 注意一个很重要的区别：
@@ -240,7 +233,7 @@ python examples/run_planning_world_model.py
 
 其中最值得盯住的是 compounding error。
 
-当模型把 \(\hat{o}_{t+1}\) 继续当作下一步输入时，误差会一步步滚大：
+当模型把 $\hat{o}_{t+1}$ 继续当作下一步输入时，误差会一步步滚大：
 
 ```mermaid
 flowchart LR

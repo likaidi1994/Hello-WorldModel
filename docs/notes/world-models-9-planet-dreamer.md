@@ -15,10 +15,12 @@ PlaNet 和 Dreamer 都先学习一个 latent world model，但它们使用这个
 
 更短一点：
 
-```text
-PlaNet  = world model + online planning
-Dreamer = world model + actor-critic learned in imagination
-```
+$$
+\begin{aligned}
+\mathrm{PlaNet} &= \text{world model} + \text{online planning} \\
+\mathrm{Dreamer} &= \text{world model} + \text{actor--critic learned in imagination}
+\end{aligned}
+$$
 
 如果用学习方式类比：
 
@@ -193,9 +195,10 @@ Dreamer 的改进思路是：
 
 于是执行时，Dreamer 不需要每一步重新大规模搜索。它只需要：
 
-```text
-observation/history -> latent state -> actor -> action
-```
+$$
+\text{observation/history} \rightarrow \text{latent state}
+\rightarrow \text{actor} \rightarrow \text{action}
+$$
 
 这就是 Dreamer 名字里 “dream” 的含义：  
 它不是单纯预测未来，而是在学到的世界里做策略学习。

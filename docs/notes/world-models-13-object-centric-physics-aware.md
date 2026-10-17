@@ -113,15 +113,17 @@ scene_t = {
 
 每个对象可以有自己的状态：
 
-```text
-object_i = [position, velocity, shape, color, contact_state, ...]
-```
+$$
+\mathrm{object}_i = [\mathrm{position},\ \mathrm{velocity},\ \mathrm{shape},\
+\mathrm{color},\ \mathrm{contact\_state},\ \ldots]
+$$
 
 然后模型学习：
 
-```text
-object_i at t+1 = f(object_i at t, messages from other objects, action_t)
-```
+$$
+\mathrm{object}_i^{t+1} = f\!\left(\mathrm{object}_i^t,
+\mathrm{messages}_i^t, a_t\right)
+$$
 
 也就是说，世界模型不再只问：
 
@@ -161,9 +163,9 @@ flowchart LR
 
 从观测里得到一组对象表示：
 
-```text
-o_t -> {s_t^1, s_t^2, ..., s_t^K}
-```
+$$
+o_t \rightarrow \{s_t^{1}, s_t^{2}, \ldots, s_t^{K}\}
+$$
 
 这里的 `s_t^i` 可以来自：
 
@@ -179,9 +181,9 @@ o_t -> {s_t^1, s_t^2, ..., s_t^K}
 
 对象之间交换信息：
 
-```text
-message_{i <- j} = g(s_t^i, s_t^j)
-```
+$$
+m_{i \leftarrow j} = g(s_t^{i}, s_t^{j})
+$$
 
 直觉是：每个对象都在“听”其他对象对自己的影响。
 
@@ -189,9 +191,9 @@ message_{i <- j} = g(s_t^i, s_t^j)
 
 每个对象根据自身状态、其他对象消息和动作更新：
 
-```text
-s_{t+1}^i = f(s_t^i, messages_i, a_t)
-```
+$$
+s_{t+1}^{i} = f(s_t^{i}, m_i, a_t)
+$$
 
 
 

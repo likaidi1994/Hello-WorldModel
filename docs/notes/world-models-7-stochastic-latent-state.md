@@ -27,7 +27,7 @@ $$
 z_{t+1} = f(z_t, a_t)
 $$
 
-这意味着：给定 z_t 和 a_t，模型只能给出一个下一 latent state。
+这意味着：给定 $z_t$ 和 $a_t$，模型只能给出一个下一 latent state。
 
 ```mermaid
 flowchart LR
@@ -112,15 +112,15 @@ z_{t+1} \sim p(z_{t+1} \mid z_t, a_t)
 $$
 
 $$
-\hat{o}*{t+1} = Dec(z*{t+1}), \quad \hat{r}_t = g(z_t, a_t)
+\hat{o}_{t+1} = \mathrm{Dec}(z_{t+1}), \quad \hat{r}_t = g(z_t, a_t)
 $$
 
 其中：
 
-- q(z_t \mid o_t)：encoder / posterior，用观测推断当前 latent。
-- p(z_{t+1} \mid z_t, a_t)：transition prior，预测下一 latent 的分布。
-- Dec(z_{t+1})：把 latent 解码回 observation，用于训练和可视化。
-- g(z_t, a_t)：reward head，让 latent 对任务有用。
+- $q(z_t \mid o_t)$：encoder / posterior，用观测推断当前 latent。
+- $p(z_{t+1} \mid z_t, a_t)$：transition prior，预测下一 latent 的分布。
+- $\mathrm{Dec}(z_{t+1})$：把 latent 解码回 observation，用于训练和可视化。
+- $g(z_t, a_t)$：reward head，让 latent 对任务有用。
 
 ```mermaid
 flowchart TD
@@ -162,10 +162,10 @@ $$
 
 其中：
 
-- L_{obs}：解码出的下一观测是否接近真实下一观测。
-- L_{reward}：预测 reward 是否接近真实 reward。
-- L_{KL}：prior 分布是否接近 posterior 分布。
-- \beta：控制 KL 项权重。
+- $L_{obs}$：解码出的下一观测是否接近真实下一观测。
+- $L_{reward}$：预测 reward 是否接近真实 reward。
+- $L_{KL}$：prior 分布是否接近 posterior 分布。
+- $\beta$：控制 KL 项权重。
 
 这已经非常接近 Dreamer / RSSM 里的关键味道：让模型同时学习“从观测推断 latent”和“在 latent 中预测未来”。
 
@@ -190,7 +190,7 @@ python examples/run_stochastic_latent_state_world_model.py
 - `02_one_step_future_distribution.png`：同一个 state-action 下采样出的多个下一状态。
 - `03_stochastic_rollout_fan.png`：同一条动作序列下的一簇可能未来。
 - `04_uncertainty_growth.png`：rollout 过程中样本不确定性如何变化。
-- `05_prior_latent_samples.png`：从 p(z_{t+1}\mid z_t,a_t) 采样出的 latent 分布。
+- `05_prior_latent_samples.png`：从 $p(z_{t+1}\mid z_t,a_t)$ 采样出的 latent 分布。
 
 
 
@@ -210,8 +210,8 @@ python examples/run_stochastic_latent_state_world_model.py
 
 Dreamer 的 RSSM 通常同时包含：
 
-- deterministic state h_t：负责稳定记忆历史。
-- stochastic state z_t：负责表达不确定性。
+- deterministic state $h_t$：负责稳定记忆历史。
+- stochastic state $z_t$：负责表达不确定性。
 
 简化地看：
 
@@ -223,7 +223,7 @@ $$
 z_t \sim p(z_t \mid h_t)
 $$
 
-其中 h_t 像是长期上下文，z_t 像是在当前上下文下对具体世界状态的一次随机解释。
+其中 $h_t$ 像是长期上下文，$z_t$ 像是在当前上下文下对具体世界状态的一次随机解释。
 
 我们的最小 demo 还没有完整实现 RSSM，但已经抓住了关键一步：
 
